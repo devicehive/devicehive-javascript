@@ -1,6 +1,9 @@
 {
   "name": "devicehive-node-library",
-  "version": "0.0.1",
+  "version": "1.0.0",
+  "engines": {
+    "node": ">=6.10.0"
+  },
   "description": "DeviceHive Node.JS Library",
   "main": "index.js",
   "scripts": {},

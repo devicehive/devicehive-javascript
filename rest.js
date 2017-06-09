@@ -36,7 +36,7 @@ class rest {
   /**
    * Returns requested property value
    * 
-   * @param {String} name 
+   * @param {String} name
    * @returns {Promise}
    * 
    * @memberof rest
@@ -82,7 +82,17 @@ class rest {
   /**
    * Gets list of devices.
    * 
-   * @param {Object} filter 
+   * @typedef DeviceFilter
+   * @property {String} name - Filter by device name.
+   * @property {String} namePattern - Filter by device name pattern.
+   * @property {Number} networkId - Filter by associated network identifier.
+   * @property {String} networkName - Filter by associated network name.
+   * @property {String} sortField - Result list sort field.
+   * @property {String} sortOrder - Result list sort order.
+   * @property {Number} take - Number of records to take from the result list.
+   * @property {Number} skip - Number of records to skip from the result list.
+   * 
+   * @param {DeviceFilter} filter 
    * @returns {Promise}
    * 
    * @memberof rest
@@ -111,8 +121,15 @@ class rest {
   /**
    * Registers or updates a device. For initial device registration, only 'name' property is required.
    * 
+   * @typedef DeviceParams
+   * @property {String} id
+   * @property {String} name
+   * @property {String} data
+   * @property {Number} networkId
+   * @property {Boolean} blocked
+   * 
    * @param {String} id 
-   * @param {Object} deviceParams 
+   * @param {DeviceParams} deviceParams 
    * @returns {Promise}
    * 
    * @memberof rest
@@ -145,7 +162,14 @@ class rest {
    * If no commands are received within the waitTimeout period, the server returns an empty response. 
    * In this case, to continue polling, the client should repeat the call with the same timestamp value.
    * 
-   * @param {Object} filter 
+   * @typedef DevicePollFilter
+   * @property {String} deviceIds - List of device IDs
+   * @property {String} names - Command names
+   * @property {String} timestamp - Timestamp to start from
+   * @property {Number} waitTimeout - Wait timeout in seconds
+   * @property {Number} limit - Limit number of commands
+   * 
+   * @param {DevicePollFilter} filter 
    * @returns 
    * 
    * @memberof rest
@@ -160,8 +184,18 @@ class rest {
   /**
    * Gets list of commands that has been received in specified time range.
    * 
+   * @typedef DeviceCommandsFilter
+   * @property {String} start - Start timestamp
+   * @property {String} end - End timestamp
+   * @property {String} command - Command name
+   * @property {String} status - Command status
+   * @property {String} sortField - Sort field
+   * @property {String} sortOrder - Sort order
+   * @property {Number} take - Limit param
+   * @property {Number} skip - Skip param
+   * 
    * @param {String} id 
-   * @param {Object} filter 
+   * @param {DeviceCommandsFilter} filter 
    * @returns {Promise}
    * 
    * @memberof rest
@@ -176,8 +210,16 @@ class rest {
   /**
    * Creates new device command, stores and returns command with generated id.
    * 
+   * @typedef CommandParams
+   * @property {String} command
+   * @property {String} timestamp
+   * @property {String} parameters
+   * @property {Number} lifetime
+   * @property {String} status
+   * @property {String} result
+   * 
    * @param {String} id 
-   * @param {Object} commandParams 
+   * @param {CommandParams} commandParams 
    * @returns {Promise}
    * 
    * @memberof rest
@@ -196,8 +238,14 @@ class rest {
    * If no commands are received within the waitTimeout period, the server returns an empty response. 
    * In this case, to continue polling, the client should repeat the call with the same timestamp value.
    * 
+   * @typedef PollParams
+   * @property {String} names - Command names
+   * @property {String} timestamp - Timestamp to start from
+   * @property {Number} waitTimeout - Wait timeout in seconds
+   * @property {Number} limit - Limit number of commands
+   * 
    * @param {String} id 
-   * @param {Object} pollParams 
+   * @param {PollParams} pollParams 
    * @returns {Promise}
    * 
    * @memberof rest
@@ -229,7 +277,7 @@ class rest {
    * 
    * @param {String} deviceId 
    * @param {String} commandId 
-   * @param {String} commandParams
+   * @param {CommandParams} commandParams
    * @returns {Promise}
    * 
    * @memberof rest
@@ -253,15 +301,17 @@ class rest {
    * 
    * @param {String} deviceId 
    * @param {String} commandId 
-   * @param {Object} pollParams 
+   * @param {Number} waitTimeout 
    * @returns {Promise}
    * 
    * @memberof rest
    */
-  getDeviceCommandPoll(deviceId, commandId, pollParams) {
+  getDeviceCommandPoll(deviceId, commandId, waitTimeout = 30) {
     return sendRequest({
       endpoint : `/device/${deviceId}/command/${commandId}/poll`,
-      query : pollParams
+      query : { 
+        waitTimeout 
+      }
     });
   }
 
@@ -274,7 +324,13 @@ class rest {
    * If no notifications are received within the waitTimeout period, the server returns an empty response. 
    * In this case, to continue polling, the client should repeat the call with the same timestamp value.
    * 
-   * @param {Object} pollParams 
+   * @typedef DevicesNotificationPollParams
+   * @property {Number} waitTimeout - Wait timeout
+   * @property {String} deviceIds - Device ids
+   * @property {String} names - Notification names
+   * @property {String} timestamp - Timestamp to start from
+   * 
+   * @param {DevicesNotificationPollParams} pollParams 
    * @returns {Promise}
    * 
    * @memberof rest
@@ -289,8 +345,17 @@ class rest {
   /**
    * Returns notifications by provided parameters
    * 
+   * @typedef DeviceNotificationsFilter
+   * @property {String} start - Start timestamp
+   * @property {String} end - End timestamp
+   * @property {String} notification - Notification name
+   * @property {String} sortField - Notification name
+   * @property {String} sortOrder - Sort order
+   * @property {Number} take - Limit param
+   * @property {Number} skip - Skip param
+   * 
    * @param {String} deviceId 
-   * @param {Object} filter 
+   * @param {DeviceNotificationsFilter} filter 
    * @returns {Promise}
    * 
    * @memberof rest
@@ -305,8 +370,13 @@ class rest {
   /**
    * Creates notification
    * 
+   * @typedef DeviceNotification
+   * @property {String} notification
+   * @property {String} timestamp
+   * @property {String} parameters
+   * 
    * @param {String} deviceId 
-   * @param {Object} notification 
+   * @param {DeviceNotification} notification 
    * @returns {Promise}
    * 
    * @memberof rest
@@ -327,9 +397,13 @@ class rest {
    * In the case when no notifications were found, the method blocks until new notification is received. 
    * If no notifications are received within the waitTimeout period, the server returns an empty response. 
    * In this case, to continue polling, the client should repeat the call with the same timestamp value.
+   * @typedef DeviceNotificationPollFilter
+   * @property {Number} waitTimeout - Wait timeout
+   * @property {String} names - Notification names
+   * @property {String} timestamp - Timestamp to start from
    * 
    * @param {String} deviceId 
-   * @param {Object} filter 
+   * @param {DeviceNotificationPollFilter} filter 
    * @returns {Promise}
    * 
    * @memberof rest
@@ -359,7 +433,11 @@ class rest {
   /**
    * Authenticates a user and returns a session-level JWT token.
    * 
-   * @param {Object} loginInfo 
+   * @typedef LoginInfo
+   * @property {String} login
+   * @property {String} password
+   * 
+   * @param {LoginInfo} loginInfo 
    * @returns {Promise}
    * 
    * @memberof rest
@@ -375,7 +453,14 @@ class rest {
   /**
    * Authenticates by system params and returns a session-level JWT token.
    * 
-   * @param {Object} systemParams 
+   * @typedef SystemParams
+   * @property {Number} userId
+   * @property {String[]} actions
+   * @property {String[]} networkIds
+   * @property {String[]} deviceIds
+   * @property {String} expiration
+   * 
+   * @param {SystemParams} systemParams 
    * @returns {Promise}
    * 
    * @memberof rest
@@ -409,7 +494,15 @@ class rest {
   /**
    * Gets list of device networks the client has access to.
    * 
-   * @param {Object} filter 
+   * @typedef NetworkFilter
+   * @property {String} name - Filter by network name.
+   * @property {String} namePattern - Filter by network name pattern.
+   * @property {String} sortField - Result list sort field.
+   * @property {String} sortOrder - Result list sort order.
+   * @property {Number} take - Number of records to take from the result list.
+   * @property {Number} skip - Number of records to skip from the result list.
+   * 
+   * @param {NetworkFilter} filter 
    * @returns {Promise}
    * 
    * @memberof rest
@@ -424,7 +517,12 @@ class rest {
   /**
    * Creates new device network.
    * 
-   * @param {Object} networkParams 
+   * @typedef NetworkParams
+   * @property {Number} id
+   * @property {String} name
+   * @property {String} description
+   * 
+   * @param {NetworkParams} networkParams 
    * @returns {Promise}
    * 
    * @memberof rest
@@ -452,10 +550,16 @@ class rest {
   }
 
   /**
-   * Gets information about device network and its devices.
+   * Updates an existing device network.
+   * 
+   * @typedef NetworkUpdateParams
+   * @property {Number} id
+   * @property {String} key
+   * @property {String} name
+   * @property {String} description
    * 
    * @param {String} networkId 
-   * @param {Object} networkParams 
+   * @param {NetworkUpdateParams} networkParams 
    * @returns {Promise}
    * 
    * @memberof rest
@@ -486,7 +590,17 @@ class rest {
   /**
    * Gets list of users.
    * 
-   * @param {Object} filter 
+   * @typedef UsersFilter
+   * @property {String} login - Filter by user login.
+   * @property {String} loginPattern - Filter by user login pattern.
+   * @property {Number} role - Filter by user role. 0 is Administrator, 1 is Client.
+   * @property {Number} status - Filter by user status. 0 is Active, 1 is Locked Out, 2 is Disabled.
+   * @property {String} sortField - Result list sort field.
+   * @property {String} sortOrder - Result list sort order. Available values are ASC and DESC.
+   * @property {Number} take - Number of records to take from the result list.
+   * @property {Number} skip - Number of records to skip from the result list.
+   * 
+   * @param {UsersFilter} filter 
    * @returns {Promise}
    * 
    * @memberof rest
@@ -500,7 +614,16 @@ class rest {
   /**
    * Creates new user.
    * 
-   * @param {Object} userParams 
+   * @typedef UserParams
+   * @property {String} login
+   * @property {Number} role
+   * @property {Number} status
+   * @property {String} password
+   * @property {String} oldPassword
+   * @property {String} data
+   * @property {Boolean} introReviewed
+   * 
+   * @param {UserParams} userParams 
    * @returns {Promise}
    * 
    * @memberof rest
@@ -529,7 +652,7 @@ class rest {
   /**
    * Updates current user.
    * 
-   * @param {Object} userParams 
+   * @param {UserParams} userParams 
    * @returns {Promise}
    * 
    * @memberof rest
@@ -562,7 +685,7 @@ class rest {
    * Update user.
    * 
    * @param {String} userId 
-   * @param {Object} userParams 
+   * @param {UserParams} userParams 
    * @returns 
    * 
    * @memberof rest
