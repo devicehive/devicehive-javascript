@@ -1,0 +1,16 @@
+{
+  "name": "devicehive-node-library",
+  "version": "1.0.0",
+  "engines": {
+    "node": ">=6.10.0"
+  },
+  "description": "DeviceHive Node.JS Library",
+  "main": "index.js",
+  "scripts": {},
+  "author": "Nikita Liashenko <neiket@hotmail.com>",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "request": "^2.81.0",
+    "request-promise-native": "^1.0.4"
+  }
+}
