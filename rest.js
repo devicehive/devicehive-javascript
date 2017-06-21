@@ -16,7 +16,8 @@ class rest {
    */
   getInfo() {
     return sendRequest({
-      endpoint : `/info`
+      endpoint : `/info`,
+      authorize : false
     });
   }
 
@@ -487,7 +488,8 @@ class rest {
       method : `POST`,
       body : {
         refreshToken
-      }
+      },
+      authorize : false
     });
   }
 
