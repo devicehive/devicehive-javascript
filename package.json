@@ -1,6 +1,6 @@
 {
-  "name": "devicehive-node-library",
-  "version": "1.0.0",
+  "name": "devicehive",
+  "version": "1.0.1",
   "engines": {
     "node": ">=6.10.0"
   },

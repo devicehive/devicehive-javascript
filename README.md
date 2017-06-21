@@ -5,14 +5,15 @@
 DeviceHive Node Library
 
 ## Installation
+Package is published in npm - https://www.npmjs.com/package/devicehive
 
 NPM >= 5.0.0
 
-`npm i devicehive-node`
+`npm i devicehive`
 
 NPM < 5.0.0
 
-`npm i -S devicehive-node`
+`npm i -S devicehive`
 
 ## API Reference
 
