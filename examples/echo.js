@@ -25,15 +25,25 @@ dhNode.refreshToken(refreshToken)
 function saveDevice() {
     dhNode.saveDevice(deviceId, {name : deviceId})
         .then(res => {
-             console.log('Device saved, start polling');
-             poll()
+             console.log('Device saved');
+             getInfo()
          })
         .catch(console.error);
 }
 
+// getting server timestamp to start polling with this time
+function getInfo() {
+    dhNode.getInfo()
+        .then(info => {
+            console.log('Info received, start polling...');
+            timestamp = info['serverTimestamp'];
+            poll(timestamp);
+        })
+        .catch(console.error);
+}
+
 // poll commands from server
-function poll() {
-    var timestamp = undefined
+function poll(timestamp) {
     dhNode.getDevicesCommandPoll({
         timestamp : timestamp,
         deviceIds: deviceId
@@ -60,7 +70,7 @@ function poll() {
             }
         }
         // do it in infinite loop
-        poll();
+        poll(timestamp);
      })
     .catch(console.error);
 }
