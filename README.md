@@ -4,6 +4,8 @@
 
 DeviceHive Node Library
 
+#THIS LIBRARY IS STILL IN DEVELOPMENT.
+
 ## Installation
 Package is published in npm - https://www.npmjs.com/package/devicehive
 
