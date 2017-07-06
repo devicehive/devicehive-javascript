@@ -12,5 +12,6 @@
   "dependencies": {
     "request": "^2.81.0",
     "request-promise-native": "^1.0.4"
-  }
+  },
+  "devDependencies": {}
 }

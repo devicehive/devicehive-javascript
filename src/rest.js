@@ -560,8 +560,6 @@ function refreshToken(refreshToken) {
       authorize : false
     });
   } else {
-    console.log(access);
-    console.log(refresh);
     return sendRequest({
       apiURL,
       endpoint : `/token/refresh`,
@@ -899,7 +897,6 @@ function init(serverUrl){
 function callAuthorized(func, ...args){
   return func(...args)
     .catch(error => {
-      console.log(error.message);
       if (error.statusCode === 401){
         return refreshToken()
           .then(() => func(...args))
