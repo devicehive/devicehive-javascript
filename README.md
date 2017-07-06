@@ -778,10 +778,10 @@ new DeviceHive({
 
 | Name | Type | Description |
 | --- | --- | --- |
-| name | `String` |
-| data| `String` |
-| networkId | `Number` |
-| blocked | `Boolean` |
+| name | `String` | device name |
+| data | `String` | device data |
+| networkId | `Number` | device network id |
+| blocked | `Boolean` | device blocked state |
 
 <a name="DeviceHive..UsersFilter"></a>
 ### DeviceHive~UsersFilter : `Object`
@@ -1159,12 +1159,12 @@ deviceInstance.unsubscribeNotifications({/*test notification parameters*/})
 
 | Name | Type | Description |
 | --- | --- | --- |
-| command | `String` |
-| timestamp | `String` |
-| parameters | `String` |
-| lifetime | `Number` | 
-| status | `String` |
-| result | `String` |
+| command | `String` | command name |
+| timestamp | `String` | command timestamp |
+| parameters | `String` | command parameters |
+| lifetime | `Number` | command lifetime |
+| status | `String` | command status |
+| result | `String` | command result |
 
 <a name="Device..NotificationParams"></a>
 ### Device~NotificationParams : `Object`
@@ -1173,8 +1173,8 @@ deviceInstance.unsubscribeNotifications({/*test notification parameters*/})
 
 | Name | Type | Description |
 | --- | --- | --- |
-| timestamp | `String` |
-| parameters | `String` |
+| timestamp | `String` | notification timestamp |
+| parameters | `String` | notification parameters |
 
 <a name="Device..CommandPollParams"></a>
 ### Device~CommandPollParams : `Object`
