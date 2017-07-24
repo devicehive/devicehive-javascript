@@ -1,5 +1,3 @@
-const rest = require(`./rest`);
+const DeviceHive = require(`./lib/DeviceHive`);
 
-module.exports = {
-  rest
-};
+module.exports = DeviceHive;
