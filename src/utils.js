@@ -1,4 +1,19 @@
-const request = require(`request-promise-native`);
+require(`isomorphic-fetch`);
+
+/**
+ * Function to create url with query params
+ * 
+ * @param {String} urlString 
+ * @param {Object} [query={}] 
+ * @returns 
+ */
+function urlWithQuery(urlString, query = {}){
+  let url = `${urlString}?`;
+  Object.keys(query).forEach(key => {
+    url += `${key}=${query[key]}&`;
+  });
+  return url.slice(0, -1);
+}
 
 /**
  * Send request with params to particular endpoint
@@ -7,29 +22,35 @@ const request = require(`request-promise-native`);
  * @returns {Promise}
  */
 function sendRequest({ apiURL, access, endpoint, query, body, method = `GET`, authorize = true }){
-  const fullURL = apiURL + endpoint;
-  const options = {
-    uri : fullURL,
+
+  let fullURL = apiURL + endpoint;
+
+  if (query){
+    fullURL = urlWithQuery(fullURL, query);
+  }
+  const params = {
     method,
-    headers : {},
-    json : true
-  };
-
-  if (query) {
-    options.qs = query;
+    headers : {}
   }
 
-  if (body) {
-    options.body = body;
-    options.headers = {
-      Accept : `application/json`,
-      'Content-Type' : `application/json`
-    };
+  if (body){
+    params.body = JSON.stringify(body)
+    params.headers[`Accept`] = `application/json`;
+    params.headers[`Content-Type`] = `application/json`;
   }
-  if (authorize) {
-    options.headers.Authorization = `Bearer ${access}`;
+  
+  if (authorize){
+    params.headers.Authorization = `Bearer ${access}`;
   }
-  return request(options);
+  return fetch(fullURL, params)
+    .then(response => response.text().then(text => ({ json : text ? JSON.parse(text) : {}, response })))
+    .then(({ json, response }) => {
+      if (!response.ok){
+        return Promise.reject(json);
+      }
+      return json;
+    })
+
 }
 
 module.exports = sendRequest;
