@@ -885,6 +885,7 @@ function deleteUsersNetwork(userId, networkId){
  */
 function init(serverUrl){
   apiURL = serverUrl;
+  return Promise.resolve(this);
 }
 
 /**
