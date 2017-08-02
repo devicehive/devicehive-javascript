@@ -10,8 +10,7 @@
   "author": "Nikita Liashenko <neiket@hotmail.com>",
   "license": "Apache-2.0",
   "dependencies": {
-    "request": "^2.81.0",
-    "request-promise-native": "^1.0.4"
+    "isomorphic-fetch": "^2.2.1"
   },
   "devDependencies": {}
 }

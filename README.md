@@ -4,6 +4,12 @@
 
 DeviceHive Node Library
 
+In case yu want to use it in the browser:
+1. Clone repo;
+2. Install `webpack`;
+3. Inside repo folder run `webpack`;
+4. Get `bundle.js` in `dist` folder. 
+
 ## Installation
 Package is published in npm - https://www.npmjs.com/package/devicehive
 
