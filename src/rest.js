@@ -1,4 +1,4 @@
-const sendRequest = require(`./utils.js`);
+const { sendRequest } = require(`./utils.js`);
 let apiURL, access, refresh;
 
 /**
@@ -531,8 +531,6 @@ function createTokenBySystemParams(systemParams) {
     body : systemParams
   })
   .then(({ accessToken, refreshToken }) => {
-    access = accessToken;
-    refresh = refreshToken;
     return {
       accessToken,
       refreshToken

@@ -1,3 +1,5 @@
+let WS, apiURL, access, refresh, socket;
+let { sendWS } = require(`./utils.js`);
 function isNode(){
   try {
     return typeof WebSocket === `undefined`;
@@ -5,7 +7,6 @@ function isNode(){
     return false;
   }
 }
-let WS, apiURL, access, refresh, socket;
 
 if (isNode()){
   try {
@@ -18,6 +19,7 @@ if (isNode()){
 function init(serverURL){
   apiURL = serverURL;
   socket = new WS(serverURL);
+  sendWS = sendWS.bind(this, socket);
   return new Promise((resolve) => {
     socket.addEventListener(`open`, (event) => {
       resolve(this);
@@ -25,90 +27,160 @@ function init(serverURL){
   })
 }
 
-function getDevices({ name, namePattern, networkId, networkName, sortField, sortOrder, take, skip }){
-  console.log(`devices`)
-  return new Promise((resolve, reject) => {
-    socket.send(JSON.stringify({
-      action : `device/list`,
-      name,
-      namePattern,
-      networkId,
-      networkName,
-      sortField,
-      sortOrder,
-      take,
-      skip
-    }))
-
-    const devicesListListener = (event) => {
-      const messageData = JSON.parse(event.data);
-      if (messageData.action === `device/list`){
-        if (messageData.status === `success`){
-          socket.removeEventListener(`message`, devicesListListener);
-          resolve(messageData.devices);
-        } else {
-          socket.removeEventListener(`message`, devicesListListener);
-          reject(messageData);
-        }
-      }
-    }
-
-    socket.addEventListener(`message`, devicesListListener);
+function getInfo(){
+  return sendWS({
+    action : `server/info`
   })
+  .then(messageData => messageData.info);
+}
+
+function getDevices(filter){
+  return sendWS(Object.assign({
+    action : `device/list`
+  }, filter))
+  .then(messageData => messageData.devices);
 }
 
 function setTokens({ accessToken, refreshToken }){
   access = accessToken;
   refresh = refreshToken;
-  return new Promise((resolve, reject) => {
-    socket.send(JSON.stringify({
-      action : `authenticate`,
-      token : accessToken
-    }))
-    console.log(`test3`);
-    const authenticateListener = (event) => {
-      const messageData = JSON.parse(event.data);
-      if (messageData.action === `authenticate`){
-        if (messageData.status === `success`){
-          console.log(`test4`);
-          socket.removeEventListener(`message`, authenticateListener);
-          resolve();
-        } else {
-          socket.removeEventListener(`message`, authenticateListener);
-          reject(messageData);
-        }
-      }
-    }
-
-    socket.addEventListener(`message`, authenticateListener);
+  return sendWS({
+    action : `authenticate`,
+    token : accessToken
   })
 }
 
-function refreshToken(){}
+function refreshToken(refreshToken){
+  return sendWS({
+    action : `token/refresh`,
+    refreshToken
+  })
+}
 
 function createTokenByLoginInfo(loginInfo){
-  return new Promise((resolve, reject) => {
-    socket.send(JSON.stringify({
-      action : `token`,
-      login : loginInfo.login,
-      password : loginInfo.password
-    }))
+  return sendWS({
+    action : `token`,
+    login : loginInfo.login,
+    password : loginInfo.password
+  })
+}
 
-    const tokenLoginInfoListener = (event) => {
-      const messageData = JSON.parse(event.data);
-      console.log(messageData);
-      if (messageData.action === `token`){
-        if (messageData.status === `success`){
-          socket.removeEventListener(`message`, tokenLoginInfoListener);
-          resolve(messageData); 
-        } else {
-          socket.removeEventListener(`message`, tokenLoginInfoListener);
-          reject(messageData);
-        }
-      }
-    }
+function getInfoConfigCluster(){
+  return sendWS({
+    action : `cluster/info`
+  })
+  .then(messageData => messageData.clusterInfo);
+}
 
-    socket.addEventListener(`message`, tokenLoginInfoListener);
+function createTokenBySystemParams(systemParams){
+  return sendWS({
+    action : `token/create`,
+    payload : systemParams
+  })
+}
+
+function getConfiguration(name){
+  return sendWS({
+    action : `configuration/get`,
+    name
+  })
+  .then(messageData => messageData.configuration)
+}
+
+function saveConfiguration(name, value){
+  return sendWS({
+    action : `configuration/put`,
+    name,
+    value
+  })
+  .then(messageData => messageData.configuration)
+}
+
+function deleteConfiguration(name){
+  return sendWS({
+    action : `configuration/delete`,
+    name
+  })
+}
+
+function getNetworks(filter){
+  return sendWS(Object.assign({
+    action : `network/list`
+  }, filter))
+  .then(messageData => messageData.networks);
+}
+
+function getNetwork(id){
+  return sendWS({
+    action : `network/get`,
+    id
+  })
+  .then(messageData => messageData.network);
+}
+
+function deleteNetwork(id){
+  return sendWS({
+    action : `network/delete`,
+    id
+  })
+}
+
+function createNetwork(network){
+  return sendWS({
+    action : `network/insert`,
+    network
+  })
+  .then(messageData => messageData.network);
+}
+
+function deleteDevice(deviceId){
+  return sendWS({
+    action : `device/delete`,
+    deviceId
+  })
+}
+
+function getDevice(deviceId){
+  return sendWS({
+    action : `device/get`,
+    deviceId
+  })
+  .then(messageData => messageData.device);
+}
+
+function saveDevice(id, device){
+  return sendWS({
+    action : `device/save`,
+    device
+  })
+}
+
+function getCurrentUser(){
+  return sendWS({
+    action : `user/getCurrent`
+  })
+  .then(messageData => messageData.current);
+}
+
+function getUsers(filter){
+  return sendWS(Object.assign({
+    action : `user/list`
+  }, filter))
+  .then(messageData => messageData.users);
+}
+
+function createUser(user){
+  return sendWS({
+    action : `user/insert`,
+    user
+  })
+  .then(messageData => messageData.user);
+}
+
+function deleteUser(userId){
+  return sendWS({
+    action : `user/delete`,
+    userId
   })
 }
 
@@ -118,9 +190,26 @@ function callAuthorized(func, ...args){
 
 module.exports = {
   init,
-  getDevices,
   callAuthorized,
   createTokenByLoginInfo,
   setTokens,
-  refreshToken
+  refreshToken,
+  getInfo,
+  getInfoConfigCluster,
+  createTokenBySystemParams,
+  getConfiguration,
+  saveConfiguration,
+  deleteConfiguration,
+  getNetworks,
+  getNetwork,
+  deleteNetwork,
+  createNetwork,
+  getDevices,
+  deleteDevice,
+  getDevice,
+  saveDevice,
+  getCurrentUser,
+  getUsers,
+  createUser,
+  deleteUser
 }
