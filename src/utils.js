@@ -55,16 +55,20 @@ function sendRequest({ apiURL, access, endpoint, query, body, method = `GET`, au
 
 function sendWS(socket, params){
   return new Promise((resolve, reject) => {
+    if (!params.requestId){
+      params.requestId = null;
+    }
     socket.send(JSON.stringify(params));
-
     const listener = (event) => {
       const messageData = JSON.parse(event.data);
       if (messageData.action === params.action){
-        socket.removeEventListener(`message`, listener);
-        if (messageData.status === `success`){
-          resolve(messageData);
-        } else {
-          reject(messageData);
+        if (messageData.requestId === params.requestId){
+          socket.removeEventListener(`message`, listener);
+          if (messageData.status === `success`){
+            resolve(messageData);
+          } else {
+            reject(messageData);
+          }
         }
       }
     }

@@ -21,5 +21,6 @@ function getAPI(){
 
 module.exports = {
   init,
-  getAPI
+  getAPI,
+  type
 }

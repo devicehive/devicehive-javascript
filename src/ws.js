@@ -1,4 +1,6 @@
 let WS, apiURL, access, refresh, socket;
+const commandsSubscribers = {};
+const notificationsSubscribers = {};
 let { sendWS } = require(`./utils.js`);
 function isNode(){
   try {
@@ -184,6 +186,91 @@ function deleteUser(userId){
   })
 }
 
+function commandsSubscribe(commandFilter, subscriber){
+  return new Promise((resolve, reject) => {
+    let subscriptionId;
+    sendWS(Object.assign({
+      action : `command/subscribe`,
+      requestId : JSON.stringify(commandFilter)
+    }, commandFilter))
+    .then(messageData => messageData.subscriptionId)
+    .then(id => {
+      subscriptionId = id;
+
+      const commandsSubscriber = (event) => {
+        const messageData = JSON.parse(event.data);
+        if (messageData.action === `command/insert` && messageData.subscriptionId === subscriptionId){
+          subscriber(messageData.command);
+        }
+      }
+
+      commandsSubscribers[JSON.stringify(commandFilter)] = {
+        handler : commandsSubscriber,
+        subscriptionId
+      };
+
+      socket.addEventListener(`message`, commandsSubscriber);
+      resolve();
+    })
+  })
+}
+
+function commandsUnsubscribe(commandFilter){
+  const subscriptionId = commandsSubscribers[JSON.stringify(commandFilter)].subscriptionId;
+  return sendWS({
+    action : `command/unsubscribe`,
+    subscriptionId,
+    requestId : JSON.stringify(commandFilter)
+  })
+  .then((messageData) => {
+    delete commandsSubscribers[JSON.stringify(commandFilter)];
+    return messageData;
+  })
+}
+
+function notificationsSubscribe(notificationFilter, subscriber){
+  return new Promise((resolve, reject) => {
+    let subscriptionId;
+    sendWS(Object.assign({
+      action : `notification/subscribe`,
+      requestId : JSON.stringify(notificationFilter)
+    }, notificationFilter))
+    .then(messageData => messageData.subscriptionId)
+    .then(id => {
+      subscriptionId = id;
+      
+      const notificationsSubscriber = (event) => {
+        const messageData = JSON.parse(event.data);
+        
+        if (messageData.action === `notification/insert` && messageData.subscriptionId === subscriptionId){
+          subscriber(messageData.notification);
+        }
+      }
+
+      notificationsSubscribers[JSON.stringify(notificationFilter)] = {
+        handler : notificationsSubscriber,
+        subscriptionId
+      };
+
+      socket.addEventListener(`message`, notificationsSubscriber);
+      resolve();
+    })
+  })
+}
+
+function notificationsUnsubscribe(notificationFilter){
+  const subscriptionId = notificationsSubscribers[JSON.stringify(notificationFilter)].subscriptionId;
+  return sendWS({
+    action : `notification/unsubscribe`,
+    subscriptionId,
+    requestId : JSON.stringify(notificationFilter)
+  })
+  .then((messageData) => {
+    delete notificationsSubscribers[JSON.stringify(notificationFilter)];
+    return messageData;
+  })
+}
+
 function callAuthorized(func, ...args){
   return func(...args);
 }
@@ -211,5 +298,9 @@ module.exports = {
   getCurrentUser,
   getUsers,
   createUser,
-  deleteUser
+  deleteUser,
+  commandsSubscribe,
+  commandsUnsubscribe,
+  notificationsSubscribe,
+  notificationsUnsubscribe
 }
