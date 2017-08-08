@@ -889,8 +889,8 @@ function init(serverUrl){
 /**
  * Function to check authorization.
  * 
- * @param {any} func 
- * @param {any} args 
+ * @param {Function} func 
+ * @param {Array} args 
  * @returns 
  */
 function callAuthorized(func, ...args){

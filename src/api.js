@@ -2,6 +2,12 @@ const rest = require(`./rest`);
 const ws = require(`./ws`);
 let type;
 
+/**
+ * Initialize API based on protocol and URL
+ * 
+ * @param {String} serverURL 
+ * @returns 
+ */
 function init(serverURL){
   type = serverURL.slice(0, 2);
   if (type === `ht`){
@@ -11,6 +17,11 @@ function init(serverURL){
   }
 }
 
+/**
+ * Returns current API
+ * 
+ * @returns 
+ */
 function getAPI(){
   if (type === `ht`){
     return rest;
