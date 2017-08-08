@@ -120,12 +120,12 @@ getInfoAsyncAwait(`login`, `password`)
       * [.subscribeNotifications(deviceIds, subscriber, notificationFilter)](#DeviceHive+subscribeNotifications) ⇒ `Promise`
       * [.unsubscribeNotifications(deviceIds, notificationFilter)](#DeviceHive+unsubscribeNotifications) ⇒ `Promise`
     * _inner_
-      * [~NetworkFilter](#DeviceHive..NetworkFilter) : `Object`
-      * [~DeviceFilter](#DeviceHive..DeviceFilter) : `Object`
-      * [~DeviceParams](#DeviceHive..DeviceParams) : `Object`
-      * [~UsersFilter](#DeviceHive..UsersFilter) : `Object`
-      * [~DeviceCommandPollFilter](#DeviceHive~DeviceCommandPollFilter) : `Object`
-      * [~DevicesNotificationPollFilter](#DeviceHive~DevicesNotificationPollFilter) : `Object`
+      * [~NetworkFilter](#DeviceHive..NetworkFilter) : `Struct`
+      * [~DeviceFilter](#DeviceHive..DeviceFilter) : `Struct`
+      * [~DeviceParams](#DeviceHive..DeviceParams) : `Struct`
+      * [~UsersFilter](#DeviceHive..UsersFilter) : `Struct`
+      * [~DeviceCommandPollFilter](#DeviceHive~DeviceCommandPollFilter) : `Struct`
+      * [~DevicesNotificationPollFilter](#DeviceHive~DevicesNotificationPollFilter) : `Struct`
   * [class Device](#Device)
     * [new Device({ id, name = id, data = null, networkId = null, isBlocked = false })](#new_Device)
     * _instance_
@@ -149,12 +149,12 @@ getInfoAsyncAwait(`login`, `password`)
       * [.subscribeNotifications(subscriber, notificationFilter)](#Device+subscribeNotifications) ⇒ `Promise`
       * [.unsubscribeNotifications(notificationFilter)](#Device+unsubscribeNotifications) ⇒ `Promise`
     * _inner_
-      * [~DeviceCommandsFilter](#Device..DeviceCommandsFilter) : `Object`
-      * [~DeviceNotificationsFilter](#Device..DeviceNotificationsFilter) : `Object`
-      * [~CommandParams](#Device~CommandParams) : `Object`
-      * [~NotificationParams](#Device~NotificationParams) : `Object`
-      * [~CommandPollParams](#Device~CommandPollParams) : `Object`
-      * [~NotificationPollParams](#Device~NotificationPollParams) : `Object`
+      * [~DeviceCommandsFilter](#Device..DeviceCommandsFilter) : `Struct`
+      * [~DeviceNotificationsFilter](#Device..DeviceNotificationsFilter) : `Struct`
+      * [~CommandParams](#Device~CommandParams) : `Struct`
+      * [~NotificationParams](#Device~NotificationParams) : `Struct`
+      * [~CommandPollParams](#Device~CommandPollParams) : `Struct`
+      * [~NotificationPollParams](#Device~NotificationPollParams) : `Struct`
   * [class DeviceCommand](#DeviceCommand)
     * [new DeviceCommand({ id, command, timestamp, userId, deviceId, parameters = null, lifetime = 0, status = null, result = null })](#new_DeviceCommand)
     * _instance_
@@ -444,7 +444,7 @@ new DeviceHive({
    accessToken : `accessToken`,
    refreshToken : `refreshToken`
 })
-.then(deviceHive => deviceHive.listNetworks({/*params*/}))
+.then(deviceHive => deviceHive.listNetworks({/*NetworkFilter*/}))
 .then(networks => ...)
 ```
 
@@ -586,7 +586,7 @@ new DeviceHive({
    accessToken : `accessToken`,
    refreshToken : `refreshToken`
 })
-.then(deviceHive => deviceHive.putDevice(`testId`, {/*params*/}))
+.then(deviceHive => deviceHive.putDevice(`testId`, {/*DeviceParams*/}))
 .then(() => ...)
 ```
 
@@ -622,7 +622,7 @@ new DeviceHive({
    accessToken : `accessToken`,
    refreshToken : `refreshToken`
 })
-.then(deviceHive => deviceHive.getUsers({/*params*/}))
+.then(deviceHive => deviceHive.getUsers({/*UsersFilter*/}))
 .then(users => ...)
 ```
 
@@ -642,7 +642,7 @@ new DeviceHive({
    accessToken : `accessToken`,
    refreshToken : `refreshToken`
 })
-.then(deviceHive => deviceHive.createUser({/*params*/}))
+.then(deviceHive => deviceHive.createUser({/*UserParams*/}))
 .then(createdUser => ...)
 ```
 
@@ -684,7 +684,7 @@ new DeviceHive({
    accessToken : `accessToken`,
    refreshToken : `refreshToken`
 })
-.then(deviceHive => deviceHive.subscribeCommands([`testId1`, `testId2`], /*function (){}*/, /*filter*/))
+.then(deviceHive => deviceHive.subscribeCommands([`testId1`, `testId2`], /*function (){}*/, /*DeviceCommandPollFilter*/))
 ```
 
 <a name="DeviceHive+unsubscribeCommands"></a>
@@ -704,7 +704,7 @@ new DeviceHive({
    accessToken : `accessToken`,
    refreshToken : `refreshToken`
 })
-.then(deviceHive => deviceHive.unsubscribeCommands([`testId1`, `testId2`], /*filter*/))
+.then(deviceHive => deviceHive.unsubscribeCommands([`testId1`, `testId2`], /*DeviceCommandPollFilter*/))
 ```
 
 <a name="DeviceHive+subscribeNotifications"></a>
@@ -725,7 +725,7 @@ new DeviceHive({
    accessToken : `accessToken`,
    refreshToken : `refreshToken`
 })
-.then(deviceHive => deviceHive.subscribeNotifications([`testId1`, `testId2`], /*function (){}*/, /*filter*/))
+.then(deviceHive => deviceHive.subscribeNotifications([`testId1`, `testId2`], /*function (){}*/, /*DeviceNotificationPollFilter*/))
 ```
 
 <a name="DeviceHive+unsubscribeNotifications"></a>
@@ -745,11 +745,11 @@ new DeviceHive({
    accessToken : `accessToken`,
    refreshToken : `refreshToken`
 })
-.then(deviceHive => deviceHive.unsubscribeNotifications([`testId1`, `testId2`], /*filter*/))
+.then(deviceHive => deviceHive.unsubscribeNotifications([`testId1`, `testId2`], /*DeviceNotificationPollFilter*/))
 ```
 
 <a name="DeviceHive..NetworkFilter"></a>
-### DeviceHive~NetworkFilter : `Object`
+### DeviceHive~NetworkFilter : `Struct`
 
 **Properties**
 
@@ -763,7 +763,7 @@ new DeviceHive({
 | skip | `Number` | Number of records to skip from the result list. |
 
 <a name="DeviceHive..DeviceFilter"></a>
-### DeviceHive~DeviceFilter : `Object`
+### DeviceHive~DeviceFilter : `Struct`
 
 **Properties**
 
@@ -779,7 +779,7 @@ new DeviceHive({
 | skip | `Number` | number of records to skip from the result list |
 
 <a name="DeviceHive..DeviceParams"></a>
-### DeviceHive~DeviceParams : `Object`
+### DeviceHive~DeviceParams : `Struct`
 
 **Properties**
 
@@ -791,7 +791,7 @@ new DeviceHive({
 | blocked | `Boolean` | device blocked state |
 
 <a name="DeviceHive..UsersFilter"></a>
-### DeviceHive~UsersFilter : `Object`
+### DeviceHive~UsersFilter : `Struct`
 
 **Properties**
 
@@ -806,8 +806,22 @@ new DeviceHive({
 | take | `Number` | Number of records to take from the result list. |
 | skip | `Number` | Number of records to skip from the result list. |
 
+<a name="#DeviceHive..UserParams"></a>
+### DeviceHive~UserParams : `Struct`
+
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| login | `String` | User login using during authentication. |
+| role | `Number` | User role. 0 is Administrator, 1 is Client. |
+| status | `Number` | User status. 0 is Active, 1 is Locked Out, 2 is Disabled. |
+| password | `String` | User password. |
+| oldPassword | `String` | User old password. Required for non-admin users |
+| data | `Object` | User data, a JSON object with an arbitrary structure. |
+
 <a name="DeviceHive..DeviceCommandPollFilter"></a>
-### DeviceHive~DeviceCommandPollFilter : `Object`
+### DeviceHive~DeviceCommandPollFilter : `Struct`
 
 **Properties**
 
@@ -819,7 +833,7 @@ new DeviceHive({
 | limit | `Number` | Limit number of commands |
 
 <a name="DeviceHive..DevicesNotificationPollFilter"></a>
-### DeviceHive~DevicesNotificationPollFilter : `Object`
+### DeviceHive~DevicesNotificationPollFilter : `Struct`
 
 **Properties**
 
@@ -1014,7 +1028,7 @@ Gets list of Commands that has been received in specified time range.
 Example:
 
 ```js
-deviceInstance.getCommands({/*filter*/})
+deviceInstance.getCommands({/*DeviceCommandsFilter*/})
 .then(commands => ...)
 ```
 
@@ -1029,7 +1043,7 @@ Returns Notifications by provided parameters
 Example:
 
 ```js
-deviceInstance.getNotifications({/*filter*/})
+deviceInstance.getNotifications({/*DeviceNotificationsFilter*/})
 .then(notifications => ...)
 ```
 
@@ -1048,7 +1062,7 @@ Also allows to pass callback for subscription on Command's updates.
 Example:
 
 ```js
-deviceInstance.sendCommand(`testName`, {/*test command parameters*/}, /*function(){}*/)
+deviceInstance.sendCommand(`testName`, {/*CommandParams*/}, /*function(){}*/)
 ```
 
 <a name="Device+sendNotification"></a>
@@ -1063,7 +1077,7 @@ Creates Notification.
 Example:
 
 ```js
-deviceInstance.sendNotification(`testName`, {/*test notification parameters*/})
+deviceInstance.sendNotification(`testName`, {/*NotificationParams*/})
 ```
 
 <a name="Device+subscribeCommands"></a>
@@ -1078,7 +1092,7 @@ Subscribes to all Commands for this Device by particular filter.
 Example:
 
 ```js
-deviceInstance.subscribeCommands(/*function(){}*/, {/*test command parameters*/})
+deviceInstance.subscribeCommands(/*function(){}*/, {/*CommandPollParams*/})
 .then(() => ...)
 ```
 
@@ -1093,7 +1107,7 @@ Unsubscribe from this Device's Commands by particular filter
 Example:
 
 ```js
-deviceInstance.unsubscribeCommands({/*test command parameters*/})
+deviceInstance.unsubscribeCommands({/*CommandPollParams*/})
 .then(() => ...)
 ```
 
@@ -1109,7 +1123,7 @@ Subscribes to all Notifications for this Device by particular filter.
 Example:
 
 ```js
-deviceInstance.subscribeNotifications(/*function(){}*/, {/*test notification parameters*/})
+deviceInstance.subscribeNotifications(/*function(){}*/, {/*NotificationPollParams*/})
 .then(() => ...)
 ```
 
@@ -1124,12 +1138,12 @@ Unsubscribe from this Device's Notifications by particular filter
 Example:
 
 ```js
-deviceInstance.unsubscribeNotifications({/*test notification parameters*/})
+deviceInstance.unsubscribeNotifications({/*NotificationPollParams*/})
 .then(() => ...)
 ```
 
 <a name="Device..DeviceCommandsFilter"></a>
-### Device~DeviceCommandsFilter : `Object`
+### Device~DeviceCommandsFilter : `Struct`
 
 **Properties**
 
@@ -1145,7 +1159,7 @@ deviceInstance.unsubscribeNotifications({/*test notification parameters*/})
 | skip | `Number` | Skip param |
 
 <a name="Device..DeviceNotificationsFilter"></a>
-### Device~DeviceNotificationsFilter : `Object`
+### Device~DeviceNotificationsFilter : `Struct`
 
 **Properties**
 
@@ -1160,7 +1174,7 @@ deviceInstance.unsubscribeNotifications({/*test notification parameters*/})
 | skip | `Number` | Skip param |
 
 <a name="Device..CommandParams"></a>
-### Device~CommandParams : `Object`
+### Device~CommandParams : `Struct`
 
 **Properties**
 
@@ -1174,7 +1188,7 @@ deviceInstance.unsubscribeNotifications({/*test notification parameters*/})
 | result | `String` | command result |
 
 <a name="Device..NotificationParams"></a>
-### Device~NotificationParams : `Object`
+### Device~NotificationParams : `Struct`
 
 **Properties**
 
@@ -1184,7 +1198,7 @@ deviceInstance.unsubscribeNotifications({/*test notification parameters*/})
 | parameters | `String` | notification parameters |
 
 <a name="Device..CommandPollParams"></a>
-### Device~CommandPollParams : `Object`
+### Device~CommandPollParams : `Struct`
 
 **Properties**
 
@@ -1196,7 +1210,7 @@ deviceInstance.unsubscribeNotifications({/*test notification parameters*/})
 | limit | `Number` | Limit number of commands |
 
 <a name="Device..NotificationPollParams"></a>
-### Device~NotificationPollParams : `Object`
+### Device~NotificationPollParams : `Struct`
 
 **Properties**
 

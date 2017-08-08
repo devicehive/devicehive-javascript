@@ -705,7 +705,8 @@ function getUsers(filter) {
   return sendRequest({
     apiURL,
     access,
-    endpoint : `/user`
+    endpoint : `/user`,
+    query : filter
   });
 }
 
@@ -900,8 +901,11 @@ function callAuthorized(func, ...args){
         return refreshToken()
           .then(() => func(...args))
       } else {
-        console.log(JSON.stringify(error));
-        throw new Error(error);
+        if (typeof error === `string`){
+          throw new Error(error);
+        } else {
+          throw error;
+        }
       }
     })
 }
