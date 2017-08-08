@@ -236,6 +236,7 @@ Public class accessable by default.
 ### new DeviceHive({ serverURL, login, password}) ⇒ `Promise`
 DeviceHive object constructor.
 Here you need to specify server url, user login and password.
+You could use either HTTP or WebSocket protocols.
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -247,7 +248,7 @@ Example:
 
 ```js
 new DeviceHive({
-   serverURL : `http://<host>:<port>/<path>`,
+   serverURL : `<protocol>://<host>:<port>/<path>`,
    login : `login`,
    password : `password`
 })
@@ -268,7 +269,7 @@ Example:
 
 ```js
 new DeviceHive({
-   serverURL : `http://<host>:<port>/<path>`,
+   serverURL : `<protocol>://<host>:<port>/<path>`,
    accessToken : `accessToken`,
    refreshToken : `refreshToken`
 })
@@ -289,7 +290,7 @@ Example:
 
 ```js
 new DeviceHive({
-   serverURL : `http://<host>:<port>/<path>`,
+   serverURL : `<protocol>://<host>:<port>/<path>`,
    accessToken : `accessToken`,
    refreshToken : `refreshToken`
 })
@@ -303,7 +304,7 @@ Example:
 
 ```js
 new DeviceHive({
-   serverURL : `http://<host>:<port>/<path>`,
+   serverURL : `<protocol>://<host>:<port>/<path>`,
    accessToken : `accessToken`,
    refreshToken : `refreshToken`
 })
@@ -319,7 +320,7 @@ Example:
 
 ```js
 new DeviceHive({
-   serverURL : `http://<host>:<port>/<path>`,
+   serverURL : `<protocol>://<host>:<port>/<path>`,
    accessToken : `accessToken`,
    refreshToken : `refreshToken`
 })
@@ -343,7 +344,7 @@ Example:
 
 ```js
 new DeviceHive({
-   serverURL : `http://<host>:<port>/<path>`,
+   serverURL : `<protocol>://<host>:<port>/<path>`,
    accessToken : `accessToken`,
    refreshToken : `refreshToken`
 })
@@ -359,7 +360,7 @@ Example:
 
 ```js
 new DeviceHive({
-   serverURL : `http://<host>:<port>/<path>`,
+   serverURL : `<protocol>://<host>:<port>/<path>`,
    accessToken : `accessToken`,
    refreshToken : `refreshToken`
 })
@@ -379,7 +380,7 @@ Example:
 
 ```js
 new DeviceHive({
-   serverURL : `http://<host>:<port>/<path>`,
+   serverURL : `<protocol>://<host>:<port>/<path>`,
    accessToken : `accessToken`,
    refreshToken : `refreshToken`
 })
@@ -400,7 +401,7 @@ Example:
 
 ```js
 new DeviceHive({
-   serverURL : `http://<host>:<port>/<path>`,
+   serverURL : `<protocol>://<host>:<port>/<path>`,
    accessToken : `accessToken`,
    refreshToken : `refreshToken`
 })
@@ -420,7 +421,7 @@ Example:
 
 ```js
 new DeviceHive({
-   serverURL : `http://<host>:<port>/<path>`,
+   serverURL : `<protocol>://<host>:<port>/<path>`,
    accessToken : `accessToken`,
    refreshToken : `refreshToken`
 })
@@ -439,7 +440,7 @@ Example:
 
 ```js
 new DeviceHive({
-   serverURL : `http://<host>:<port>/<path>`,
+   serverURL : `<protocol>://<host>:<port>/<path>`,
    accessToken : `accessToken`,
    refreshToken : `refreshToken`
 })
@@ -459,7 +460,7 @@ Example:
 
 ```js
 new DeviceHive({
-   serverURL : `http://<host>:<port>/<path>`,
+   serverURL : `<protocol>://<host>:<port>/<path>`,
    accessToken : `accessToken`,
    refreshToken : `refreshToken`
 })
@@ -479,7 +480,7 @@ Example:
 
 ```js
 new DeviceHive({
-   serverURL : `http://<host>:<port>/<path>`,
+   serverURL : `<protocol>://<host>:<port>/<path>`,
    accessToken : `accessToken`,
    refreshToken : `refreshToken`
 })
@@ -500,7 +501,7 @@ Example:
 
 ```js
 new DeviceHive({
-   serverURL : `http://<host>:<port>/<path>`,
+   serverURL : `<protocol>://<host>:<port>/<path>`,
    accessToken : `accessToken`,
    refreshToken : `refreshToken`
 })
@@ -520,7 +521,7 @@ Example:
 
 ```js
 new DeviceHive({
-   serverURL : `http://<host>:<port>/<path>`,
+   serverURL : `<protocol>://<host>:<port>/<path>`,
    accessToken : `accessToken`,
    refreshToken : `refreshToken`
 })
@@ -540,7 +541,7 @@ Example:
 
 ```js
 new DeviceHive({
-   serverURL : `http://<host>:<port>/<path>`,
+   serverURL : `<protocol>://<host>:<port>/<path>`,
    accessToken : `accessToken`,
    refreshToken : `refreshToken`
 })
@@ -560,7 +561,7 @@ Example:
 
 ```js
 new DeviceHive({
-   serverURL : `http://<host>:<port>/<path>`,
+   serverURL : `<protocol>://<host>:<port>/<path>`,
    accessToken : `accessToken`,
    refreshToken : `refreshToken`
 })
@@ -581,7 +582,7 @@ Example:
 
 ```js
 new DeviceHive({
-   serverURL : `http://<host>:<port>/<path>`,
+   serverURL : `<protocol>://<host>:<port>/<path>`,
    accessToken : `accessToken`,
    refreshToken : `refreshToken`
 })
@@ -597,7 +598,7 @@ Example:
 
 ```js
 new DeviceHive({
-   serverURL : `http://<host>:<port>/<path>`,
+   serverURL : `<protocol>://<host>:<port>/<path>`,
    accessToken : `accessToken`,
    refreshToken : `refreshToken`
 })
@@ -617,7 +618,7 @@ Example:
 
 ```js
 new DeviceHive({
-   serverURL : `http://<host>:<port>/<path>`,
+   serverURL : `<protocol>://<host>:<port>/<path>`,
    accessToken : `accessToken`,
    refreshToken : `refreshToken`
 })
@@ -637,7 +638,7 @@ Example:
 
 ```js
 new DeviceHive({
-   serverURL : `http://<host>:<port>/<path>`,
+   serverURL : `<protocol>://<host>:<port>/<path>`,
    accessToken : `accessToken`,
    refreshToken : `refreshToken`
 })
@@ -657,7 +658,7 @@ Example:
 
 ```js
 new DeviceHive({
-   serverURL : `http://<host>:<port>/<path>`,
+   serverURL : `<protocol>://<host>:<port>/<path>`,
    accessToken : `accessToken`,
    refreshToken : `refreshToken`
 })
@@ -679,7 +680,7 @@ Example:
 
 ```js
 new DeviceHive({
-   serverURL : `http://<host>:<port>/<path>`,
+   serverURL : `<protocol>://<host>:<port>/<path>`,
    accessToken : `accessToken`,
    refreshToken : `refreshToken`
 })
@@ -699,7 +700,7 @@ Example:
 
 ```js
 new DeviceHive({
-   serverURL : `http://<host>:<port>/<path>`,
+   serverURL : `<protocol>://<host>:<port>/<path>`,
    accessToken : `accessToken`,
    refreshToken : `refreshToken`
 })
@@ -720,7 +721,7 @@ Example:
 
 ```js
 new DeviceHive({
-   serverURL : `http://<host>:<port>/<path>`,
+   serverURL : `<protocol>://<host>:<port>/<path>`,
    accessToken : `accessToken`,
    refreshToken : `refreshToken`
 })
@@ -740,7 +741,7 @@ Example:
 
 ```js
 new DeviceHive({
-   serverURL : `http://<host>:<port>/<path>`,
+   serverURL : `<protocol>://<host>:<port>/<path>`,
    accessToken : `accessToken`,
    refreshToken : `refreshToken`
 })

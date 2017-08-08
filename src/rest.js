@@ -1,4 +1,4 @@
-const sendRequest = require(`./utils.js`);
+const { sendRequest } = require(`./utils.js`);
 let apiURL, access, refresh;
 
 /**
@@ -531,8 +531,6 @@ function createTokenBySystemParams(systemParams) {
     body : systemParams
   })
   .then(({ accessToken, refreshToken }) => {
-    access = accessToken;
-    refresh = refreshToken;
     return {
       accessToken,
       refreshToken
@@ -885,13 +883,14 @@ function deleteUsersNetwork(userId, networkId){
  */
 function init(serverUrl){
   apiURL = serverUrl;
+  return Promise.resolve(this);
 }
 
 /**
  * Function to check authorization.
  * 
- * @param {any} func 
- * @param {any} args 
+ * @param {Function} func 
+ * @param {Array} args 
  * @returns 
  */
 function callAuthorized(func, ...args){
