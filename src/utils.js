@@ -1,4 +1,5 @@
 require(`isomorphic-fetch`);
+const randomstring = require(`randomstring`);
 
 /**
  * Function to create url with query params
@@ -56,7 +57,7 @@ function sendRequest({ apiURL, access, endpoint, query, body, method = `GET`, au
 function sendWS(socket, params){
   return new Promise((resolve, reject) => {
     if (!params.requestId){
-      params.requestId = null;
+      params.requestId = randomstring.generate();
     }
     socket.send(JSON.stringify(params));
     const listener = (event) => {

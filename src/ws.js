@@ -2,6 +2,7 @@ let WS, apiURL, access, refresh, socket;
 const commandsSubscribers = {};
 const notificationsSubscribers = {};
 let { sendWS } = require(`./utils.js`);
+
 function isNode(){
   try {
     return typeof WebSocket === `undefined`;
@@ -13,7 +14,8 @@ function isNode(){
 if (isNode()){
   try {
     WS = require(`ws`);
-  } catch(error){}
+  } catch(error){
+  }
 } else {
   WS = WebSocket;
 }
@@ -186,7 +188,7 @@ function deleteUser(userId){
   })
 }
 
-function commandsSubscribe(commandFilter, subscriber){
+function commandsSubscribe(commandFilter, subscriber, Wrapper){
   return new Promise((resolve, reject) => {
     let subscriptionId;
     sendWS(Object.assign({
@@ -200,7 +202,7 @@ function commandsSubscribe(commandFilter, subscriber){
       const commandsSubscriber = (event) => {
         const messageData = JSON.parse(event.data);
         if (messageData.action === `command/insert` && messageData.subscriptionId === subscriptionId){
-          subscriber(messageData.command);
+          subscriber(new Wrapper(messageData.command));
         }
       }
 
@@ -228,7 +230,7 @@ function commandsUnsubscribe(commandFilter){
   })
 }
 
-function notificationsSubscribe(notificationFilter, subscriber){
+function notificationsSubscribe(notificationFilter, subscriber, Wrapper){
   return new Promise((resolve, reject) => {
     let subscriptionId;
     sendWS(Object.assign({
@@ -243,7 +245,7 @@ function notificationsSubscribe(notificationFilter, subscriber){
         const messageData = JSON.parse(event.data);
         
         if (messageData.action === `notification/insert` && messageData.subscriptionId === subscriptionId){
-          subscriber(messageData.notification);
+          subscriber(new Wrapper(messageData.notification));
         }
       }
 
@@ -269,6 +271,100 @@ function notificationsUnsubscribe(notificationFilter){
     delete notificationsSubscribers[JSON.stringify(notificationFilter)];
     return messageData;
   })
+}
+
+function getDeviceCommands(deviceId, filter){
+  return sendWS(Object.assign({
+    action : `command/list`,
+    deviceId
+  }, filter))
+  .then(messageData => messageData.commands);
+}
+
+function getDeviceNotifications(deviceId, filter){
+  return sendWS(Object.assign({
+    action : `notification/list`,
+    deviceId
+  }, filter))
+  .then(messageData => messageData.notifications)
+}
+
+function createDeviceCommand(deviceId, command){
+  return sendWS({
+    action : `command/insert`,
+    deviceId,
+    command
+  })
+  .then(messageData => messageData.command);
+}
+
+function createDeviceNotification(deviceId, notification){
+  return sendWS({
+    action : `notification/insert`,
+    deviceId,
+    notification
+  })
+  .then(messageData => messageData.notification);
+}
+
+function getCommand(deviceId, commandId){
+  return sendWS({
+    action : `command/get`,
+    deviceId,
+    commandId
+  })
+  .then(messageData => messageData.command);
+}
+
+function updateCommand(deviceId, commandId, command){
+  return sendWS({
+    action : `command/update`,
+    deviceId,
+    commandId,
+    command
+  });
+}
+
+function updateNetwork(networkId, network){
+  network.id = networkId;
+  console.log(network);
+  return sendWS({
+    action : `network/update`,
+    network
+  })
+}
+
+function updateCurrentUser(user){
+  return sendWS({
+    action : `user/updateCurrent`,
+    user
+  })
+}
+
+function addUsersNetwork(userId, networkId){
+  console.log(userId, networkId);
+  return sendWS({
+    action : `user/assignNetwork`,
+    userId,
+    networkId
+  })
+}
+
+function deleteUsersNetwork(userId, networkId){
+  console.log(userId, networkId);
+  return sendWS({
+    action : `user/unassignNetwork`,
+    userId,
+    networkId
+  })
+}
+
+function getUser(userId){
+  return sendWS({
+    action : `user/get`,
+    userId
+  })
+  .then(messageData => messageData.user);
 }
 
 function callAuthorized(func, ...args){
@@ -302,5 +398,16 @@ module.exports = {
   commandsSubscribe,
   commandsUnsubscribe,
   notificationsSubscribe,
-  notificationsUnsubscribe
+  notificationsUnsubscribe,
+  getDeviceCommands,
+  getDeviceNotifications,
+  createDeviceCommand,
+  createDeviceNotification,
+  getCommand,
+  updateCommand,
+  updateNetwork,
+  updateCurrentUser,
+  addUsersNetwork,
+  deleteUsersNetwork,
+  getUser
 }
