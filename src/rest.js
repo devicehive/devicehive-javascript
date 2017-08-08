@@ -897,7 +897,7 @@ function init(serverUrl){
 function callAuthorized(func, ...args){
   return func(...args)
     .catch(error => {
-      if (error.statusCode === 401){
+      if (error.error === 401){
         return refreshToken()
           .then(() => func(...args))
       } else {
