@@ -703,6 +703,22 @@ function getUser(userId){
   })
   .then(messageData => messageData.user);
 }
+
+/**
+ * Update user.
+ * 
+ * @param {String} userId 
+ * @param {UserParams} userParams 
+ * @returns 
+ * 
+ */
+function updateUser(userId, user){
+  return sendWS({
+    action : `user/update`,
+    userId,
+    user
+  })
+}
 /**
  * Mock to check authorization.
  * 
@@ -752,5 +768,6 @@ module.exports = {
   updateCurrentUser,
   addUsersNetwork,
   deleteUsersNetwork,
-  getUser
+  getUser,
+  updateUser
 }
