@@ -51,7 +51,7 @@ function getInfo(){
   return sendWS({
     action : `server/info`
   })
-  .then(messageData => messageData.info);
+    .then(messageData => messageData.info);
 }
 
 /**
@@ -74,7 +74,7 @@ function getDevices(filter){
   return sendWS(Object.assign({
     action : `device/list`
   }, filter))
-  .then(messageData => messageData.devices);
+    .then(messageData => messageData.devices);
 }
 
 /**
@@ -129,7 +129,7 @@ function getInfoConfigCluster(){
   return sendWS({
     action : `cluster/info`
   })
-  .then(messageData => messageData.clusterInfo);
+    .then(messageData => messageData.clusterInfo);
 }
 
 /**
@@ -163,7 +163,7 @@ function getConfiguration(name){
     action : `configuration/get`,
     name
   })
-  .then(messageData => messageData.configuration)
+    .then(messageData => messageData.configuration)
 }
 
 /**
@@ -179,7 +179,7 @@ function saveConfiguration(name, value){
     name,
     value
   })
-  .then(messageData => messageData.configuration)
+    .then(messageData => messageData.configuration)
 }
 
 /**
@@ -213,7 +213,7 @@ function getNetworks(filter){
   return sendWS(Object.assign({
     action : `network/list`
   }, filter))
-  .then(messageData => messageData.networks);
+    .then(messageData => messageData.networks);
 }
 
 /**
@@ -222,12 +222,12 @@ function getNetworks(filter){
  * @param {String} networkId 
  * 
  */
-function getNetwork(id){
+function getNetwork(networkId){
   return sendWS({
     action : `network/get`,
-    id
+    networkId
   })
-  .then(messageData => messageData.network);
+    .then(messageData => messageData.network);
 }
 
 /**
@@ -236,10 +236,10 @@ function getNetwork(id){
  * @param {String} networkId 
  * 
  */
-function deleteNetwork(id){
+function deleteNetwork(networkId){
   return sendWS({
     action : `network/delete`,
-    id
+    networkId
   })
 }
 
@@ -259,7 +259,7 @@ function createNetwork(network){
     action : `network/insert`,
     network
   })
-  .then(messageData => messageData.network);
+    .then(messageData => messageData.network);
 }
 
 /**
@@ -288,7 +288,7 @@ function getDevice(deviceId){
     action : `device/get`,
     deviceId
   })
-  .then(messageData => messageData.device);
+    .then(messageData => messageData.device);
 }
 
 /**
@@ -308,6 +308,7 @@ function getDevice(deviceId){
 function saveDevice(id, device){
   return sendWS({
     action : `device/save`,
+    deviceId : id,
     device
   })
 }
@@ -320,7 +321,7 @@ function getCurrentUser(){
   return sendWS({
     action : `user/getCurrent`
   })
-  .then(messageData => messageData.current);
+    .then(messageData => messageData.current);
 }
 
 /**
@@ -343,7 +344,7 @@ function getUsers(filter){
   return sendWS(Object.assign({
     action : `user/list`
   }, filter))
-  .then(messageData => messageData.users);
+    .then(messageData => messageData.users);
 }
 
 /**
@@ -366,7 +367,7 @@ function createUser(user){
     action : `user/insert`,
     user
   })
-  .then(messageData => messageData.user);
+    .then(messageData => messageData.user);
 }
 
 /**
@@ -397,25 +398,25 @@ function commandsSubscribe(commandFilter, subscriber, Wrapper){
       action : `command/subscribe`,
       requestId : JSON.stringify(commandFilter)
     }, commandFilter))
-    .then(messageData => messageData.subscriptionId)
-    .then(id => {
-      subscriptionId = id;
+      .then(messageData => messageData.subscriptionId)
+      .then(id => {
+        subscriptionId = id;
 
-      const commandsSubscriber = (event) => {
-        const messageData = JSON.parse(event.data);
-        if (messageData.action === `command/insert` && messageData.subscriptionId === subscriptionId){
-          subscriber(new Wrapper(messageData.command));
+        const commandsSubscriber = (event) => {
+          const messageData = JSON.parse(event.data);
+          if (messageData.action === `command/insert` && messageData.subscriptionId === subscriptionId){
+            subscriber(new Wrapper(messageData.command));
+          }
         }
-      }
 
-      commandsSubscribers[JSON.stringify(commandFilter)] = {
-        handler : commandsSubscriber,
-        subscriptionId
-      };
+        commandsSubscribers[JSON.stringify(commandFilter)] = {
+          handler : commandsSubscriber,
+          subscriptionId
+        };
 
-      socket.addEventListener(`message`, commandsSubscriber);
-      resolve();
-    })
+        socket.addEventListener(`message`, commandsSubscriber);
+        resolve();
+      })
   })
 }
 
@@ -432,10 +433,10 @@ function commandsUnsubscribe(commandFilter){
     subscriptionId,
     requestId : JSON.stringify(commandFilter)
   })
-  .then((messageData) => {
-    delete commandsSubscribers[JSON.stringify(commandFilter)];
-    return messageData;
-  })
+    .then((messageData) => {
+      delete commandsSubscribers[JSON.stringify(commandFilter)];
+      return messageData;
+    })
 }
 
 /**
@@ -453,26 +454,26 @@ function notificationsSubscribe(notificationFilter, subscriber, Wrapper){
       action : `notification/subscribe`,
       requestId : JSON.stringify(notificationFilter)
     }, notificationFilter))
-    .then(messageData => messageData.subscriptionId)
-    .then(id => {
-      subscriptionId = id;
-      
-      const notificationsSubscriber = (event) => {
-        const messageData = JSON.parse(event.data);
-        
-        if (messageData.action === `notification/insert` && messageData.subscriptionId === subscriptionId){
-          subscriber(new Wrapper(messageData.notification));
+      .then(messageData => messageData.subscriptionId)
+      .then(id => {
+        subscriptionId = id;
+
+        const notificationsSubscriber = (event) => {
+          const messageData = JSON.parse(event.data);
+
+          if (messageData.action === `notification/insert` && messageData.subscriptionId === subscriptionId){
+            subscriber(new Wrapper(messageData.notification));
+          }
         }
-      }
 
-      notificationsSubscribers[JSON.stringify(notificationFilter)] = {
-        handler : notificationsSubscriber,
-        subscriptionId
-      };
+        notificationsSubscribers[JSON.stringify(notificationFilter)] = {
+          handler : notificationsSubscriber,
+          subscriptionId
+        };
 
-      socket.addEventListener(`message`, notificationsSubscriber);
-      resolve();
-    })
+        socket.addEventListener(`message`, notificationsSubscriber);
+        resolve();
+      })
   })
 }
 
@@ -489,10 +490,10 @@ function notificationsUnsubscribe(notificationFilter){
     subscriptionId,
     requestId : JSON.stringify(notificationFilter)
   })
-  .then((messageData) => {
-    delete notificationsSubscribers[JSON.stringify(notificationFilter)];
-    return messageData;
-  })
+    .then((messageData) => {
+      delete notificationsSubscribers[JSON.stringify(notificationFilter)];
+      return messageData;
+    })
 }
 
 /**
@@ -517,7 +518,7 @@ function getDeviceCommands(deviceId, filter){
     action : `command/list`,
     deviceId
   }, filter))
-  .then(messageData => messageData.commands);
+    .then(messageData => messageData.commands);
 }
 
 /**
@@ -541,7 +542,7 @@ function getDeviceNotifications(deviceId, filter){
     action : `notification/list`,
     deviceId
   }, filter))
-  .then(messageData => messageData.notifications)
+    .then(messageData => messageData.notifications)
 }
 
 /**
@@ -565,7 +566,7 @@ function createDeviceCommand(deviceId, command){
     deviceId,
     command
   })
-  .then(messageData => messageData.command);
+    .then(messageData => messageData.command);
 }
 
 /**
@@ -586,7 +587,7 @@ function createDeviceNotification(deviceId, notification){
     deviceId,
     notification
   })
-  .then(messageData => messageData.notification);
+    .then(messageData => messageData.notification);
 }
 
 /**
@@ -602,7 +603,7 @@ function getCommand(deviceId, commandId){
     deviceId,
     commandId
   })
-  .then(messageData => messageData.command);
+    .then(messageData => messageData.command);
 }
 
 /**
@@ -610,7 +611,7 @@ function getCommand(deviceId, commandId){
  * 
  * @param {String} deviceId 
  * @param {String} commandId 
- * @param {CommandParams} commandParams
+ * @param {CommandParams} command
  * 
  */
 function updateCommand(deviceId, commandId, command){
@@ -631,14 +632,13 @@ function updateCommand(deviceId, commandId, command){
  * @property {String} description
  * 
  * @param {String} networkId 
- * @param {NetworkUpdateParams} networkParams 
+ * @param {NetworkUpdateParams} network
  * 
  */
 function updateNetwork(networkId, network){
-  network.id = networkId;
-  console.log(network);
   return sendWS({
     action : `network/update`,
+    networkId,
     network
   })
 }
@@ -701,7 +701,7 @@ function getUser(userId){
     action : `user/get`,
     userId
   })
-  .then(messageData => messageData.user);
+    .then(messageData => messageData.user);
 }
 
 /**
