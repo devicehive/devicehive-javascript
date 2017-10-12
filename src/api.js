@@ -18,6 +18,14 @@ function init(serverURL){
 }
 
 /**
+ * Returns api type
+ * @returns {*}
+ */
+function getType(){
+  return type;
+}
+
+/**
  * Returns current API
  * 
  * @returns 
@@ -33,5 +41,6 @@ function getAPI(){
 module.exports = {
   init,
   getAPI,
-  type
+  type,
+  getType
 }
