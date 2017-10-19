@@ -786,7 +786,7 @@ new DeviceHive({
 | Name | Type | Description |
 | --- | --- | --- |
 | name | `String` | device name |
-| data | `String` | device data |
+| data | `Object` | device data |
 | networkId | `Number` | device network id |
 | blocked | `Boolean` | device blocked state |
 
