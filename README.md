@@ -1182,7 +1182,7 @@ deviceInstance.unsubscribeNotifications({/*NotificationPollParams*/})
 | --- | --- | --- |
 | command | `String` | command name |
 | timestamp | `String` | command timestamp |
-| parameters | `String` | command parameters |
+| parameters | `Object` | command parameters |
 | lifetime | `Number` | command lifetime |
 | status | `String` | command status |
 | result | `String` | command result |
@@ -1195,7 +1195,7 @@ deviceInstance.unsubscribeNotifications({/*NotificationPollParams*/})
 | Name | Type | Description |
 | --- | --- | --- |
 | timestamp | `String` | notification timestamp |
-| parameters | `String` | notification parameters |
+| parameters | `Object` | notification parameters |
 
 <a name="Device..CommandPollParams"></a>
 ### Device~CommandPollParams : `Struct`
