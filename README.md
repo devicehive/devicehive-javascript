@@ -110,7 +110,7 @@ getInfoAsyncAwait(`login`, `password`)
       * [.listDevices(filter)](#DeviceHive+getDevices) ⇒ `Http` ⇒ `Promise`
       * [.removeDevice(id)](#DeviceHive+removeDevice) ⇒ `Http` ⇒ `Promise`
       * [.getDevice(id)](#DeviceHive+getDevice) ⇒ `Http` ⇒ `Promise`
-      * [.putDevice(id, deviceParams)](#DeviceHive+saveDevice) ⇒ `Http` ⇒ `Promise`
+      * [.putDevice(id, deviceParams)](#DeviceHive+putDevice) ⇒ `Http` ⇒ `Promise`
       * [.getCurrentUser()](#DeviceHive+getCurrentUser) ⇒ `Http` ⇒ `Promise`
       * [.getUsers(filter)](#DeviceHive+getUsers) ⇒ `Http` ⇒ `Promise`
       * [.createUser(userParams)](#DeviceHive+createUser) ⇒ `Http` ⇒ `Promise`
