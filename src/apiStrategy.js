@@ -1,3 +1,14 @@
+'use strict';
+
+// Requirements
+
+const EventEmitter = require('events');
+const Rest = require('./transports/rest');
+const WS = require('./transports/ws');
+
+
+// API Strategy
+
 /**
 * @event onMessage
 */
@@ -7,7 +18,17 @@ class APIStrategy extends EventEmitter {
      * APIStrategy
      */
     constructor(urls) {
-        this.strategy = getType(urls.mainServiceURL);
+        super();
+
+        console.log(urls, urls.mainServiceURL)
+
+        const SelectedAPI = this.getType(urls.mainServiceURL);
+
+        if (SelectedAPI) {
+            this.strategy = new SelectedAPI(urls);
+        } else {
+            throw new Error('unexpected mainServiceURL, please use allowed protocol');
+        }
     }
     
     /**
@@ -16,11 +37,7 @@ class APIStrategy extends EventEmitter {
      * @returns 
      */
     getType(url) {
-        let parsedURL;
-        if (url) parsedURL = url.match(/^([a-z]{1,5}):\/\//);
-        if (!parsedURL || !parsedURL[1]) return;
-        const protocol = parsedURL[1].toLowerCase();
-        switch (protocol) {
+        switch (true) {
             case url.startsWith('http'): {
                 return Rest;
                 break;
@@ -52,3 +69,5 @@ class APIStrategy extends EventEmitter {
     }
 
 }
+
+module.exports = APIStrategy;
