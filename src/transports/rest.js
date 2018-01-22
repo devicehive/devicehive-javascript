@@ -33,11 +33,12 @@ class Rest {
             const options = {
                 method,
                 headers: {},
-                json: true
+                url: fullURL
             }
-    
+            
             if (body) {
-                options.body = JSON.stringify(body)
+                options.json = true;
+                options.body = body;
                 options.headers['Accept'] = 'application/json';
                 options.headers['Content-Type'] = 'application/json';
             }
@@ -45,7 +46,8 @@ class Rest {
             if (authorize) {
                 options.headers.Authorization = `Bearer ${access}`;
             }
-            request(fullURL, (err, res, body) => {
+
+            request(options, (err, res, body) => {
                 if (err) return reject(err);
                 return resolve(body);
             });

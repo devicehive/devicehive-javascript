@@ -20,8 +20,6 @@ class APIStrategy extends EventEmitter {
     constructor(urls) {
         super();
 
-        console.log(urls, urls.mainServiceURL)
-
         const SelectedAPI = this.getType(urls.mainServiceURL);
 
         if (SelectedAPI) {
@@ -34,7 +32,7 @@ class APIStrategy extends EventEmitter {
     /**
      * Returns current API
      * 
-     * @returns 
+     * @returns {function} new model
      */
     getType(url) {
         switch (true) {

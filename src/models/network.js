@@ -7,16 +7,16 @@ class Network {
      * @param {object} options ({ id, name, description })
      */
     constructor({ id, name, description }) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
+        this._id = id;
+        this._name = name;
+        this._description = description;
     }
 
     /**
      * @returns {number} id;
      */
     get id() {
-        return this.id;
+        return this._id;
     }
 
     /**
@@ -24,14 +24,14 @@ class Network {
     * @returns {number} id;
     */
     set id(value) {
-        return this.id = value;
+        this._id = value;
     }
 
     /**
      * @returns {string} name;
      */
     get name() {
-        return this.name;
+        return this._name;
     }
 
     /**
@@ -39,14 +39,14 @@ class Network {
      * @returns {string} name;
      */
     set name(value) {
-        return this.name = value;
+        this._name = value;
     }
 
     /**
      * @returns {string} description;
      */
     get description() {
-        return this.description;
+        return this._description;
     }
 
     /**
@@ -54,7 +54,7 @@ class Network {
      * @returns {string} description;
      */
     set description(value) {
-        return this.description = value;
+        this._description = value;
     }
 
     /**

@@ -7,22 +7,22 @@ class User {
      * @param {object} options ({ id, login, role, status, lastLogin, data, password, introReviewed, allDeviceTypesAvailable })
      */
     constructor({ id, login, role, status, lastLogin, data, password, introReviewed, allDeviceTypesAvailable }) {
-        this.id = id;
-        this.login = login;
-        this.role = role;
-        this.status = status;
-        this.lastLogin = lastLogin;
-        this.data = data;
-        this.password = password;
-        this.introReviewed = introReviewed;
-        this.allDeviceTypesAvailable = allDeviceTypesAvailable;
+        this._id = id;
+        this._login = login;
+        this._role = role;
+        this._status = status;
+        this._lastLogin = lastLogin;
+        this._data = data;
+        this._password = password;
+        this._introReviewed = introReviewed;
+        this._allDeviceTypesAvailable = allDeviceTypesAvailable;
     }
 
     /**
      * @returns {number} id;
      */
     get id() {
-        return this.id;
+        return this._id;
     }
 
     /**
@@ -30,14 +30,14 @@ class User {
     * @returns {number} id;
     */
     set id(value) {
-        return this.id = value;
+        this._id = value;
     }
 
     /**
      * @returns {string} name;
      */
     get name() {
-        return this.name;
+        return this._name;
     }
 
     /**
@@ -45,14 +45,14 @@ class User {
      * @returns {string} name;
      */
     set name(value) {
-        return this.name = value;
+        this._name = value;
     }
 
     /**
      * @returns {string} login;
      */
     get login() {
-        return this.login;
+        return this._login;
     }
 
     /**
@@ -60,14 +60,14 @@ class User {
      * @returns {string} login;
      */
     set login(value) {
-        return this.login = value;
+        this._login = value;
     }
 
     /**
      * @returns {numner} role;
      */
     get role() {
-        return this.role;
+        return this._role;
     }
 
     /**
@@ -75,14 +75,14 @@ class User {
      * @returns {numner} role;
      */
     set role(value) {
-        return this.role = value;
+        this._role = value;
     }
 
     /**
      * @returns {numner} status;
      */
     get status() {
-        return this.status;
+        return this._status;
     }
 
     /**
@@ -90,14 +90,14 @@ class User {
      * @returns {numner} status;
      */
     set status(value) {
-        return this.status = value;
+        this._status = value;
     }
 
     /**
      * @returns {string} lastLogin;
      */
     get lastLogin() {
-        return this.lastLogin;
+        return this._lastLogin;
     }
 
     /**
@@ -105,14 +105,14 @@ class User {
      * @returns {string} lastLogin;
      */
     set lastLogin(value) {
-        return this.lastLogin = value;
+        this._lastLogin = value;
     }
 
     /**
      * @returns {object} data;
      */
     get data() {
-        return this.data;
+        return this._data;
     }
 
     /**
@@ -120,14 +120,14 @@ class User {
      * @returns {object} data;
      */
     set data(value) {
-        return this.data = value;
+        this._data = value;
     }
 
     /**
      * @returns {string} password;
      */
     get password() {
-        return this.password;
+        return this._password;
     }
 
     /**
@@ -135,14 +135,14 @@ class User {
      * @returns {string} password;
      */
     set password(value) {
-        return this.password = value;
+        this._password = value;
     }
 
     /**
      * @returns {boolean} introReviewed;
      */
     get introReviewed() {
-        return this.introReviewed;
+        return this._introReviewed;
     }
 
     /**
@@ -150,14 +150,14 @@ class User {
      * @returns {boolean} introReviewed;
      */
     set introReviewed(value) {
-        return this.introReviewed = value;
+        this._introReviewed = value;
     }
 
     /**
      * @returns {boolean} introReviewed;
      */
     get allDeviceTypesAvailable() {
-        return this.allDeviceTypesAvailable;
+        return this._allDeviceTypesAvailable;
     }
 
     /**
@@ -165,7 +165,7 @@ class User {
      * @returns {boolean} allDeviceTypesAvailable;
      */
     set allDeviceTypesAvailable(value) {
-        return this.allDeviceTypesAvailable = value;
+        this._allDeviceTypesAvailable = value;
     }
 
     /**
