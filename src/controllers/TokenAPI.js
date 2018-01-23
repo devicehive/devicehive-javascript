@@ -11,30 +11,60 @@ class TokenAPI extends API {
      */
     constructor(...args) {
         super(...args);
-        this.startEndporint = '/token'
+        this.startEndpoint = 'token';
     }
 
     /**
-     * 
-     * @param {object} credentials (login, password)
+     * Authentificate using login and password
+     * @param {object} credentials { login, password }
      */
-    create({ login, password }) {
-        return this.send({
+    auth({ login, password }) {
+        return this.strategy.send({
+            auth: false,
             url: 'authServiceURL',
-            endpoint: this.startEndporint,
+            endpoint: `/${this.startEndpoint}`,
+            action: this.startEndpoint,
             method: 'POST',
             body: {
                 login,
                 password
-            },
-            authorize: false
+            }
         });
     }
 
-    get() {
-
+    /**
+     * Refresg token
+     * @param {object} { refreshToken }
+     */
+    refresh({ refreshToken }) {
+        return this.strategy.send({
+            auth: false,
+            url: 'authServiceURL',
+            endpoint: `/${this.startEndpoint}/refresh`,
+            action: `${this.startEndpoint}/refresh`,
+            method: 'POST',
+            body: {
+                a, e, t, tpc
+            }
+        });
     }
 
+    /**
+     * Create token
+     * @param {object} { a, e, t, tpc }
+     */
+    create({ a, e, t, tpc }) {
+        return this.strategy.send({
+            auth: true,
+            url: 'authServiceURL',
+            endpoint: `/${this.startEndpoint}/create`,
+            action: `${this.startEndpoint}/create`,
+            method: 'POST',
+            body: {
+                a, e, t, tpc
+            }
+        });
+    }
 }
 
 

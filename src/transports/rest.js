@@ -28,8 +28,6 @@ class Rest {
      */
     send(options) {
 
-        console.log(options)
-
         const promise = new Promise((resolve, reject) => {
 
             request(options, (err, res, body) => {

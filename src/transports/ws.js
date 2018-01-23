@@ -28,7 +28,7 @@ class WS {
      * @returns {promise} when initialized
      */
     init(serverURL) {
-        this.socket = new WSClient(this.mainServiceURL);
+        this.socket = new WSClient(this.urls.mainServiceURL);
         // const sendWS = sendWS.bind(this, socket);
         return new Promise(resolve => {
             this.socket.addEventListener('open', event => resolve(this));

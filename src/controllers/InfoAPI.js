@@ -7,20 +7,20 @@ const API = require('./API');
 class InfoAPI extends API {
 
     /**
-     * InfoAPI
+     * TokenAPI
      */
     constructor(...args) {
         super(...args);
-        this.startEndporint = '/info'
+        this.startEndpoint = 'info';
     }
 
     /**
      * Get info
      */
     get() {
-        return this.send({
-            endpoint: this.startEndporint,
-            authorize: false
+        return this.strategy.send({
+            endpoint: `/${this.startEndpoint}`,
+            action: `server/${this.startEndpoint}`
         });
     }
 }

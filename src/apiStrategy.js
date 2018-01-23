@@ -89,15 +89,15 @@ class APIStrategy extends EventEmitter {
     /**
      * TransportDataBuilder
      */
-    transportDataBuilder({ auth = true, url = 'mainServiceURL', accessToken, endpoint, body, method = 'GET', action }) {
+    transportDataBuilder({ auth = true, url = 'mainServiceURL', accessToken, endpoint, query, body, method = 'GET', action }) {
         let transferData = {};
         if (this.strategy.type === 'rest') {
             let fullURL = this.strategy.urls[url] + endpoint;
 
-            if (method === 'GET' && body) {
+            if (method === 'GET' && query) {
                 let queryPart = '';
-                Object.keys(body).forEach(key => {
-                    queryPart += `${key}=${body[key]}&`;
+                Object.keys(query).forEach(key => {
+                    queryPart += `${key}=${query[key]}&`;
                 });
                 fullURL = `${fullURL}?${queryPart}`;
             }
@@ -108,7 +108,7 @@ class APIStrategy extends EventEmitter {
                 url: fullURL
             }
 
-            if (method === 'GET' || method === 'PUT') {
+            if (method === 'POST' || method === 'PUT') {
                 transferData.json = true;
                 transferData.body = body;
                 transferData.headers['Accept'] = 'application/json';
