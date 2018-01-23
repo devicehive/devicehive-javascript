@@ -46,9 +46,9 @@ class DeviceHive extends APIStrategy {
         };
 
         // API`s
-        this.info = new InfoAPI(this.send.bind(this));
-        this.device = new DeviceAPI(this.send.bind(this));
-        this.token = new TokenAPI(this.send.bind(this));
+        this.info = new InfoAPI({ strategy: this });
+        this.device = new DeviceAPI({ strategy: this });
+        this.token = new TokenAPI({ strategy: this });
     }
 
     /**
@@ -71,13 +71,37 @@ class DeviceHive extends APIStrategy {
      */
     connect() {
         const promise = new Promise((resolve, reject) => {
-            this.token.create(this.credentials)
-                .then(({ accessToken, refreshToken }) => {
-                    this.token.accessToken = accessToken;
-                    this.token.refreshToken = refreshToken;
-                    return resolve(this);
-                })
-                .catch(reject);
+            if (this.credentials.refreshToken) {
+
+                if (this.credentials.accessToken) {
+                    this.initTransport()
+                        .then(() => this.token.refresh(this.credentials))
+                        .then(({ accessToken }) => {
+                            this.credentials.accessToken = accessToken;
+                        })
+                        .then(() => this.authTransport(this.credentials))
+                        .then(() => resolve(this))
+                        .catch(reject);
+                } else {
+
+                    this.initTransport()
+                        .then(() => this.authTransport(this.credentials))
+                        .then(() => resolve(this))
+                        .catch(reject);
+                }
+            } else if (this.credentials.login && this.credentials.password) {
+
+                this.initTransport()
+                    .then(() => this.token.auth(this.credentials))
+                    .then(({ accessToken, refreshToken }) => {
+                        this.credentials.accessToken = accessToken;
+                        this.credentials.refreshToken = refreshToken;
+                    })
+                    .then(() => this.authTransport(this.credentials))
+                    .then(() => resolve(this))
+                    .catch(reject);
+            }
+            
         });
 
         return promise;

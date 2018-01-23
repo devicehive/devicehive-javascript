@@ -2,8 +2,8 @@ class API {
     /**
      * API
      */
-    constructor(send) {
-        this.send = send;
+    constructor({ strategy }) {
+        this.strategy = strategy;
     }
 }
 

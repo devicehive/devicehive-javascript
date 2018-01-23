@@ -2,7 +2,8 @@
 
 const request = require('request');
 
-// Source
+
+// Transport
 
 class Rest {
 
@@ -10,45 +11,31 @@ class Rest {
      * Rest API
      */
     constructor(urls) {
+        this.type = 'rest';
         this.urls = urls;
+    }
+
+    /**
+     * Init
+     * 
+     */
+    init() {
+        return new Promise(resolve => resolve());
     }
 
     /**
      * Rest API send method
      */
-    send({ url = 'mainServiceURL', access, endpoint, query, body, method = 'GET', authorize = true }) {
+    send(options) {
+
+        console.log(options)
 
         const promise = new Promise((resolve, reject) => {
 
-            let fullURL = this.urls[url] + endpoint;
-    
-            if (query) {
-                let queryPart = '';
-                Object.keys(query).forEach(key => {
-                    queryPart += `${key}=${query[key]}&`;
-                });
-                fullURL = `${fullURL}?${queryPart}`;
-            }
-    
-            const options = {
-                method,
-                headers: {},
-                url: fullURL
-            }
-            
-            if (body) {
-                options.json = true;
-                options.body = body;
-                options.headers['Accept'] = 'application/json';
-                options.headers['Content-Type'] = 'application/json';
-            }
-    
-            if (authorize) {
-                options.headers.Authorization = `Bearer ${access}`;
-            }
-
             request(options, (err, res, body) => {
-                if (err) return reject(err);
+                if (err) {
+                    return reject(err);
+                }
                 return resolve(body);
             });
     

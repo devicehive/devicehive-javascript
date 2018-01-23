@@ -3,8 +3,8 @@
 // Requirements
 
 const EventEmitter = require('events');
-const Rest = require('./transports/rest');
-const WS = require('./transports/ws');
+const Rest = require('./transports/Rest');
+const WS = require('./transports/WS');
 
 
 // API Strategy
@@ -28,6 +28,39 @@ class APIStrategy extends EventEmitter {
             throw new Error('unexpected mainServiceURL, please use allowed protocol');
         }
     }
+
+    /**
+     * Init method
+     * @returns {promise} when initialized
+     */
+    initTransport () {
+        return this.strategy.init();
+    }
+
+    /**
+     * Authorize method
+     * @param {object} credentials { accessToken }
+     * @returns {promise} when authorized
+     */
+    authTransport({ accessToken }) {
+        this.accessToken = accessToken;
+
+        let promise;
+
+        if (this.strategy.type === 'ws') {
+            promise = this.send({
+                action: 'authenticate',
+                body: {
+                    token: this.accessToken
+                }
+            });
+        } else {
+            promise = new Promise(resolve => resolve());
+        }
+
+
+        return promise;
+    }
     
     /**
      * Returns current API
@@ -35,35 +68,74 @@ class APIStrategy extends EventEmitter {
      * @returns {function} new model
      */
     getType(url) {
+        let result;
         switch (true) {
-            case url.startsWith('http'): {
-                return Rest;
+            case url.startsWith('http'):
+            case url.startsWith('https'):
+                result = Rest;
                 break;
-            }
 
-            case url.startsWith('https'): {
-                return Rest;
+            case url.startsWith('ws'):
+                result = WS;
                 break;
-            }
 
-            case url.startsWith('ws'): {
-                return WS;
+            default:
                 break;
-            }
-
-            default: {
-                return;
-                break;
-            }
         }
+
+        return result;
     }
+
+    /**
+     * TransportDataBuilder
+     */
+    transportDataBuilder({ auth = true, url = 'mainServiceURL', accessToken, endpoint, body, method = 'GET', action }) {
+        let transferData = {};
+        if (this.strategy.type === 'rest') {
+            let fullURL = this.strategy.urls[url] + endpoint;
+
+            if (method === 'GET' && body) {
+                let queryPart = '';
+                Object.keys(body).forEach(key => {
+                    queryPart += `${key}=${body[key]}&`;
+                });
+                fullURL = `${fullURL}?${queryPart}`;
+            }
+
+            transferData = {
+                method,
+                headers: {},
+                url: fullURL
+            }
+
+            if (method === 'GET' || method === 'PUT') {
+                transferData.json = true;
+                transferData.body = body;
+                transferData.headers['Accept'] = 'application/json';
+                transferData.headers['Content-Type'] = 'application/json';
+            }
+
+            if (auth) {
+                transferData.headers.Authorization = `Bearer ${this.accessToken}`;
+            }
+        } else if (this.strategy.type === 'ws') {
+            if (!action) throw new Error('no action');
+            transferData = {
+                ...body,
+                action
+            };
+        }
+
+        return transferData;
+    }
+
 
     /**
      * Sending data
      * @param {object} data 
      */
     send(data) {
-        return this.strategy.send(data);
+        return this.strategy.send(this.transportDataBuilder(data));
     }
 
 }
