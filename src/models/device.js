@@ -4,9 +4,9 @@ class Device {
 
     /**
      * Device model
-     * @param {object} options ({ id, name, data, networkId, blocked })
+     * @param {object} options ({ id, name, data, networkId, deviceTypeId, blocked })
      */
-    constructor({ id, name, data, networkId, blocked }) {
+    constructor({ id, name, data, networkId, deviceTypeId, blocked }) {
         this._name = name;
         this._data = data;
         this._networkId = networkId;

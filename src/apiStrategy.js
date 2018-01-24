@@ -3,6 +3,7 @@
 // Requirements
 
 const EventEmitter = require('events');
+const randomstring = require('randomstring');
 const Rest = require('./transports/Rest');
 const WS = require('./transports/WS');
 
@@ -89,7 +90,7 @@ class APIStrategy extends EventEmitter {
     /**
      * TransportDataBuilder
      */
-    transportDataBuilder({ auth = true, url = 'mainServiceURL', accessToken, endpoint, query, body, method = 'GET', action }) {
+    transportDataBuilder({ auth = true, url = 'mainServiceURL', accessToken, endpoint, query, body, bodyWS, method = 'GET', action }) {
         let transferData = {};
         if (this.strategy.type === 'rest') {
             let fullURL = this.strategy.urls[url] + endpoint;
@@ -120,10 +121,15 @@ class APIStrategy extends EventEmitter {
             }
         } else if (this.strategy.type === 'ws') {
             if (!action) throw new Error('no action');
+            if (!bodyWS) bodyWS = body;
             transferData = {
-                ...body,
+                ...bodyWS,
                 action
             };
+            if (!transferData.requestId) {
+                transferData.requestId = randomstring.generate();
+            }
+            console.log(transferData);
         }
 
         return transferData;

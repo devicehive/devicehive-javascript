@@ -35,15 +35,6 @@ class DeviceHive extends APIStrategy {
             refreshToken
         });
 
-        // Entities
-        this._entities = {
-            Device,
-            DeviceCommand,
-            DeviceNotification,
-            Network,
-            Token,
-            User
-        };
 
         // API`s
         this.info = new InfoAPI({ strategy: this });
@@ -57,13 +48,22 @@ class DeviceHive extends APIStrategy {
      * @param {String} name (Device | DeviceCommand | DeviceNotification | Network | Token | User)
      * @return {Object} Entity 
      */
-    static model() {
-        const model = this._entities[name];
+    static model(name) {
+        // Entities
+        const models = {
+            Device,
+            DeviceCommand,
+            DeviceNotification,
+            Network,
+            Token,
+            User
+        };
+        const model = models[name];
 
         if (!model) {
             throw new Error('no such model');
         }
-        return this._entities[name];
+        return model;
     }
 
     /**

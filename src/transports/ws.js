@@ -1,6 +1,4 @@
 // Requirements
-
-const randomstring = require('randomstring');
 let WSClient;
 
 // if it's node.js environment
@@ -41,9 +39,6 @@ class WS {
     send(params) {
 
         return new Promise((resolve, reject) => {
-            if (!params.requestId) {
-                params.requestId = randomstring.generate();
-            }
             this.socket.send(JSON.stringify(params));
             const listener = event => {
                 const messageData = JSON.parse(event.data);

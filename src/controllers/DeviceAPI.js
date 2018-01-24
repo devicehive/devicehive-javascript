@@ -68,6 +68,10 @@ class DeviceAPI extends API {
             endpoint: `/${this.startEndpoint}/${deviceId}`,
             action: `${this.startEndpoint}/save`,
             method: 'PUT',
+            bodyWS: {
+                deviceId,
+                device: body
+            },
             body
         });
     }
