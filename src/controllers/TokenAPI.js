@@ -11,24 +11,19 @@ class TokenAPI extends API {
      */
     constructor(...args) {
         super(...args);
-        this.startEndpoint = 'token';
+        this.type = 'token';
     }
 
     /**
      * Authentificate using login and password
      * @param {object} credentials { login, password }
      */
-    auth({ login, password }) {
-        return this.strategy.send({
+    auth(body) {
+        return this.send({
             auth: false,
-            url: 'authServiceURL',
-            endpoint: `/${this.startEndpoint}`,
-            action: this.startEndpoint,
+            service: 'authServiceURL',
             method: 'POST',
-            body: {
-                login,
-                password
-            }
+            body
         });
     }
 
@@ -36,16 +31,13 @@ class TokenAPI extends API {
      * Refresg token
      * @param {object} { refreshToken }
      */
-    refresh({ refreshToken }) {
-        return this.strategy.send({
+    refresh(body) {
+        return this.send({
             auth: false,
-            url: 'authServiceURL',
-            endpoint: `/${this.startEndpoint}/refresh`,
-            action: `${this.startEndpoint}/refresh`,
+            service: 'authServiceURL',
             method: 'POST',
-            body: {
-                a, e, t, tpc
-            }
+            type: 'refresh',
+            body
         });
     }
 
@@ -53,16 +45,13 @@ class TokenAPI extends API {
      * Create token
      * @param {object} { a, e, t, tpc }
      */
-    create({ a, e, t, tpc }) {
-        return this.strategy.send({
-            auth: true,
-            url: 'authServiceURL',
-            endpoint: `/${this.startEndpoint}/create`,
-            action: `${this.startEndpoint}/create`,
+    create(body) {
+        return this.send({
+            auth: false,
+            service: 'authServiceURL',
             method: 'POST',
-            body: {
-                a, e, t, tpc
-            }
+            type: 'create',
+            body
         });
     }
 }

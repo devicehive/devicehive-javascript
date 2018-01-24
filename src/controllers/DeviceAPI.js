@@ -11,7 +11,7 @@ class DeviceAPI extends API {
      */
     constructor(...args) {
         super(...args);
-        this.startEndpoint = 'device'
+        this.type = 'device'
     }
 
     /**
@@ -20,10 +20,10 @@ class DeviceAPI extends API {
      * @returns {promise} selected device
      */
     get(deviceId) {
-        return this.strategy.send({
-            endpoint: `/${this.startEndpoint}/${deviceId}`,
-            action: `${this.startEndpoint}/get`,
-            body: {
+        return this.send({
+            root: true,
+            type: 'get',
+            parameters: {
                 deviceId
             }
         });
@@ -34,12 +34,11 @@ class DeviceAPI extends API {
      * @param {object} query params
      * @returns {promise} list of devices
      */
-    list(query) {
-        return this.strategy.send({
-            endpoint: `/${this.startEndpoint}`,
-            action: `${this.startEndpoint}/list`,
-            body: query,
-            query
+    list(body) {
+        return this.send({
+            body,
+            root: true,
+            type: 'list'
         });
     }
 
@@ -49,11 +48,8 @@ class DeviceAPI extends API {
      * @returns {promise} count of devices
      */
     count(query) {
-        return this.strategy.send({
-            endpoint: `/${this.startEndpoint}/count`,
-            action: `${this.startEndpoint}/count`,
-            body: query,
-            query
+        return this.send({
+            type: 'count'
         });
     }
 
@@ -64,15 +60,14 @@ class DeviceAPI extends API {
      * @returns {promise} count of devices
      */
     save(deviceId, body) {
-        return this.strategy.send({
-            endpoint: `/${this.startEndpoint}/${deviceId}`,
-            action: `${this.startEndpoint}/save`,
+        return this.send({
+            body,
+            root: true,
+            type: 'save',
             method: 'PUT',
-            bodyWS: {
-                deviceId,
-                device: body
-            },
-            body
+            parameters: {
+                deviceId
+            }
         });
     }
 
@@ -82,11 +77,11 @@ class DeviceAPI extends API {
      * @returns {promise}
      */
     delete(deviceId) {
-        return this.strategy.send({
-            endpoint: `/${this.startEndpoint}/${deviceId}`,
-            action: `${this.startEndpoint}/delete`,
+        return this.send({
+            root: true,
+            type: 'delete',
             method: 'DELETE',
-            body: {
+            parameters: {
                 deviceId
             }
         });

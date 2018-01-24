@@ -11,17 +11,14 @@ class InfoAPI extends API {
      */
     constructor(...args) {
         super(...args);
-        this.startEndpoint = 'info';
+        this.type = 'info';
     }
 
     /**
      * Get info
      */
     get() {
-        return this.strategy.send({
-            endpoint: `/${this.startEndpoint}`,
-            action: `server/${this.startEndpoint}`
-        });
+        return this.strategy.send();
     }
 }
 

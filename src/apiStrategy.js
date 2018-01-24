@@ -4,6 +4,7 @@
 
 const EventEmitter = require('events');
 const randomstring = require('randomstring');
+const path = require('path');
 const Rest = require('./transports/Rest');
 const WS = require('./transports/WS');
 
@@ -50,7 +51,7 @@ class APIStrategy extends EventEmitter {
 
         if (this.strategy.type === 'ws') {
             promise = this.send({
-                action: 'authenticate',
+                apiType: 'authenticate',
                 body: {
                     token: this.accessToken
                 }
@@ -68,15 +69,15 @@ class APIStrategy extends EventEmitter {
      * 
      * @returns {function} new model
      */
-    getType(url) {
+    getType(serviceURL) {
         let result;
         switch (true) {
-            case url.startsWith('http'):
-            case url.startsWith('https'):
+            case serviceURL.startsWith('http'):
+            case serviceURL.startsWith('https'):
                 result = Rest;
                 break;
 
-            case url.startsWith('ws'):
+            case serviceURL.startsWith('ws'):
                 result = WS;
                 break;
 
@@ -90,18 +91,27 @@ class APIStrategy extends EventEmitter {
     /**
      * TransportDataBuilder
      */
-    transportDataBuilder({ auth = true, url = 'mainServiceURL', accessToken, endpoint, query, body, bodyWS, method = 'GET', action }) {
+    transportDataBuilder({ auth = true, service = 'mainServiceURL', apiType = '', type = '', parameters, body, method = 'get', root = false }) {
+    // transportDataBuilder({ auth = true, url = 'mainServiceURL', accessToken, endpoint, query, body, bodyWS, method = 'GET', action }) {
+
+        method = method.toUpperCase();
+
         let transferData = {};
         if (this.strategy.type === 'rest') {
-            let fullURL = this.strategy.urls[url] + endpoint;
-
-            if (method === 'GET' && query) {
+            let pathParameter = '';
+            let queryPart = '';
+            if (parameters) pathParameter = parameters[Object.keys(parameters)[0]];
+            
+            if (method === 'GET' && body) {
                 let queryPart = '';
-                Object.keys(query).forEach(key => {
-                    queryPart += `${key}=${query[key]}&`;
+                Object.keys(body).forEach(key => {
+                    queryPart += `${key}=${body[key]}&`;
                 });
                 fullURL = `${fullURL}?${queryPart}`;
             }
+
+            // Generating endproint
+            const fullURL = `${this.strategy.urls[service]}/${path.join(apiType, root? '': type, pathParameter, queryPart)}`;
 
             transferData = {
                 method,
@@ -120,16 +130,16 @@ class APIStrategy extends EventEmitter {
                 transferData.headers.Authorization = `Bearer ${this.accessToken}`;
             }
         } else if (this.strategy.type === 'ws') {
-            if (!action) throw new Error('no action');
-            if (!bodyWS) bodyWS = body;
+            const action = apiType + (type && '/') + type; 
             transferData = {
-                ...bodyWS,
+                ...parameters,
+                ...body,
                 action
             };
             if (!transferData.requestId) {
                 transferData.requestId = randomstring.generate();
             }
-            console.log(transferData);
+            console.log(action, transferData);
         }
 
         return transferData;

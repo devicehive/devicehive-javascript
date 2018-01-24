@@ -3,7 +3,12 @@ class API {
      * API
      */
     constructor({ strategy }) {
-        this.strategy = strategy;
+        this.send = (data) => {
+            return strategy.send({
+                ...data,
+                apiType: this.type
+            });
+        }
     }
 }
 
