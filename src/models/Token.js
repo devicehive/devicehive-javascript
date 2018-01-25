@@ -7,10 +7,10 @@ class Token {
      * @param {object} options ({ login, password, accessToken, refreshToken })
      */
     constructor({ login, password, accessToken, refreshToken }) {
-        this._login = login;
-        this._password = password;
-        this._accessToken = accessToken;
-        this._refreshToken = refreshToken;
+        this.login = login;
+        this.password = password;
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
     }
 
     /**

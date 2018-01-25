@@ -11,7 +11,7 @@ class TokenAPI extends API {
      */
     constructor(...args) {
         super(...args);
-        this.type = 'token';
+        this.type = API.TOKEN_TYPE;
     }
 
     /**

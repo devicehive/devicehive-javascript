@@ -11,7 +11,7 @@ class DeviceAPI extends API {
      */
     constructor(...args) {
         super(...args);
-        this.type = 'device'
+        this.type = API.DEVICE_TYPE;
     }
 
     /**
