@@ -16,8 +16,9 @@ class API {
     constructor({ strategy }) {
         this.send = data => {
             return strategy.send({
+                apiType: this.type,
+                nestedApiType: this.nestedType,
                 ...data,
-                apiType: this.type
             });
         }
     }

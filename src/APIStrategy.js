@@ -96,15 +96,17 @@ class APIStrategy extends EventEmitter {
     /**
      * TransportDataBuilder
      */
-    transportDataBuilder({ auth = true, service = 'mainServiceURL', apiType = '', type = '', parameters, body, method = 'get', root = false }) {
+    transportDataBuilder({ auth = true, service = 'mainServiceURL', apiType = '', type = '', nestedApiType = '', parameters, body, method = 'get', root = false }) {
 
         method = method.toUpperCase();
 
         let transferData = {};
         if (this.strategy.type === 'rest') {
             let pathParameter = '';
+            let netsedPathParameter = '';
             let queryPart = '';
-            if (parameters) pathParameter = String(parameters[Object.keys(parameters)[0]]);
+            if (parameters) pathParameter = String(parameters[Object.keys(parameters)[0]] || '');
+            if (parameters) netsedPathParameter = String(parameters[Object.keys(parameters)[1]] || '');
 
             if (method === 'GET' && body) {
                 let queryPart = '';
@@ -114,9 +116,9 @@ class APIStrategy extends EventEmitter {
                 fullURL = `${fullURL}?${queryPart}`;
             }
 
-
             // Generating endproint
-            const fullURL = `${this.strategy.urls[service]}/${path.join(apiType, root ? '' : type, pathParameter, queryPart)}`;
+            const fullURL = `${this.strategy.urls[service]}/${path.join(apiType, pathParameter, root ? '' : type, nestedApiType, netsedPathParameter, queryPart)}`;
+        
 
             transferData = {
                 method,
