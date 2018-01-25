@@ -97,7 +97,6 @@ class APIStrategy extends EventEmitter {
      * TransportDataBuilder
      */
     transportDataBuilder({ auth = true, service = 'mainServiceURL', apiType = '', type = '', parameters, body, method = 'get', root = false }) {
-        // transportDataBuilder({ auth = true, url = 'mainServiceURL', accessToken, endpoint, query, body, bodyWS, method = 'GET', action }) {
 
         method = method.toUpperCase();
 

@@ -4,6 +4,7 @@
 
 const APIStrategy = require('./APIStrategy');
 
+const Configuration = require('./models/Configuration');
 const Device = require('./models/Device');
 const DeviceCommand = require('./models/DeviceCommand');
 const DeviceNotification = require('./models/DeviceNotification');
@@ -15,6 +16,7 @@ const InfoAPI = require('./controllers/InfoAPI');
 const DeviceAPI = require('./controllers/DeviceAPI');
 const TokenAPI = require('./controllers/TokenAPI');
 const NetworkAPI = require('./controllers/NetworkAPI');
+const ConfigurationAPI = require('./controllers/ConfigurationAPI')
 
 //Source
 
@@ -29,6 +31,7 @@ class DeviceHive extends APIStrategy {
     static model(name) {
         // Entities
         const models = {
+            Configuration,
             Device,
             DeviceCommand,
             DeviceNotification,
@@ -66,6 +69,7 @@ class DeviceHive extends APIStrategy {
         this.device = new DeviceAPI({ strategy: this });
         this.token = new TokenAPI({ strategy: this });
         this.network = new NetworkAPI({ strategy: this });
+        this.configuration = new ConfigurationAPI({ strategy: this });
     }
 
     /**
