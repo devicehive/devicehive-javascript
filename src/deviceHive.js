@@ -28,12 +28,12 @@ class DeviceHive extends APIStrategy {
         super({ mainServiceURL, authServiceURL, pluginServiceURL });
 
         // Credentials
-        this.credentials = {
+        this.credentials = new Token({
             login,
             password,
             accessToken,
             refreshToken
-        };
+        });
 
 
         // API`s

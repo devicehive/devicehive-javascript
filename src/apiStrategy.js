@@ -120,6 +120,11 @@ class APIStrategy extends EventEmitter {
             }
 
             if (method === 'POST' || method === 'PUT') {
+                // if it's a model
+                if (body && typeof body.toObject === 'function') {
+                    body = body.toObject();
+                }
+
                 transferData.json = true;
                 transferData.body = body;
                 transferData.headers['Accept'] = 'application/json';
@@ -130,7 +135,15 @@ class APIStrategy extends EventEmitter {
                 transferData.headers.Authorization = `Bearer ${this.accessToken}`;
             }
         } else if (this.strategy.type === 'ws') {
-            const action = apiType + (type && '/') + type; 
+            const action = apiType + (type && '/') + type;
+
+            // if it's a model
+            if (body && typeof body.toObject === 'function') {
+                body = {
+                    [apiType]: body.toObject()
+                }
+            }
+
             transferData = {
                 ...parameters,
                 ...body,

@@ -173,7 +173,17 @@ class User {
      * @returns {object} A copy of instance
      */
     toObject() {
-        return Object.assign({}, this);
+        return {
+            id: this.id,
+            login: this.login,
+            role: this.role,
+            status: this.status,
+            lastLogin: this.lastLogin,
+            data: this.data,
+            password: this.password,
+            introReviewed: this.introReviewed,
+            allDeviceTypesAvailable: this.allDeviceTypesAvailable
+        }
     }
 
     /**
@@ -181,7 +191,7 @@ class User {
      * @returns {object} A stringified instance
      */
     toString() {
-        JSON.stringify(this);
+        JSON.stringify(this.toObject());
     }
 }
 

@@ -94,7 +94,13 @@ class Device {
      * @returns {object} A copy of instance
      */
     toObject() {
-        return Object.assign({}, this);
+        return {
+            name: this.name,
+            data: this.data,
+            networkId: this.networkId,
+            deviceTypeId: this.deviceTypeId,
+            blocked: this.blocked
+        }
     }
 
     /**
@@ -102,7 +108,7 @@ class Device {
      * @returns {object} A stringified instance
      */
     toString() {
-        JSON.stringify(this);
+        return JSON.stringify(this.toObject());
     }
 }
 

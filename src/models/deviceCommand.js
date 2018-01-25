@@ -206,7 +206,20 @@ class DeviceCommand {
      * @returns {object} A copy of instance
      */
     toObject() {
-        return Object.assign({}, this);
+        return {
+            id: this.id,
+            command: this.command,
+            timestamp: this.timestamp,
+            lastUpdated: this.lastUpdated,
+            userId: this.userId,
+            deviceId: this.deviceId,
+            networkId: this.networkId,
+            deviceTypeId: this.deviceTypeId,
+            parameters: this.parameters,
+            lifetime: this.lifetime,
+            status: this.status,
+            result: this.result,
+        }
     }
 
     /**
@@ -214,7 +227,7 @@ class DeviceCommand {
      * @returns {object} A stringified instance
      */
     toString() {
-        JSON.stringify(this);
+        return JSON.stringify(this.toObject());
     }
 }
 

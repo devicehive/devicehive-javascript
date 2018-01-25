@@ -93,7 +93,12 @@ class DeviceNotification {
      * @returns {object} A copy of instance
      */
     toObject() {
-        return Object.assign({}, this);
+        return {
+            id: this.id,
+            notification: this.notification,
+            timestamp: this.timestamp,
+            parameters: this.parameters
+        }
     }
 
     /**
@@ -101,7 +106,7 @@ class DeviceNotification {
      * @returns {object} A stringified instance
      */
     toString() {
-        JSON.stringify(this);
+        JSON.stringify(this.toObject());
     }
 }
 

@@ -18,32 +18,37 @@ class TokenAPI extends API {
      * Authentificate using login and password
      * @param {object} credentials { login, password }
      */
-    auth(body) {
+    auth({ login, password }) {
         return this.send({
             auth: false,
             service: 'authServiceURL',
             method: 'POST',
-            body
+            body: {
+                login,
+                password
+            }
         });
     }
 
     /**
      * Refresg token
-     * @param {object} { refreshToken }
+     * @param {object} credentials { refreshToken }
      */
-    refresh(body) {
+    refresh({ refreshToken }) {
         return this.send({
             auth: false,
             service: 'authServiceURL',
             method: 'POST',
             type: 'refresh',
-            body
+            body: {
+                refreshToken
+            }
         });
     }
 
     /**
      * Create token
-     * @param {object} { a, e, t, tpc }
+     * @param {object} credentials
      */
     create(body) {
         return this.send({

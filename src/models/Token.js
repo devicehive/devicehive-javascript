@@ -78,7 +78,12 @@ class Token {
      * @returns {object} A copy of instance
      */
     toObject() {
-        return Object.assign({}, this);
+        return {
+            login: this.login,
+            password: this.password,
+            accessToken: this.accessToken,
+            refreshToken: this.refreshToken
+        }
     }
 
     /**
@@ -86,7 +91,7 @@ class Token {
      * @returns {object} A stringified instance
      */
     toString() {
-        JSON.stringify(this);
+        JSON.stringify(this.toObject());
     }
 }
 
