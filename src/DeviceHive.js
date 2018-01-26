@@ -18,8 +18,9 @@ const DeviceAPI = require('./controllers/DeviceAPI');
 const DeviceTypeAPI = require('./controllers/DeviceTypeAPI');
 const TokenAPI = require('./controllers/TokenAPI');
 const NetworkAPI = require('./controllers/NetworkAPI');
-const ConfigurationAPI = require('./controllers/ConfigurationAPI')
-const CommandAPI = require('./controllers/CommandAPI')
+const ConfigurationAPI = require('./controllers/ConfigurationAPI');
+const CommandAPI = require('./controllers/CommandAPI');
+const NotificationAPI = require('./controllers/NotificationAPI');
 
 //Source
 
@@ -75,6 +76,7 @@ class DeviceHive extends APIStrategy {
         this.network = new NetworkAPI({ strategy: this });
         this.configuration = new ConfigurationAPI({ strategy: this });
         this.command = new CommandAPI({ strategy: this });
+        this.notification = new NotificationAPI({ strategy: this });
     }
 
     /**
