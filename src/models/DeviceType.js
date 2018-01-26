@@ -1,9 +1,9 @@
 // Model
 
-class Network {
+class DeviceType {
 
     /**
-     * Network model
+     * DeviceType model
      * @param {object} options ({ id, name, description })
      */
     constructor({ id, name, description }) {
@@ -81,4 +81,4 @@ class Network {
 
 // Exports
 
-module.exports = Network;
+module.exports = DeviceType;

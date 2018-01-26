@@ -7,18 +7,18 @@ class DeviceCommand {
      * @param {object} options ({ id, command, timestamp, lastUpdated, userId, deviceId, networkId, deviceTypeId, parameters, lifetime, status, result })
      */
     constructor({ id, command, timestamp, lastUpdated, userId, deviceId, networkId, deviceTypeId, parameters, lifetime, status, result }) {
-        this._id = id;
-        this._command = command;
-        this._timestamp = timestamp;
-        this._lastUpdated = lastUpdated;
-        this._userId = userId;
-        this._deviceId = deviceId;
-        this._networkId = networkId;
-        this._deviceTypeId = deviceTypeId;
-        this._parameters = parameters;
-        this._lifetime = lifetime;
-        this._status = status;
-        this._result = result;
+        this.id = id;
+        this.command = command;
+        this.timestamp = timestamp;
+        this.lastUpdated = lastUpdated;
+        this.userId = userId;
+        this.deviceId = deviceId;
+        this.networkId = networkId;
+        this.deviceTypeId = deviceTypeId;
+        this.parameters = parameters;
+        this.lifetime = lifetime;
+        this.status = status;
+        this.result = result;
     }
 
     /**
@@ -206,7 +206,20 @@ class DeviceCommand {
      * @returns {object} A copy of instance
      */
     toObject() {
-        return Object.assign({}, this);
+        return {
+            id: this.id,
+            command: this.command,
+            timestamp: this.timestamp,
+            lastUpdated: this.lastUpdated,
+            userId: this.userId,
+            deviceId: this.deviceId,
+            networkId: this.networkId,
+            deviceTypeId: this.deviceTypeId,
+            parameters: this.parameters,
+            lifetime: this.lifetime,
+            status: this.status,
+            result: this.result,
+        }
     }
 
     /**
@@ -214,7 +227,7 @@ class DeviceCommand {
      * @returns {object} A stringified instance
      */
     toString() {
-        JSON.stringify(this);
+        return JSON.stringify(this.toObject());
     }
 }
 

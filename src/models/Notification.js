@@ -7,10 +7,10 @@ class DeviceNotification {
      * @param {object} options ({ id, notification, timestamp, parameters })
      */
     constructor({ id, notification, timestamp, parameters }) {
-        this._id = id;
-        this._notification = notification;
-        this._timestamp = timestamp;
-        this._parameters = parameters;
+        this.id = id;
+        this.notification = notification;
+        this.timestamp = timestamp;
+        this.parameters = parameters;
     }
 
     /**
@@ -93,7 +93,12 @@ class DeviceNotification {
      * @returns {object} A copy of instance
      */
     toObject() {
-        return Object.assign({}, this);
+        return {
+            id: this.id,
+            notification: this.notification,
+            timestamp: this.timestamp,
+            parameters: this.parameters
+        }
     }
 
     /**
@@ -101,7 +106,7 @@ class DeviceNotification {
      * @returns {object} A stringified instance
      */
     toString() {
-        JSON.stringify(this);
+        JSON.stringify(this.toObject());
     }
 }
 

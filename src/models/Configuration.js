@@ -1,30 +1,15 @@
 // Model
 
-class Network {
+class Configuration {
 
     /**
-     * Network model
-     * @param {object} options ({ id, name, description })
+     * Configuration model
+     * @param {object} options ({ name, value, entityVersion })
      */
-    constructor({ id, name, description }) {
-        this.id = id;
+    constructor({ name, value, entityVersion }) {
         this.name = name;
-        this.description = description;
-    }
-
-    /**
-     * @returns {number} id;
-     */
-    get id() {
-        return this._id;
-    }
-
-    /**
-    * @param {number} value;
-    * @returns {number} id;
-    */
-    set id(value) {
-        this._id = value;
+        this.value = value;
+        this.entityVersion = entityVersion;
     }
 
     /**
@@ -45,16 +30,31 @@ class Network {
     /**
      * @returns {string} description;
      */
-    get description() {
-        return this._description;
+    get value() {
+        return this._value;
     }
 
     /**
      * @param {string} value;
-     * @returns {string} description;
+     * @returns {string} value;
      */
-    set description(value) {
-        this._description = value;
+    set value(value) {
+        this._value = value;
+    }
+
+    /**
+     * @returns {number} entityVersion;
+     */
+    get entityVersion() {
+        return this._entityVersion;
+    }
+
+    /**
+    * @param {number} value;
+    * @returns {number} entityVersion;
+    */
+    set entityVersion(value) {
+        this._entityVersion = value;
     }
 
     /**
@@ -63,9 +63,9 @@ class Network {
      */
     toObject() {
         return {
-            id: this.id,
             name: this.name,
-            description: this.description
+            value: this.value,
+            entityVersion: this.entityVersion
         }
     }
 
@@ -81,4 +81,4 @@ class Network {
 
 // Exports
 
-module.exports = Network;
+module.exports = Configuration;

@@ -11,7 +11,7 @@ class InfoAPI extends API {
      */
     constructor(...args) {
         super(...args);
-        this.type = 'info';
+        this.type = API.INFO_TYPE;
     }
 
     /**
