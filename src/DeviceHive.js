@@ -14,6 +14,7 @@ const Token = require('./models/Token');
 const User = require('./models/User');
 
 const InfoAPI = require('./controllers/InfoAPI');
+const UserAPI = require('./controllers/UserAPI');
 const DeviceAPI = require('./controllers/DeviceAPI');
 const DeviceTypeAPI = require('./controllers/DeviceTypeAPI');
 const TokenAPI = require('./controllers/TokenAPI');
@@ -71,6 +72,7 @@ class DeviceHive extends APIStrategy {
 
         // API`s
         this.info = new InfoAPI({ strategy: this });
+        this.user = new UserAPI({ strategy: this });
         this.device = new DeviceAPI({ strategy: this });
         this.token = new TokenAPI({ strategy: this });
         this.network = new NetworkAPI({ strategy: this });
