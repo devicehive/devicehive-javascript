@@ -6,17 +6,21 @@ const APIStrategy = require('./APIStrategy');
 
 const Configuration = require('./models/Configuration');
 const Device = require('./models/Device');
-const DeviceCommand = require('./models/DeviceCommand');
-const DeviceNotification = require('./models/DeviceNotification');
+const DeviceType = require('./models/DeviceType');
+const Command = require('./models/Command');
+const Notification = require('./models/Notification');
 const Network = require('./models/Network');
 const Token = require('./models/Token');
 const User = require('./models/User');
 
 const InfoAPI = require('./controllers/InfoAPI');
 const DeviceAPI = require('./controllers/DeviceAPI');
+const DeviceTypeAPI = require('./controllers/DeviceTypeAPI');
 const TokenAPI = require('./controllers/TokenAPI');
 const NetworkAPI = require('./controllers/NetworkAPI');
-const ConfigurationAPI = require('./controllers/ConfigurationAPI')
+const ConfigurationAPI = require('./controllers/ConfigurationAPI');
+const CommandAPI = require('./controllers/CommandAPI');
+const NotificationAPI = require('./controllers/NotificationAPI');
 
 //Source
 
@@ -25,7 +29,7 @@ class DeviceHive extends APIStrategy {
     /**
      * Returns an model of DeviceHive
      * 
-     * @param {String} name (Device | DeviceCommand | DeviceNotification | Network | Token | User)
+     * @param {String} name (Configuration | Device | Command | Notification | Network | Token | User)
      * @return {Object} Entity 
      */
     static model(name) {
@@ -33,8 +37,9 @@ class DeviceHive extends APIStrategy {
         const models = {
             Configuration,
             Device,
-            DeviceCommand,
-            DeviceNotification,
+            DeviceType,
+            Command,
+            Notification,
             Network,
             Token,
             User
@@ -70,6 +75,8 @@ class DeviceHive extends APIStrategy {
         this.token = new TokenAPI({ strategy: this });
         this.network = new NetworkAPI({ strategy: this });
         this.configuration = new ConfigurationAPI({ strategy: this });
+        this.command = new CommandAPI({ strategy: this });
+        this.notification = new NotificationAPI({ strategy: this });
     }
 
     /**

@@ -9,7 +9,6 @@ const Rest = require('./transports/Rest');
 const WS = require('./transports/WS');
 const API = require('./controllers/API');
 
-
 // API Strategy
 
 /**
@@ -113,12 +112,13 @@ class APIStrategy extends EventEmitter {
                 Object.keys(body).forEach(key => {
                     queryPart += `${key}=${body[key]}&`;
                 });
-                fullURL = `${fullURL}?${queryPart}`;
+                queryPart = `?${queryPart}`;
             }
 
             // Generating endproint
             const fullURL = `${this.strategy.urls[service]}/${path.join(apiType, pathParameter, root ? '' : type, nestedApiType, netsedPathParameter, queryPart)}`;
-        
+
+            console.log(fullURL);
 
             transferData = {
                 method,
@@ -142,12 +142,12 @@ class APIStrategy extends EventEmitter {
                 transferData.headers.Authorization = `Bearer ${this.accessToken}`;
             }
         } else if (this.strategy.type === 'ws') {
-            const action = apiType + (type && '/') + type;
+            const action = (nestedApiType || apiType) + (type && '/') + type;
 
             // if it's a model
             if (body && typeof body.toObject === 'function') {
                 body = {
-                    [apiType]: body.toObject()
+                    [nestedApiType || apiType]: body.toObject()
                 }
             }
 
