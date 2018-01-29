@@ -95,7 +95,7 @@ class APIStrategy extends EventEmitter {
     /**
      * TransportDataBuilder
      */
-    transportDataBuilder({ auth = true, service = 'mainServiceURL', apiType = '', type = '', nestedApiType = '', parameters, body, method = 'get', root = false, alternativeType='' }) {
+    transportDataBuilder({ auth = true, service = 'mainServiceURL', apiType = '', type = '', nestedApiType = '', parameters, body, method = 'get', root = false }) {
 
         method = method.toUpperCase();
 
@@ -115,8 +115,11 @@ class APIStrategy extends EventEmitter {
                 queryPart = `?${queryPart}`;
             }
 
+            root ? '' : type
+            type = type.replace(/^[^A-Z]+/, '').toLowerCase();
+
             // Generating endproint
-            const fullURL = `${this.strategy.urls[service]}/${path.join(apiType, pathParameter, root? '': type, nestedApiType, netsedPathParameter, queryPart)}`;
+            const fullURL = `${this.strategy.urls[service]}/${path.join(apiType, pathParameter, type, nestedApiType, netsedPathParameter, queryPart)}`;
 
             console.log(fullURL);
 
