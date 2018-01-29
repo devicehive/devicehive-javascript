@@ -1,12 +1,27 @@
 const format = require("string-template");
 const queryString = require('query-string');
 
-class HttpApiReslover {
 
+/**
+ *
+ */
+class HttpApiResolver {
+
+    /**
+     *
+     * @param base
+     * @param parameters
+     * @returns {string}
+     */
     static buildUrl(base, parameters) {
         return `${format(base, parameters)}?${queryString.stringify(parameters)}`;
     }
 
+    /**
+     *
+     * @param method
+     * @param uri
+     */
     constructor({ method, uri }) {
         const me = this;
 
@@ -14,11 +29,17 @@ class HttpApiReslover {
         me.uri = uri;
     }
 
+    /**
+     *
+     * @param parameters
+     * @param body
+     * @returns {{method: *, endpoint: string}}
+     */
     build(parameters, body) {
         const me = this;
         const result = {
             method: me.method,
-            endpoint: HttpApiReslover.buildUrl(me.uri, parameters)
+            endpoint: HttpApiResolver.buildUrl(me.uri, parameters)
         };
 
         if (body) {
@@ -29,4 +50,5 @@ class HttpApiReslover {
     }
 }
 
-module.exports = HttpApiReslover;
+
+module.exports = HttpApiResolver;

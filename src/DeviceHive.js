@@ -13,14 +13,14 @@ const Network = require('./models/Network');
 const Token = require('./models/Token');
 const User = require('./models/User');
 
-const InfoAPI = require('./controllers/InfoAPI');
+const InfoAPI = require('./controllers/ServerInfoAPI');
 const DeviceAPI = require('./controllers/DeviceAPI');
 const DeviceTypeAPI = require('./controllers/DeviceTypeAPI');
 const TokenAPI = require('./controllers/TokenAPI');
 const NetworkAPI = require('./controllers/NetworkAPI');
 const ConfigurationAPI = require('./controllers/ConfigurationAPI');
-const CommandAPI = require('./controllers/CommandAPI');
-const NotificationAPI = require('./controllers/NotificationAPI');
+const CommandAPI = require('./controllers/DeviceCommandAPI');
+const NotificationAPI = require('./controllers/DeviceNotificationAPI');
 
 //Source
 
@@ -57,7 +57,7 @@ class DeviceHive extends APIStrategy {
      */
     constructor({ accessToken, refreshToken, login, password, mainServiceURL, authServiceURL, pluginServiceURL }) {
 
-        // APIStrategy
+        // ApiStrategy
         super({ mainServiceURL, authServiceURL, pluginServiceURL });
 
         // Credentials

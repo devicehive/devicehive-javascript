@@ -1,4 +1,14 @@
-class WebSocketApiReslover {
+
+/**
+ *
+ */
+class WebSocketApiResolver {
+
+    /**
+     *
+     * @param action
+     * @param bodyKey
+     */
     constructor({ action, bodyKey }) {
         const me = this;
 
@@ -6,6 +16,12 @@ class WebSocketApiReslover {
         me.bodyKey = bodyKey;
     }
 
+    /**
+     *
+     * @param parameters
+     * @param body
+     * @returns {{action: *}}
+     */
     build(parameters, body) {
         const me = this;
         const result = {
@@ -21,4 +37,4 @@ class WebSocketApiReslover {
     }
 }
 
-module.exports = WebSocketApiReslover;
+module.exports = WebSocketApiResolver;

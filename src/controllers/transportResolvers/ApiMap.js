@@ -1,8 +1,9 @@
-const API = require(`./API`);
-const HttpApiReslover = require(`./HttpApiReslover`);
-const WebSocketApiReslover = require(`./WebSocketApiReslover`);
-const apiMap = new Map();
+const API = require(`../API`);
+const HttpApiResolver = require(`./HttpApiResolver`);
+const WebSocketApiResolver = require(`./WebSocketApiResolver`);
 
+
+const apiMap = new Map();
 
 apiMap.set(API.login, { http: { method: 'POST', uri: '/token'}, ws: { action: 'token' } }); 
 apiMap.set(API.createUserToken, { http: { method: 'POST', uri: '/token/create'}, ws: { action: 'token/create', bodyKey: 'payload' } }); 
@@ -87,10 +88,10 @@ class ApiMap {
 
         switch (transport) {
             case 'http':
-                transportAPI = new HttpApiReslover(apiMap.get(key).http);
+                transportAPI = new HttpApiResolver(apiMap.get(key).http);
                 break;
             case 'ws':
-                transportAPI = new WebSocketApiReslover(apiMap.get(key).ws);
+                transportAPI = new WebSocketApiResolver(apiMap.get(key).ws);
                 break;
         }
 

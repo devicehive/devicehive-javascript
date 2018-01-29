@@ -1,20 +1,18 @@
-'use strict';
-
-// Requirements
-
 const request = require('request');
-const APIStrategy = require('../APIStrategy');
 
 
-// Transport
+/**
+ *
+ */
+class HTTP {
 
-class Rest {
+    static get TYPE() { return `http`; }
 
     /**
      * Rest API
      */
     constructor(urls) {
-        this.type = 'rest';
+        this.type = HTTP.TYPE;
         this.urls = urls;
     }
 
@@ -29,9 +27,8 @@ class Rest {
     /**
      * Rest API send method
      */
-    send(options) {
-
-        const promise = new Promise((resolve, reject) => {
+    send(url, body) {
+        return new Promise((resolve, reject) => {
 
             request(options, (err, res, body) => {
                 if (err) {
@@ -41,9 +38,8 @@ class Rest {
             });
     
         });
-
-        return promise;
     }
 }
+
 
 module.exports = Rest;

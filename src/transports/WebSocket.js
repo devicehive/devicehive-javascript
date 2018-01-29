@@ -1,14 +1,16 @@
-'use strict';
 
-// Transport
+/**
+ *
+ */
+class WebSocket {
 
-class WS {
+    static get TYPE() { return `ws`; }
 
     /**
-     * WS API
+     * WebSocket API
      */
     constructor({ mainServiceURL }) {
-        this.type = 'ws';
+        this.type = WebSocket.TYPE;
         this.urls = { mainServiceURL };
 
         // if it's node.js environment
@@ -20,7 +22,7 @@ class WS {
     }
 
     /**
-     * Initialize WS API
+     * Initialize WebSocket API
      * 
      * @returns {promise} when initialized
      */
@@ -32,16 +34,15 @@ class WS {
     }
 
     /**
-     * WS API send method
+     * WebSocket API send method
      */
-    send(params) {
-
+    send(data) {
         return new Promise((resolve, reject) => {
-            this.socket.send(JSON.stringify(params));
+            this.socket.send(JSON.stringify(data));
             const listener = event => {
                 const messageData = JSON.parse(event.data);
-                if (messageData.action === params.action) {
-                    if (messageData.requestId === params.requestId) {
+                if (messageData.action === data.action) {
+                    if (messageData.requestId === data.requestId) {
                         this.socket.removeEventListener('message', listener);
                         if (messageData.status === 'success') {
                             resolve(messageData);
@@ -50,7 +51,7 @@ class WS {
                         }
                     }
                 }
-            }
+            };
 
             this.socket.addEventListener('message', listener);
         })
@@ -59,6 +60,4 @@ class WS {
 }
 
 
-// Epxorts
-
-module.exports = WS;
+module.exports = WebSocket;
