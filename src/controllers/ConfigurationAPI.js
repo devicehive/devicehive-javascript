@@ -1,76 +1,38 @@
-'use strict';
-
 const API = require('./API');
 
-// API
 
+/**
+ *
+ */
 class ConfigurationAPI extends API {
 
     /**
-     * ConfigurationAPI
-     */
-    constructor(...args) {
-        super(...args);
-        this.type = API.CONFIGURATION_TYPE;
-    }
-
-    /**
-     * Returns information about the current configeration
+     * Returns information about the current configuration
      * @param {number} name
-     * @returns {promise} selected configeration
+     * @returns {Promise} selected configuration
      */
     get(name) {
-        return this.send({
-            root: true,
-            type: 'get',
-            parameters: {
-                name
-            }
-        });
+        return this.send(API.getConfiguration, { name: name });
     }
 
     /**
-     * Updates a configeration
-     * @param {number} name
-     * @param {object} body configeration data
-     * @returns {promise} count of configerations
+     * Updates a configuration
+     * @param {Configuration} configuration
+     * @returns {Promise} count of configuration
      */
-    put(name, body) {
-
-        // Specific to this method
-        if (body && typeof body.toObject === 'function') {
-            body = body.toObject();
-        }
-
-        return this.send({
-            body,
-            root: true,
-            type: 'put',
-            method: 'PUT',
-            parameters: {
-                name
-            }
-        });
+    put(configuration) {
+        return this.send(API.putConfiguration, { name: configuration.name, value: configuration.value });
     }
 
     /**
-     * Deletes an existing configeration
+     * Deletes an existing configuration
      * @param {number} name
-     * @returns {promise}
+     * @returns {Promise}
      */
     delete(name) {
-        return this.send({
-            root: true,
-            type: 'delete',
-            method: 'DELETE',
-            parameters: {
-                name
-            }
-        });
+        return this.send(API.deleteConfiguration, { name: name });
     }
 }
 
-
-// Exports
 
 module.exports = ConfigurationAPI;

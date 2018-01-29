@@ -1,67 +1,36 @@
-'use strict';
-
 const API = require('./API');
 
-// API
 
+/**
+ *
+ */
 class TokenAPI extends API {
 
     /**
-     * TokenAPI
-     */
-    constructor(...args) {
-        super(...args);
-        this.type = API.TOKEN_TYPE;
-    }
-
-    /**
      * Authentificate using login and password
-     * @param {object} credentials { login, password }
+     * @param {string} login
+     * @param {string} password
      */
-    auth({ login, password }) {
-        return this.send({
-            auth: false,
-            service: 'authServiceURL',
-            method: 'POST',
-            body: {
-                login,
-                password
-            }
-        });
-    }
-
-    /**
-     * Refresg token
-     * @param {object} credentials { refreshToken }
-     */
-    refresh({ refreshToken }) {
-        return this.send({
-            auth: false,
-            service: 'authServiceURL',
-            method: 'POST',
-            type: 'refresh',
-            body: {
-                refreshToken
-            }
-        });
+    login(login, password) {
+        return this.send(API.login, { login: login, password: password });
     }
 
     /**
      * Create token
-     * @param {object} credentials
+     * @param {Token} token
      */
-    create(body) {
-        return this.send({
-            auth: false,
-            service: 'authServiceURL',
-            method: 'POST',
-            type: 'create',
-            body
-        });
+    create(token) {
+        return this.send(API.createUserToken, {}, token);
+    }
+
+    /**
+     * Refresg token
+     * @param {string} refreshToken
+     */
+    refresh(refreshToken) {
+        return this.send(API.refreshToken, {}, refreshToken); //TODO
     }
 }
 
-
-// Exports
 
 module.exports = TokenAPI;

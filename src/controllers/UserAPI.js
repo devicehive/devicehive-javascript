@@ -7,14 +7,6 @@ const API = require('./API');
 class UserAPI extends API {
 
     /**
-     * UserAPI
-     */
-    constructor(...args) {
-        super(...args);
-        this.type = API.USER_TYPE;
-    }
-
-    /**
      * Returns information about the current user
      * @param {number} userId
      * @returns {promise} selected user

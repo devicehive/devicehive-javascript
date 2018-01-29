@@ -1,28 +1,25 @@
-'use strict';
-
 const API = require('./API');
 
-// API
 
+/**
+ *
+ */
 class InfoAPI extends API {
 
     /**
-     * TokenAPI
+     * Get server info
      */
-    constructor(...args) {
-        super(...args);
-        this.type = API.INFO_TYPE;
+    getServerInfo() {
+        return this.strategy.send(API.getServerInfo);
     }
 
     /**
-     * Get info
+     * Get cluster info
      */
-    get() {
-        return this.strategy.send();
+    getClusterInfo() {
+        return this.strategy.send(API.getClusterInfo);
     }
 }
 
-
-// Exports
 
 module.exports = InfoAPI;

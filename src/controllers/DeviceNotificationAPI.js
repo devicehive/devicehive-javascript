@@ -1,72 +1,41 @@
-'use strict';
-
 const API = require('./API');
 
-// API
 
+/**
+ *
+ */
 class DeviceNotificationAPI extends API {
-
-    /**
-     * DeviceNotificationAPI
-     */
-    constructor(...args) {
-        super(...args);
-        this.type = API.DEVICE_TYPE;
-        this.nestedType = API.DEVICENOTIFICATION_TYPE;
-    }
 
     /**
      * Returns information about the current notification
      * @param {number} deviceId - Device ID
      * @param {number} notificationId - Notification ID
-     * @returns {promise} selected notification
+     * @returns {Promise} selected notification
      */
     get(deviceId, notificationId) {
-        return this.send({
-            root: true,
-            type: 'get',
-            parameters: {
-                deviceId,
-                notificationId
-            }
-        });
+        return this.send(API.getNotification, { deviceId: deviceId, notificationId: notificationId });
     }
 
     /**
      * Return a list of notifications
-     * @param {object} query params
-     * @returns {promise} list of notifications
+     * @param {string} deviceId
+     * @param {Query} query
+     * @returns {Promise} list of notifications
      */
-    list(deviceId, body) {
-        return this.send({
-            body,
-            root: true,
-            type: 'list',
-            parameters: {
-                deviceId
-            }
-        });
+    list(deviceId, query) {
+        return this.send(API.listNotification, query);
     }
 
     /**
      * Registers a notification
-     * @param {object} body notification data
-     * @returns {promise} count of notifications
+     * @param {string} deviceId
+     * @param {Notification} notification
+     * @returns {Promise} count of notifications
      */
-    insert(deviceId, body) {
-        return this.send({
-            body,
-            root: true,
-            type: 'insert',
-            method: 'POST',
-            parameters: {
-                deviceId
-            }
-        });
+    insert(deviceId, notification) {
+        return this.send(API.insertNotification, { deviceId: deviceId }, notification);
     }
 }
 
-
-// Exports
 
 module.exports = DeviceNotificationAPI;

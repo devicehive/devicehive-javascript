@@ -1,93 +1,51 @@
-'use strict';
-
 const API = require('./API');
 
-// API
 
+/**
+ *
+ */
 class DeviceCommandAPI extends API {
-
-    /**
-     * DeviceCommandAPI
-     */
-    constructor(...args) {
-        super(...args);
-        this.type = API.DEVICE_TYPE;
-        this.nestedType = API.DEVICECOMMAND_TYPE;
-    }
 
     /**
      * Returns information about the current command
      * @param {number} deviceId - Device ID
-     * @param {number} [commandId] - Command ID
-     * @returns {promise} selected command
+     * @param {number} commandId - Command ID
+     * @returns {Promise} selected command
      */
     get(deviceId, commandId) {
-        return this.send({
-            root: true,
-            type: 'get',
-            parameters: {
-                deviceId,
-                commandId
-            }
-        });
+        return this.send(API.getCommand, { deviceId: deviceId, commandId: commandId });
     }
 
     /**
      * Return a list of commands
-     * @param {number} deviceId - Device ID
-     * @param {object} body - Params
-     * @returns {promise} list of commands
+     * @param {object} query - Params
+     * @returns {Promise} list of commands
      */
-    list(deviceId, body) {
-        return this.send({
-            body,
-            root: true,
-            type: 'list',
-            parameters: {
-                deviceId
-            }
-        });
+    list(query) {
+        return this.send(API.listCommand, query);
     }
 
     /**
      * Registers a command
      * @param {number} deviceId - Device ID
-     * @param {object} body command data
-     * @returns {promise} count of commands
+     * @param {Command} command data
+     * @returns {Promise} count of commands
      */
-    insert(deviceId, body) {
-        return this.send({
-            body,
-            root: true,
-            type: 'insert',
-            method: 'POST',
-            parameters: {
-                deviceId
-            }
-        });
+    insert(deviceId, command) {
+        return this.send(API.insertCommand, { deviceId: deviceId }, command);
     }
 
     /**
      * Updates a command
-     * @param {number} deviceId
-     * @param {object} body command data
-     * @returns {promise} count of commands
+     * @param {string} deviceId
+     * @param {number} commandId
+     * @param {Command} command data
+     * @returns {Promise} count of commands
      */
-    update(deviceId, commandId, body) {
-        return this.send({
-            body,
-            root: true,
-            type: 'update',
-            method: 'PUT',
-            parameters: {
-                deviceId,
-                commandId
-            }
-        });
+    update(deviceId, commandId, command) {
+        return this.send({ deviceId: deviceId, commandId: commandId }, command);
     }
 }
 
-
-// Exports
 
 module.exports = DeviceCommandAPI;

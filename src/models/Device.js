@@ -91,7 +91,7 @@ class Device {
     }
 
     /**
-     * @returns {string} blocked;
+     * @returns {boolean} blocked;
      */
     get blocked() {
         return this._blocked;
