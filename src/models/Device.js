@@ -1,5 +1,7 @@
-// Model
 
+/**
+ *
+ */
 class Device {
 
     /**
@@ -91,7 +93,7 @@ class Device {
     }
 
     /**
-     * @returns {string} blocked;
+     * @returns {boolean} blocked;
      */
     get blocked() {
         return this._blocked;
@@ -129,7 +131,5 @@ class Device {
     }
 }
 
-
-// Exports
 
 module.exports = Device;

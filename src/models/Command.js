@@ -1,5 +1,7 @@
-// Model
 
+/**
+ *
+ */
 class DeviceCommand {
 
     /**
@@ -202,6 +204,21 @@ class DeviceCommand {
     }
 
     /**
+     * @returns {string} status;
+     */
+    get result() {
+        return this._result;
+    }
+
+    /**
+     * @param {string} value;
+     * @returns {string} status;
+     */
+    set result(value) {
+        this._result = value;
+    }
+
+    /**
      * Returns a copy of instance
      * @returns {object} A copy of instance
      */
@@ -231,7 +248,5 @@ class DeviceCommand {
     }
 }
 
-
-// Exports
 
 module.exports = DeviceCommand;

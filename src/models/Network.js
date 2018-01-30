@@ -1,5 +1,7 @@
-// Model
 
+/**
+ *
+ */
 class Network {
 
     /**
@@ -78,7 +80,5 @@ class Network {
     }
 }
 
-
-// Exports
 
 module.exports = Network;

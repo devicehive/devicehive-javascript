@@ -1,108 +1,67 @@
-'use strict';
-
 const API = require('./API');
+const ApiMap = require(`./transportResolvers/ApiMap`);
 
-// API
 
+/**
+ *
+ */
 class NetworkAPI extends API {
-
-    /**
-     * NetworkAPI
-     */
-    constructor(...args) {
-        super(...args);
-        this.type = API.NETWORK_TYPE;
-    }
 
     /**
      * Returns information about the current network
      * @param {number} networkId
-     * @returns {promise} selected network
+     * @returns {Promise} selected network
      */
     get(networkId) {
-        return this.send({
-            root: true,
-            type: 'get',
-            parameters: {
-                networkId
-            }
-        });
+        return this.send(ApiMap.getNetwork, { networkId: networkId });
     }
 
     /**
      * Return a list of networks
-     * @param {object} query params
-     * @returns {promise} list of networks
+     * @param {Query} query params
+     * @returns {Promise} list of networks
      */
-    list(body) {
-        return this.send({
-            body,
-            root: true,
-            type: 'list'
-        });
+    list(query) {
+        return this.send(ApiMap.listNetwork, query.toObject());
     }
 
     /**
      * Returns count of networks
-     * @param {object} query params
-     * @returns {promise} count of networks
+     * @param {Query} query params
+     * @returns {Promise} count of networks
      */
     count(query) {
-        return this.send({
-            type: 'count'
-        });
+        return this.send(ApiMap.countNetwork, query.toObject());
     }
 
     /**
      * Registers a network
-     * @param {object} body network data
-     * @returns {promise} count of networks
+     * @param {Network} network data
+     * @returns {Promise} count of networks
      */
-    insert(body) {
-        return this.send({
-            body,
-            root: true,
-            type: 'insert',
-            method: 'POST'
-        });
+    insert(network) {
+        return this.send(ApiMap.addNetwork, {}, network.toObject());
     }
 
     /**
      * Updates a network
      * @param {number} networkId
-     * @param {object} body network data
-     * @returns {promise} count of networks
+     * @param {Network} network data
+     * @returns {Promise} count of networks
      */
-    update(networkId, body) {
-        return this.send({
-            body,
-            root: true,
-            type: 'update',
-            method: 'PUT',
-            parameters: {
-                networkId
-            }
-        });
+    update(network) {
+        return this.send(ApiMap.updateNetwork, { networkId: network.id }, network.toObject());
     }
 
     /**
      * Deletes an existing network
      * @param {number} networkId
-     * @returns {promise}
+     * @returns {Promise}
      */
     delete(networkId) {
-        return this.send({
-            root: true,
-            type: 'delete',
-            method: 'DELETE',
-            parameters: {
-                networkId
-            }
-        });
+        return this.send(ApiMap.deleteNetwork, { networkId: networkId });
     }
 }
 
-
-// Exports
 
 module.exports = NetworkAPI;

@@ -1,108 +1,66 @@
-'use strict';
-
 const API = require('./API');
+const ApiMap = require(`./transportResolvers/ApiMap`);
 
-// API
 
+/**
+ *
+ */
 class DeviceTypeAPI extends API {
-
-    /**
-     * DeviceTypeAPI
-     */
-    constructor(...args) {
-        super(...args);
-        this.type = API.DEVICETYPE_TYPE;
-    }
 
     /**
      * Returns information about the current deviceType
      * @param {number} deviceTypeId
-     * @returns {promise} selected deviceType
+     * @returns {Promise} selected deviceType
      */
     get(deviceTypeId) {
-        return this.send({
-            root: true,
-            type: 'get',
-            parameters: {
-                deviceTypeId
-            }
-        });
+        return this.send(ApiMap.getDeviceType, { deviceTypeId: deviceTypeId });
     }
 
     /**
      * Return a list of deviceTypes
-     * @param {object} query params
-     * @returns {promise} list of deviceTypes
+     * @param {Query} query params
+     * @returns {Promise} list of deviceTypes
      */
-    list(body) {
-        return this.send({
-            body,
-            root: true,
-            type: 'list'
-        });
+    list(query) {
+        return this.send(ApiMap.listDeviceType, query.toObject());
     }
 
     /**
      * Returns count of deviceTypes
-     * @param {object} query params
-     * @returns {promise} count of deviceTypes
+     * @param {Query} query params
+     * @returns {Promise} count of deviceTypes
      */
     count(query) {
-        return this.send({
-            type: 'count'
-        });
+        return this.send(ApiMap.countDeviceType, query.toObject());
     }
 
     /**
      * Registers a deviceType
-     * @param {object} body deviceType data
-     * @returns {promise} count of deviceTypes
+     * @param {DeviceType} deviceType data
+     * @returns {Promise} count of deviceTypes
      */
-    insert(body) {
-        return this.send({
-            body,
-            root: true,
-            type: 'insert',
-            method: 'POST'
-        });
+    insert(deviceType) {
+        return this.send(ApiMap.addDeviceType, {}, deviceType.toObject());
     }
 
     /**
      * Updates a deviceType
-     * @param {number} deviceTypeId
-     * @param {object} body deviceType data
-     * @returns {promise} count of deviceTypes
+     * @param {DeviceType} deviceType data
+     * @returns {Promise} count of deviceTypes
      */
-    update(deviceTypeId, body) {
-        return this.send({
-            body,
-            root: true,
-            type: 'update',
-            method: 'PUT',
-            parameters: {
-                deviceTypeId
-            }
-        });
+    update(deviceType) {
+        return this.send(ApiMap.updateDeviceType, { deviceTypeId: deviceType.id }, deviceType.toObject());
     }
 
     /**
      * Deletes an existing deviceType
      * @param {number} deviceTypeId
-     * @returns {promise}
+     * @returns {Promise}
      */
     delete(deviceTypeId) {
-        return this.send({
-            root: true,
-            type: 'delete',
-            method: 'DELETE',
-            parameters: {
-                deviceTypeId
-            }
-        });
+        return this.send(ApiMap.deleteDeviceType, { deviceTypeId: deviceTypeId });
     }
 }
 
-
-// Exports
 
 module.exports = DeviceTypeAPI;

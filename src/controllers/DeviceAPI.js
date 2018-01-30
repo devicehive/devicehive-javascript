@@ -1,94 +1,57 @@
-'use strict';
-
 const API = require('./API');
+const ApiMap = require(`./transportResolvers/ApiMap`);
 
-// API
 
+/**
+ *
+ */
 class DeviceAPI extends API {
-
-    /**
-     * DeviceAPI
-     */
-    constructor(...args) {
-        super(...args);
-        this.type = API.DEVICE_TYPE;
-    }
 
     /**
      * Returns information about the current device
      * @param {string} deviceId
-     * @returns {promise} selected device
+     * @returns {Promise} selected device
      */
     get(deviceId) {
-        return this.send({
-            root: true,
-            type: 'get',
-            parameters: {
-                deviceId
-            }
-        });
+        return this.send(ApiMap.getDevice, { deviceId: deviceId });
     }
 
     /**
      * Return a list of devices
      * @param {object} query params
-     * @returns {promise} list of devices
+     * @returns {Promise} list of devices
      */
-    list(body) {
-        return this.send({
-            body,
-            root: true,
-            type: 'list'
-        });
+    list(query) {
+        return this.send(ApiMap.listDevice, query.toObject());
     }
 
     /**
      * Returns count of devices
      * @param {object} query params
-     * @returns {promise} count of devices
+     * @returns {Promise} count of devices
      */
     count(query) {
-        return this.send({
-            type: 'count'
-        });
+        return this.send(ApiMap.countDevice, query.toObject());
     }
 
     /**
      * Registers or updates a device
-     * @param {string} deviceId
-     * @param {object} body device data
-     * @returns {promise} count of devices
+     * @param {object} device data
+     * @returns {Promise} count of devices
      */
-    save(deviceId, body) {
-        return this.send({
-            body,
-            root: true,
-            type: 'save',
-            method: 'PUT',
-            parameters: {
-                deviceId
-            }
-        });
+    add(device) {
+        return this.send(ApiMap.addDevice, { deviceId: device.id }, device.toObject());
     }
 
     /**
      * Deletes an existing device
      * @param {string} deviceId
-     * @returns {promise}
+     * @returns {Promise}
      */
     delete(deviceId) {
-        return this.send({
-            root: true,
-            type: 'delete',
-            method: 'DELETE',
-            parameters: {
-                deviceId
-            }
-        });
+        return this.send(ApiMap.deleteDevice, { deviceId: deviceId });
     }
 }
 
-
-// Exports
 
 module.exports = DeviceAPI;

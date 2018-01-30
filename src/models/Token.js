@@ -1,5 +1,7 @@
-// Model
 
+/**
+ *
+ */
 class Token {
 
     /**
@@ -95,7 +97,5 @@ class Token {
     }
 }
 
-
-// Exports
 
 module.exports = Token;

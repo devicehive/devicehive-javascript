@@ -1,27 +1,47 @@
+const ApiMap = require(`./transportResolvers/ApiMap`);
+
+/**
+ *
+ */
 class API {
 
-    static get INFO_TYPE() { return 'info'; }
-    static get CONFIGURATION_TYPE() { return 'configuration'; }
-    static get DEVICE_TYPE() { return 'device'; }
-    static get DEVICECOMMAND_TYPE() { return 'command'; }
-    static get DEVICENOTIFICATION_TYPE() { return 'notification'; }
-    static get DEVICETYPE_TYPE() { return 'devicetype'; }
-    static get NETWORK_TYPE() { return 'network'; }
-    static get TOKEN_TYPE() { return 'token'; }
-    static get USER_TYPE() { return 'user'; }
+    static get HTTP_API() { return ApiMap.HTTP_API; }
+    static get WS_API() { return ApiMap.WS_API; }
+
+    static get MAIN_BASE() { return ApiMap.MAIN_BASE; }
+    static get AUTH_BASE() { return ApiMap.AUTH_BASE; }
+    static get PLUGIN_BASE() { return ApiMap.PLUGIN_BASE; }
+
+    /**
+     *
+     * @param transport
+     * @param key
+     * @param parameters
+     * @param body
+     */
+    static build(transport, key, parameters, body) {
+        return ApiMap.build(transport, key, parameters, body);
+    }
+
 
     /**
      * API
      */
     constructor({ strategy }) {
-        this.send = data => {
-            return strategy.send({
-                apiType: this.type,
-                nestedApiType: this.nestedType,
-                ...data,
-            });
-        }
+        const me = this;
+
+        me.strategy = strategy;
+    }
+
+    /**
+     *
+     */
+    send(key, parameters, body) {
+        const me = this;
+
+        return me.strategy.send(key, parameters, body);
     }
 }
+
 
 module.exports = API;

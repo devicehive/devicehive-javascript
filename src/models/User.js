@@ -1,5 +1,7 @@
-// Model
 
+/**
+ *
+ */
 class User {
 
     /**
@@ -195,7 +197,5 @@ class User {
     }
 }
 
-
-// Exports
 
 module.exports = User;

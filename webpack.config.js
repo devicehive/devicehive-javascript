@@ -1,3 +1,6 @@
+const webpack = require('webpack');
+
+
 module.exports = {
     entry: `${__dirname}/index.js`,
     output: {
@@ -5,16 +8,29 @@ module.exports = {
         filename: `bundle.js`,
         libraryTarget: "commonjs2"
     },
-    target: `web`,
+    target: 'web',
     resolve: {
         modules: ["node_modules"]
     },
+    module: {
+        rules: [
+            {
+                test: /\.js$/,
+                exclude: /(node_modules|bower_components)/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['@babel/preset-env']
+                    }
+                }
+            }
+        ]
+    },
     plugins: [
         new webpack.DefinePlugin({
-            'process.env': {
-                NODE_ENV: JSON.stringify('production'),
-                APP_ENV: JSON.stringify('browser')
+            "process.env": {
+                BROWSER: JSON.stringify(true)
             }
-        }),
+        })
     ]
 };
