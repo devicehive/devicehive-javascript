@@ -1,5 +1,4 @@
-const request = require('request');
-
+require('isomorphic-fetch');
 
 /**
  *
@@ -27,19 +26,14 @@ class HTTP {
     /**
      * Rest API send method
      */
-    send(url, body) {
-        return new Promise((resolve, reject) => {
-
-            request(options, (err, res, body) => {
-                if (err) {
-                    return reject(err);
-                }
-                return resolve(body);
-            });
-    
-        });
+    send({ endpoint, method, body, headers }) {
+        return fetch(endpoint, {
+            method,
+            headers,
+            body: body ? JSON.stringify(body) : undefined
+        }).then(response => response.json());
     }
 }
 
 
-module.exports = Rest;
+module.exports = HTTP;
