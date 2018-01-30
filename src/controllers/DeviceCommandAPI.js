@@ -22,7 +22,7 @@ class DeviceCommandAPI extends API {
      * @returns {Promise} list of commands
      */
     list(query) {
-        return this.send(API.listCommand, query);
+        return this.send(API.listCommand, query.toObject());
     }
 
     /**
@@ -32,18 +32,16 @@ class DeviceCommandAPI extends API {
      * @returns {Promise} count of commands
      */
     insert(deviceId, command) {
-        return this.send(API.insertCommand, { deviceId: deviceId }, command);
+        return this.send(API.insertCommand, { deviceId: deviceId }, command.toObject());
     }
 
     /**
      * Updates a command
-     * @param {string} deviceId
-     * @param {number} commandId
      * @param {Command} command data
      * @returns {Promise} count of commands
      */
-    update(deviceId, commandId, command) {
-        return this.send({ deviceId: deviceId, commandId: commandId }, command);
+    update(command) {
+        return this.send({ deviceId: command.deviceId, commandId: command.id }, command.toObject());
     }
 }
 

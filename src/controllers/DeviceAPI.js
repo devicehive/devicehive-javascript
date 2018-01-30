@@ -21,7 +21,7 @@ class DeviceAPI extends API {
      * @returns {Promise} list of devices
      */
     list(query) {
-        return this.send(API.listDevice, query);
+        return this.send(API.listDevice, query.toObject());
     }
 
     /**
@@ -30,17 +30,16 @@ class DeviceAPI extends API {
      * @returns {Promise} count of devices
      */
     count(query) {
-        return this.send(API.countDevice, query);
+        return this.send(API.countDevice, query.toObject());
     }
 
     /**
      * Registers or updates a device
-     * @param {string} deviceId
      * @param {object} device data
      * @returns {Promise} count of devices
      */
-    add(deviceId, device) {
-        return this.send(API.addDevice, { deviceId: deviceId }, device);
+    add(device) {
+        return this.send(API.addDevice, { deviceId: device.id }, device.toObject());
     }
 
     /**

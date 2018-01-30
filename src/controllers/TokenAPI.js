@@ -20,7 +20,7 @@ class TokenAPI extends API {
      * @param {Token} token
      */
     create(token) {
-        return this.send(API.createUserToken, {}, token);
+        return this.send(API.createUserToken, {}, token.toObject());
     }
 
     /**

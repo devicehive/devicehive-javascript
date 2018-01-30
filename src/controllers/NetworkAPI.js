@@ -21,7 +21,7 @@ class NetworkAPI extends API {
      * @returns {Promise} list of networks
      */
     list(query) {
-        return this.send(API.listNetwork, query);
+        return this.send(API.listNetwork, query.toObject());
     }
 
     /**
@@ -30,7 +30,7 @@ class NetworkAPI extends API {
      * @returns {Promise} count of networks
      */
     count(query) {
-        return this.send(API.countNetwork, query);
+        return this.send(API.countNetwork, query.toObject());
     }
 
     /**
@@ -39,7 +39,7 @@ class NetworkAPI extends API {
      * @returns {Promise} count of networks
      */
     insert(network) {
-        return this.send(API.addNetwork, {}, network);
+        return this.send(API.addNetwork, {}, network.toObject());
     }
 
     /**
@@ -48,8 +48,8 @@ class NetworkAPI extends API {
      * @param {Network} network data
      * @returns {Promise} count of networks
      */
-    update(networkId, network) {
-        return this.send(API.updateNetwork, { networkId: networkId }, network);
+    update(network) {
+        return this.send(API.updateNetwork, { networkId: network.id }, network.toObject());
     }
 
     /**

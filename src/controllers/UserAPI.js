@@ -12,7 +12,7 @@ class UserAPI extends API {
      * @returns {Promise} list of users
      */
     list(query) {
-        return this.send(API.listUser, query);
+        return this.send(API.listUser, query.toObject());
     }
 
     /**
@@ -21,7 +21,7 @@ class UserAPI extends API {
      * @returns {Promise} count of users
      */
     count(query) {
-        return this.send(API.countUser, query);
+        return this.send(API.countUser, query.toObject());
     }
 
     /**
@@ -39,17 +39,16 @@ class UserAPI extends API {
      * @returns {Promise} count of users
      */
     insert(user) {
-        return this.send(API.addUser, {}, user);
+        return this.send(API.addUser, {}, user.toObject());
     }
 
     /**
      * Updates a user (only for administrators)
-     * @param {number} userId
      * @param {User} user data
      * @returns {Promise} count of users
      */
-    update(userId, user) {
-        return this.send(API.updateUser, { userId: userId }, user);
+    update(user) {
+        return this.send(API.updateUser, { userId: user.id }, user.toObject());
     }
 
     /**
@@ -75,7 +74,7 @@ class UserAPI extends API {
      * @returns {Promise} count of users
      */
     updateCurrent(user) {
-        return this.send(API.updateCurrentUser, {}, user);
+        return this.send(API.updateCurrentUser, {}, user.toObject());
     }
 
     /**

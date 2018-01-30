@@ -21,7 +21,7 @@ class DeviceTypeAPI extends API {
      * @returns {Promise} list of deviceTypes
      */
     list(query) {
-        return this.send(API.listDeviceType, query);
+        return this.send(API.listDeviceType, query.toObject());
     }
 
     /**
@@ -30,7 +30,7 @@ class DeviceTypeAPI extends API {
      * @returns {Promise} count of deviceTypes
      */
     count(query) {
-        return this.send(API.countDeviceType, query);
+        return this.send(API.countDeviceType, query.toObject());
     }
 
     /**
@@ -39,17 +39,16 @@ class DeviceTypeAPI extends API {
      * @returns {Promise} count of deviceTypes
      */
     insert(deviceType) {
-        return this.send(API.addDeviceType, {}, deviceType);
+        return this.send(API.addDeviceType, {}, deviceType.toObject());
     }
 
     /**
      * Updates a deviceType
-     * @param {number} deviceTypeId
      * @param {DeviceType} deviceType data
      * @returns {Promise} count of deviceTypes
      */
-    update(deviceTypeId, deviceType) {
-        return this.send(API.updateDeviceType, { deviceTypeId: deviceTypeId }, deviceType);
+    update(deviceType) {
+        return this.send(API.updateDeviceType, { deviceTypeId: deviceType.id }, deviceType.toObject());
     }
 
     /**

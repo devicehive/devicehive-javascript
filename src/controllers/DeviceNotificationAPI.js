@@ -23,17 +23,16 @@ class DeviceNotificationAPI extends API {
      * @returns {Promise} list of notifications
      */
     list(deviceId, query) {
-        return this.send(API.listNotification, query);
+        return this.send(API.listNotification, query.toObject());
     }
 
     /**
      * Registers a notification
-     * @param {string} deviceId
      * @param {Notification} notification
      * @returns {Promise} count of notifications
      */
-    insert(deviceId, notification) {
-        return this.send(API.insertNotification, { deviceId: deviceId }, notification);
+    insert(notification) {
+        return this.send(API.insertNotification, { deviceId: notification.deviceId }, notification.toObject());
     }
 }
 
