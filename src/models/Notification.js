@@ -1,5 +1,7 @@
-// Model
 
+/**
+ *
+ */
 class DeviceNotification {
 
     /**
@@ -110,7 +112,5 @@ class DeviceNotification {
     }
 }
 
-
-// Exports
 
 module.exports = DeviceNotification;

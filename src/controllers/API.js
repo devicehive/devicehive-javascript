@@ -1,4 +1,3 @@
-const ApiMap = require(`./transportResolvers/ApiMap`);
 
 /**
  *

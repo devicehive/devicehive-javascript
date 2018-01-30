@@ -1,180 +1,114 @@
-'use strict';
-
 const API = require('./API');
 
-// API
 
+/**
+ *
+ */
 class UserAPI extends API {
-
-    /**
-     * Returns information about the current user
-     * @param {number} userId
-     * @returns {promise} selected user
-     */
-    get(userId) {
-        return this.send({
-            root: true,
-            type: 'get',
-            parameters: {
-                userId
-            }
-        });
-    }
-
-    /**
-     * Returns information about the current user
-     * @param {number} userId
-     * @returns {promise} selected user
-     */
-    getCurrent() {
-        return this.send({
-            type: 'current',
-            alternativeType: 'getCurrent'
-        });
-    }
 
     /**
      * Return a list of users
      * @param {object} query params
-     * @returns {promise} list of users
+     * @returns {Promise} list of users
      */
-    list(body) {
-        return this.send({
-            body,
-            root: true,
-            type: 'list'
-        });
+    list(query) {
+        return this.send(API.listUser, query);
     }
 
     /**
      * Returns count of users
      * @param {object} query params
-     * @returns {promise} count of users
+     * @returns {Promise} count of users
      */
     count(query) {
-        return this.send({
-            type: 'count'
-        });
+        return this.send(API.countUser, query);
+    }
+
+    /**
+     * Returns information about the current user
+     * @param {number} userId
+     * @returns {Promise} selected user
+     */
+    get(userId) {
+        return this.send(API.getUser, { userId: userId });
     }
 
     /**
      * Registers a user
-     * @param {object} body user data
-     * @returns {promise} count of users
+     * @param {User} user data
+     * @returns {Promise} count of users
      */
-    insert(body) {
-        return this.send({
-            body,
-            root: true,
-            type: 'insert',
-            method: 'POST'
-        });
+    insert(user) {
+        return this.send(API.addUser, {}, user);
     }
 
     /**
      * Updates a user (only for administrators)
      * @param {number} userId
-     * @param {object} body user data
-     * @returns {promise} count of users
+     * @param {User} user data
+     * @returns {Promise} count of users
      */
-    update(userId, body) {
-        return this.send({
-            body,
-            root: true,
-            type: 'update',
-            method: 'PUT',
-            parameters: {
-                userId
-            }
-        });
-    }
-
-    /**
-     * Updates a user (only for administrators)
-     * @param {object} body user data
-     * @returns {promise} count of users
-     */
-    updateCurrent(body) {
-        return this.send({
-            body,
-            type: 'current',
-            alternativeType: 'updateCurrent',
-            method: 'PUT'
-        });
+    update(userId, user) {
+        return this.send(API.updateUser, { userId: userId }, user);
     }
 
     /**
      * Deletes an existing user
-     * @param {number} userId - User ID
-     * @returns {promise}
+     * @param {number} userId
+     * @returns {Promise}
      */
     delete(userId) {
-        return this.send({
-            root: true,
-            type: 'delete',
-            method: 'DELETE',
-            parameters: {
-                userId
-            }
-        });
+        return this.send(API.deleteUser, { userId: userId });
+    }
+
+    /**
+     * Returns information about the current user
+     * @returns {Promise} selected user
+     */
+    getCurrent() {
+        return this.send(API.getCurrentUser);
+    }
+
+    /**
+     * Updates a user (only for administrators)
+     * @param {User} user data
+     * @returns {Promise} count of users
+     */
+    updateCurrent(user) {
+        return this.send(API.updateCurrentUser, {}, user);
     }
 
     /**
      * Gets information about user/network association
      * @param {number} userId - User ID
      * @param {number} networkId - Network ID
-     * @returns {promise}
+     * @returns {Promise}
      */
     getNetwork(userId, networkId) {
-        return this.send({
-            type: 'network',
-            alternativeType: 'getNetwork',
-            parameters: {
-                userId,
-                networkId
-            }
-        });
+        return this.send(API.getUserNetwork, { userId: userId, networkId: networkId });
     }
 
     /**
      * Associates network with the user
      * @param {number} userId - User ID
      * @param {number} networkId - Network ID
-     * @returns {promise}
+     * @returns {Promise}
      */
     assignNetwork(userId, networkId) {
-        return this.send({
-            method: 'PUT',
-            type: 'network',
-            alternativeType: 'assignNetwork',
-            parameters: {
-                userId,
-                networkId
-            }
-        });
+        return this.send(API.assignNetwork, { userId: userId, networkId: networkId });
     }
 
     /**
      * Removes association between network and user
      * @param {number} userId - User ID
      * @param {number} networkId - Network ID
-     * @returns {promise}
+     * @returns {Promise}
      */
     unassignNetwork(userId, networkId) {
-        return this.send({
-            method: 'Delete',
-            type: 'network',
-            alternativeType: 'unassignNetwork',
-            parameters: {
-                userId,
-                networkId
-            }
-        });
+        return this.send(API.unassignNetwork, { userId: userId, networkId: networkId });
     }
 
 }
 
-
-// Exports
 
 module.exports = UserAPI;

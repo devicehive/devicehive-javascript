@@ -1,5 +1,7 @@
-// Model
 
+/**
+ *
+ */
 class Configuration {
 
     /**
@@ -78,7 +80,5 @@ class Configuration {
     }
 }
 
-
-// Exports
 
 module.exports = Configuration;

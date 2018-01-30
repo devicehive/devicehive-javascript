@@ -1,5 +1,7 @@
-// Model
 
+/**
+ *
+ */
 class DeviceType {
 
     /**
@@ -78,7 +80,5 @@ class DeviceType {
     }
 }
 
-
-// Exports
 
 module.exports = DeviceType;

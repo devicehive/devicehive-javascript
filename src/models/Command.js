@@ -1,5 +1,7 @@
-// Model
 
+/**
+ *
+ */
 class DeviceCommand {
 
     /**
@@ -231,7 +233,5 @@ class DeviceCommand {
     }
 }
 
-
-// Exports
 
 module.exports = DeviceCommand;
