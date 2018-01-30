@@ -1,3 +1,3 @@
-const DeviceHive = require(`./lib/DeviceHive`);
+const DeviceHive = require('./src/DeviceHive');
 
 module.exports = DeviceHive;

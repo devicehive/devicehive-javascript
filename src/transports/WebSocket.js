@@ -2,7 +2,7 @@
 /**
  *
  */
-class WebSocket {
+class WS {
 
     static get TYPE() { return `ws`; }
 
@@ -10,11 +10,11 @@ class WebSocket {
      * WebSocket API
      */
     constructor({ mainServiceURL }) {
-        this.type = WebSocket.TYPE;
+        this.type = WS.TYPE;
         this.urls = { mainServiceURL };
 
         // if it's node.js environment
-        if (typeof WebSocket === 'undefined') {
+        if (!process.env.BROWSER) {
             this.WSClient = require('ws');
         } else {
             this.WSClient = WebSocket;
@@ -60,4 +60,4 @@ class WebSocket {
 }
 
 
-module.exports = WebSocket;
+module.exports = WS;

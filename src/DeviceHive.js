@@ -105,7 +105,7 @@ class DeviceHive extends APIStrategy {
             } else if (this.credentials.login && this.credentials.password) {
 
                 this.initTransport()
-                    .then(() => this.token.auth(this.credentials))
+                    .then(() => this.token.login(this.credentials))
                     .then(({ accessToken, refreshToken }) => {
                         this.credentials.accessToken = accessToken;
                         this.credentials.refreshToken = refreshToken;

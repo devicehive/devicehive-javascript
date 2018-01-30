@@ -24,10 +24,12 @@ class WebSocketApiResolver {
      */
     build(parameters, body) {
         const me = this;
-        const result = {
-            ...parameters,
-            action: me.action
-        };
+        const result = Object.assign(
+            parameters,
+            {
+                action: me.action
+            }
+        );
 
         if (body && me.bodyKey) {
             result[me.bodyKey] = body;
