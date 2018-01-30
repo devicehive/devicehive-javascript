@@ -23,6 +23,16 @@ class WS extends Transport {
         } else {
             this.WSClient = WebSocket;
         }
+
+        this.WSClient.on(`message`, message => {
+            data = JSON.parse(message);
+
+            if (data.requestId) {
+                this.emit(data.requestId, data);
+            } else {
+                this.emit(`message`, data);
+            }
+        })
     }
 
     /**
@@ -41,25 +51,14 @@ class WS extends Transport {
      * WebSocket API send method
      */
     send(data) {
-        return Promise.resolve(`WS send: ${JSON.stringify(data)}`);
-        // return new Promise((resolve, reject) => {
-        //     this.socket.send(JSON.stringify(data));
-        //     const listener = event => {
-        //         const messageData = JSON.parse(event.data);
-        //         if (messageData.action === data.action) {
-        //             if (messageData.requestId === data.requestId) {
-        //                 this.socket.removeEventListener('message', listener);
-        //                 if (messageData.status === 'success') {
-        //                     resolve(messageData);
-        //                 } else {
-        //                     reject(messageData);
-        //                 }
-        //             }
-        //         }
-        //     };
-        //
-        //     this.socket.addEventListener('message', listener);
-        // })
+        requestId = data.requestId;
+
+        return new Promise((resolve, reject) => {
+
+            ws.send(data);
+
+            ws.once(requestId, (message) => resolve(message))
+        })
     }
 
 }
