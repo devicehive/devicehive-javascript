@@ -1,4 +1,5 @@
 const API = require('./API');
+const ApiMap = require(`./transportResolvers/ApiMap`);
 
 
 /**
@@ -13,7 +14,7 @@ class DeviceCommandAPI extends API {
      * @returns {Promise} selected command
      */
     get(deviceId, commandId) {
-        return this.send(API.getCommand, { deviceId: deviceId, commandId: commandId });
+        return this.send(ApiMap.getCommand, { deviceId: deviceId, commandId: commandId });
     }
 
     /**
@@ -22,7 +23,7 @@ class DeviceCommandAPI extends API {
      * @returns {Promise} list of commands
      */
     list(query) {
-        return this.send(API.listCommand, query.toObject());
+        return this.send(ApiMap.listCommand, query.toObject());
     }
 
     /**
@@ -32,7 +33,7 @@ class DeviceCommandAPI extends API {
      * @returns {Promise} count of commands
      */
     insert(deviceId, command) {
-        return this.send(API.insertCommand, { deviceId: deviceId }, command.toObject());
+        return this.send(ApiMap.insertCommand, { deviceId: deviceId }, command.toObject());
     }
 
     /**

@@ -1,8 +1,10 @@
+const Transport = require(`./base/Transport`);
+
 
 /**
  *
  */
-class WebSocket {
+class WebSocket extends Transport {
 
     static get TYPE() { return `ws`; }
 
@@ -10,7 +12,10 @@ class WebSocket {
      * WebSocket API
      */
     constructor({ mainServiceURL }) {
+        super();
+
         this.type = WebSocket.TYPE;
+
         this.urls = { mainServiceURL };
 
         // if it's node.js environment
@@ -37,24 +42,25 @@ class WebSocket {
      * WebSocket API send method
      */
     send(data) {
-        return new Promise((resolve, reject) => {
-            this.socket.send(JSON.stringify(data));
-            const listener = event => {
-                const messageData = JSON.parse(event.data);
-                if (messageData.action === data.action) {
-                    if (messageData.requestId === data.requestId) {
-                        this.socket.removeEventListener('message', listener);
-                        if (messageData.status === 'success') {
-                            resolve(messageData);
-                        } else {
-                            reject(messageData);
-                        }
-                    }
-                }
-            };
-
-            this.socket.addEventListener('message', listener);
-        })
+        return Promise.resolve(`WS send: ${JSON.stringify(data)}`);
+        // return new Promise((resolve, reject) => {
+        //     this.socket.send(JSON.stringify(data));
+        //     const listener = event => {
+        //         const messageData = JSON.parse(event.data);
+        //         if (messageData.action === data.action) {
+        //             if (messageData.requestId === data.requestId) {
+        //                 this.socket.removeEventListener('message', listener);
+        //                 if (messageData.status === 'success') {
+        //                     resolve(messageData);
+        //                 } else {
+        //                     reject(messageData);
+        //                 }
+        //             }
+        //         }
+        //     };
+        //
+        //     this.socket.addEventListener('message', listener);
+        // })
     }
 
 }

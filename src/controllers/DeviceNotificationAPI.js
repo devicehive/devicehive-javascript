@@ -1,4 +1,5 @@
 const API = require('./API');
+const ApiMap = require(`./transportResolvers/ApiMap`);
 
 
 /**
@@ -13,7 +14,7 @@ class DeviceNotificationAPI extends API {
      * @returns {Promise} selected notification
      */
     get(deviceId, notificationId) {
-        return this.send(API.getNotification, { deviceId: deviceId, notificationId: notificationId });
+        return this.send(ApiMap.getNotification, { deviceId: deviceId, notificationId: notificationId });
     }
 
     /**
@@ -23,7 +24,7 @@ class DeviceNotificationAPI extends API {
      * @returns {Promise} list of notifications
      */
     list(deviceId, query) {
-        return this.send(API.listNotification, query.toObject());
+        return this.send(ApiMap.listNotification, query.toObject());
     }
 
     /**
@@ -32,7 +33,7 @@ class DeviceNotificationAPI extends API {
      * @returns {Promise} count of notifications
      */
     insert(notification) {
-        return this.send(API.insertNotification, { deviceId: notification.deviceId }, notification.toObject());
+        return this.send(ApiMap.insertNotification, { deviceId: notification.deviceId }, notification.toObject());
     }
 }
 

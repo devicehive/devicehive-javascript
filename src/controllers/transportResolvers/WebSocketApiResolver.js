@@ -1,3 +1,5 @@
+const Utils = require(`../../utils/Utils`);
+
 
 /**
  *
@@ -24,10 +26,9 @@ class WebSocketApiResolver {
      */
     build(parameters, body) {
         const me = this;
-        const result = {
-            ...parameters,
-            action: me.action
-        };
+        const result = Utils.isObjectEmpty(parameters) && !me.bodyKey ? { ...body } : { ...parameters };
+
+        result.action = me.action;
 
         if (body && me.bodyKey) {
             result[me.bodyKey] = body;

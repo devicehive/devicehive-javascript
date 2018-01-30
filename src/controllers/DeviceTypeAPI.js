@@ -1,4 +1,5 @@
 const API = require('./API');
+const ApiMap = require(`./transportResolvers/ApiMap`);
 
 
 /**
@@ -12,7 +13,7 @@ class DeviceTypeAPI extends API {
      * @returns {Promise} selected deviceType
      */
     get(deviceTypeId) {
-        return this.send(API.getDeviceType, { deviceTypeId: deviceTypeId });
+        return this.send(ApiMap.getDeviceType, { deviceTypeId: deviceTypeId });
     }
 
     /**
@@ -21,7 +22,7 @@ class DeviceTypeAPI extends API {
      * @returns {Promise} list of deviceTypes
      */
     list(query) {
-        return this.send(API.listDeviceType, query.toObject());
+        return this.send(ApiMap.listDeviceType, query.toObject());
     }
 
     /**
@@ -30,7 +31,7 @@ class DeviceTypeAPI extends API {
      * @returns {Promise} count of deviceTypes
      */
     count(query) {
-        return this.send(API.countDeviceType, query.toObject());
+        return this.send(ApiMap.countDeviceType, query.toObject());
     }
 
     /**
@@ -39,7 +40,7 @@ class DeviceTypeAPI extends API {
      * @returns {Promise} count of deviceTypes
      */
     insert(deviceType) {
-        return this.send(API.addDeviceType, {}, deviceType.toObject());
+        return this.send(ApiMap.addDeviceType, {}, deviceType.toObject());
     }
 
     /**
@@ -48,7 +49,7 @@ class DeviceTypeAPI extends API {
      * @returns {Promise} count of deviceTypes
      */
     update(deviceType) {
-        return this.send(API.updateDeviceType, { deviceTypeId: deviceType.id }, deviceType.toObject());
+        return this.send(ApiMap.updateDeviceType, { deviceTypeId: deviceType.id }, deviceType.toObject());
     }
 
     /**
@@ -57,7 +58,7 @@ class DeviceTypeAPI extends API {
      * @returns {Promise}
      */
     delete(deviceTypeId) {
-        return this.send(API.deleteDeviceType, { deviceTypeId: deviceTypeId });
+        return this.send(ApiMap.deleteDeviceType, { deviceTypeId: deviceTypeId });
     }
 }
 

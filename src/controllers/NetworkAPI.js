@@ -1,4 +1,5 @@
 const API = require('./API');
+const ApiMap = require(`./transportResolvers/ApiMap`);
 
 
 /**
@@ -12,7 +13,7 @@ class NetworkAPI extends API {
      * @returns {Promise} selected network
      */
     get(networkId) {
-        return this.send(API.getNetwork, { networkId: networkId });
+        return this.send(ApiMap.getNetwork, { networkId: networkId });
     }
 
     /**
@@ -21,7 +22,7 @@ class NetworkAPI extends API {
      * @returns {Promise} list of networks
      */
     list(query) {
-        return this.send(API.listNetwork, query.toObject());
+        return this.send(ApiMap.listNetwork, query.toObject());
     }
 
     /**
@@ -30,7 +31,7 @@ class NetworkAPI extends API {
      * @returns {Promise} count of networks
      */
     count(query) {
-        return this.send(API.countNetwork, query.toObject());
+        return this.send(ApiMap.countNetwork, query.toObject());
     }
 
     /**
@@ -39,7 +40,7 @@ class NetworkAPI extends API {
      * @returns {Promise} count of networks
      */
     insert(network) {
-        return this.send(API.addNetwork, {}, network.toObject());
+        return this.send(ApiMap.addNetwork, {}, network.toObject());
     }
 
     /**
@@ -49,7 +50,7 @@ class NetworkAPI extends API {
      * @returns {Promise} count of networks
      */
     update(network) {
-        return this.send(API.updateNetwork, { networkId: network.id }, network.toObject());
+        return this.send(ApiMap.updateNetwork, { networkId: network.id }, network.toObject());
     }
 
     /**
@@ -58,7 +59,7 @@ class NetworkAPI extends API {
      * @returns {Promise}
      */
     delete(networkId) {
-        return this.send(API.deleteNetwork, { networkId: networkId });
+        return this.send(ApiMap.deleteNetwork, { networkId: networkId });
     }
 }
 

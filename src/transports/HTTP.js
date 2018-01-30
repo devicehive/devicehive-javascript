@@ -1,24 +1,25 @@
+const Transport = require(`./base/Transport`);
 const request = require('request');
 
 
 /**
  *
  */
-class HTTP {
+class HTTP extends Transport {
 
     static get TYPE() { return `http`; }
 
     /**
      * Rest API
      */
-    constructor(urls) {
+    constructor() {
+        super();
+
         this.type = HTTP.TYPE;
-        this.urls = urls;
     }
 
     /**
      * Init
-     * 
      */
     init() {
         return new Promise(resolve => resolve());
@@ -27,19 +28,10 @@ class HTTP {
     /**
      * Rest API send method
      */
-    send(url, body) {
-        return new Promise((resolve, reject) => {
-
-            request(options, (err, res, body) => {
-                if (err) {
-                    return reject(err);
-                }
-                return resolve(body);
-            });
-    
-        });
+    send({ method, endpoint, body }) {
+        return Promise.resolve(`HTTP send: ${method} ${endpoint} ${body ? JSON.stringify(body) : ''}`);
     }
 }
 
 
-module.exports = Rest;
+module.exports = HTTP;

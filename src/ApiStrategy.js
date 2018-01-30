@@ -1,7 +1,8 @@
+const randomString = require(`randomstring`);
 const EventEmitter = require('events');
 const HTTP = require('./transports/HTTP');
 const WebSocket = require('./transports/WebSocket');
-const ApiMap = require('./controllers/transportResolvers/ApiMap');
+const API = require(`./controllers/API`);
 
 
 /**
@@ -9,28 +10,20 @@ const ApiMap = require('./controllers/transportResolvers/ApiMap');
 */
 class ApiStrategy extends EventEmitter {
 
-    static get HTTP_STRATEGY() { return HTTP.TYPE; }
-    static get WS_STRATEGY() { return WebSocket.TYPE; }
-
     /**
-     * Returns current API
      *
-     * @returns {function} new model
+     * @param url
+     * @returns {Class} Transport Class
      */
-    static getType(serviceURL) {
+    static getType(url) {
         let result;
-        switch (true) {
-            case serviceURL.startsWith('http'):
-            case serviceURL.startsWith('https'):
-                result = HTTP;
-                break;
 
-            case serviceURL.startsWith('ws'):
-                result = WebSocket;
-                break;
-
-            default:
-                break;
+        if (url.startsWith('http') || url.startsWith('https')) {
+            result = HTTP;
+        } else if (url.startsWith('ws')) {
+            result = WebSocket;
+        } else {
+            //TODO
         }
 
         return result;
@@ -39,49 +32,20 @@ class ApiStrategy extends EventEmitter {
     /**
      * ApiStrategy
      */
-    constructor(urls) {
+    constructor({ mainServiceURL, authServiceURL, pluginServiceURL }) {
         super();
 
-        const SelectedTransport = ApiStrategy.getType(urls.mainServiceURL);
+        const me = this;
 
-        if (SelectedTransport) {
-            this.strategy = new SelectedTransport(urls);
-        } else {
-            throw new Error('unexpected mainServiceURL, please use allowed protocol');
-        }
-    }
+        me.urlsMap = new Map();
 
-    /**
-     * Init method
-     * @returns {promise} when initialized
-     */
-    initTransport() {
-        return this.strategy.init();
-    }
+        me.urlsMap.set(API.MAIN_BASE, mainServiceURL);
+        me.urlsMap.set(API.AUTH_BASE, authServiceURL);
+        me.urlsMap.set(API.PLUGIN_BASE, pluginServiceURL);
 
-    /**
-     * Authorize method
-     * @param {object} credentials { accessToken }
-     * @returns {promise} when authorized
-     */
-    authTransport({ accessToken }) {
-        this.accessToken = accessToken;
+        me.strategy = new (ApiStrategy.getType(mainServiceURL))({ mainServiceURL, authServiceURL, pluginServiceURL });
 
-        let promise;
-
-        if (this.strategy.type === 'ws') {
-            promise = this.send({
-                apiType: 'authenticate',
-                body: {
-                    token: this.accessToken
-                }
-            });
-        } else {
-            promise = new Promise(resolve => resolve());
-        }
-
-
-        return promise;
+        me.strategy.on(`message`, (message) => { me.emit(`message`, message) });
     }
 
     /**
@@ -92,10 +56,20 @@ class ApiStrategy extends EventEmitter {
      */
     send(key, parameters, body) {
         const me = this;
+        const sendData = API.build(me.strategy.type, key, parameters, body);
 
-        return me.strategy.send(ApiMap.build(me.strategy.type, key, parameters, body));
+        switch(me.strategy.type) {
+            case HTTP.TYPE:
+                sendData.endpoint = `${me.urlsMap.get(sendData.base)}${sendData.endpoint}`;
+                break;
+            case WebSocket.TYPE:
+                sendData.requestId = randomString.generate();
+                break;
+        }
+
+        return me.strategy.send(sendData);
     }
-
 }
+
 
 module.exports = ApiStrategy;

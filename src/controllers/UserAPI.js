@@ -1,4 +1,5 @@
 const API = require('./API');
+const ApiMap = require(`./transportResolvers/ApiMap`);
 
 
 /**
@@ -12,7 +13,7 @@ class UserAPI extends API {
      * @returns {Promise} list of users
      */
     list(query) {
-        return this.send(API.listUser, query.toObject());
+        return this.send(ApiMap.listUser, query.toObject());
     }
 
     /**
@@ -21,7 +22,7 @@ class UserAPI extends API {
      * @returns {Promise} count of users
      */
     count(query) {
-        return this.send(API.countUser, query.toObject());
+        return this.send(ApiMap.countUser, query.toObject());
     }
 
     /**
@@ -30,7 +31,7 @@ class UserAPI extends API {
      * @returns {Promise} selected user
      */
     get(userId) {
-        return this.send(API.getUser, { userId: userId });
+        return this.send(ApiMap.getUser, { userId: userId });
     }
 
     /**
@@ -39,7 +40,7 @@ class UserAPI extends API {
      * @returns {Promise} count of users
      */
     insert(user) {
-        return this.send(API.addUser, {}, user.toObject());
+        return this.send(ApiMap.addUser, {}, user.toObject());
     }
 
     /**
@@ -48,7 +49,7 @@ class UserAPI extends API {
      * @returns {Promise} count of users
      */
     update(user) {
-        return this.send(API.updateUser, { userId: user.id }, user.toObject());
+        return this.send(ApiMap.updateUser, { userId: user.id }, user.toObject());
     }
 
     /**
@@ -57,7 +58,7 @@ class UserAPI extends API {
      * @returns {Promise}
      */
     delete(userId) {
-        return this.send(API.deleteUser, { userId: userId });
+        return this.send(ApiMap.deleteUser, { userId: userId });
     }
 
     /**
@@ -65,7 +66,7 @@ class UserAPI extends API {
      * @returns {Promise} selected user
      */
     getCurrent() {
-        return this.send(API.getCurrentUser);
+        return this.send(ApiMap.getCurrentUser);
     }
 
     /**
@@ -74,7 +75,64 @@ class UserAPI extends API {
      * @returns {Promise} count of users
      */
     updateCurrent(user) {
-        return this.send(API.updateCurrentUser, {}, user.toObject());
+        return this.send(ApiMap.updateCurrentUser, {}, user.toObject());
+    }
+
+    /**
+     *
+     * @param userId
+     * @returns {Promise}
+     */
+    getDeviceTypes(userId) {
+        return this.send(ApiMap.updateCurrentUser, { userId: userId });
+    }
+
+    /**
+     *
+     * @param userId
+     * @returns {Promise}
+     */
+    unassignAllDeviceTypes(userId) {
+        return this.send(ApiMap.updateCurrentUser, { userId: userId });
+    }
+
+    /**
+     *
+     * @param userId
+     * @returns {Promise}
+     */
+    assignAllDeviceTypes(userId) {
+        return this.send(ApiMap.updateCurrentUser, { userId: userId });
+    }
+
+    /**
+     *
+     * @param userId
+     * @param deviceTypeId
+     * @returns {Promise}
+     */
+    unassignDeviceType(userId, deviceTypeId) {
+        return this.send(ApiMap.updateCurrentUser, { userId: userId, deviceTypeId: deviceTypeId });
+    }
+
+    /**
+     *
+     * @param userId
+     * @param deviceTypeId
+     * @returns {Promise}
+     */
+    getDeviceType(userId, deviceTypeId) {
+        return this.send(ApiMap.updateCurrentUser, { userId: userId, deviceTypeId: deviceTypeId });
+    }
+
+    /**
+     *
+     * @param userId
+     * @param deviceTypeId
+     * @returns {Promise}
+     */
+    assignDeviceType(userId, deviceTypeId) {
+        return this.send(ApiMap.updateCurrentUser, { userId: userId, deviceTypeId: deviceTypeId });
     }
 
     /**
@@ -84,7 +142,7 @@ class UserAPI extends API {
      * @returns {Promise}
      */
     getNetwork(userId, networkId) {
-        return this.send(API.getUserNetwork, { userId: userId, networkId: networkId });
+        return this.send(ApiMap.getUserNetwork, { userId: userId, networkId: networkId });
     }
 
     /**
@@ -94,7 +152,7 @@ class UserAPI extends API {
      * @returns {Promise}
      */
     assignNetwork(userId, networkId) {
-        return this.send(API.assignNetwork, { userId: userId, networkId: networkId });
+        return this.send(ApiMap.assignNetwork, { userId: userId, networkId: networkId });
     }
 
     /**
@@ -104,7 +162,7 @@ class UserAPI extends API {
      * @returns {Promise}
      */
     unassignNetwork(userId, networkId) {
-        return this.send(API.unassignNetwork, { userId: userId, networkId: networkId });
+        return this.send(ApiMap.unassignNetwork, { userId: userId, networkId: networkId });
     }
 
 }

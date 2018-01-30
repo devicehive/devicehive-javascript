@@ -1,4 +1,5 @@
 const API = require('./API');
+const ApiMap = require(`./transportResolvers/ApiMap`);
 
 
 /**
@@ -12,7 +13,7 @@ class TokenAPI extends API {
      * @param {string} password
      */
     login(login, password) {
-        return this.send(API.login, { login: login, password: password });
+        return this.send(ApiMap.login, {}, { login: login, password: password });
     }
 
     /**
@@ -20,7 +21,7 @@ class TokenAPI extends API {
      * @param {Token} token
      */
     create(token) {
-        return this.send(API.createUserToken, {}, token.toObject());
+        return this.send(ApiMap.createUserToken, {}, token.toObject());
     }
 
     /**
@@ -28,7 +29,7 @@ class TokenAPI extends API {
      * @param {string} refreshToken
      */
     refresh(refreshToken) {
-        return this.send(API.refreshToken, {}, refreshToken); //TODO
+        return this.send(ApiMap.refreshToken, {}, refreshToken); //TODO
     }
 }
 

@@ -21,12 +21,14 @@ class HttpApiResolver {
      *
      * @param method
      * @param uri
+     * @param base
      */
-    constructor({ method, uri }) {
+    constructor({ method, uri, base }) {
         const me = this;
 
         me.method = method;
         me.uri = uri;
+        me.base = base;
     }
 
     /**
@@ -39,7 +41,8 @@ class HttpApiResolver {
         const me = this;
         const result = {
             method: me.method,
-            endpoint: HttpApiResolver.buildUrl(me.uri, parameters)
+            endpoint: HttpApiResolver.buildUrl(me.uri, parameters),
+            base: me.base,
         };
 
         if (body) {

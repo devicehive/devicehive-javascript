@@ -1,4 +1,5 @@
 const API = require('./API');
+const ApiMap = require(`./transportResolvers/ApiMap`);
 
 
 /**
@@ -12,7 +13,7 @@ class ConfigurationAPI extends API {
      * @returns {Promise} selected configuration
      */
     get(name) {
-        return this.send(API.getConfiguration, { name: name });
+        return this.send(ApiMap.getConfiguration, { name: name });
     }
 
     /**
@@ -21,7 +22,7 @@ class ConfigurationAPI extends API {
      * @returns {Promise} count of configuration
      */
     put(configuration) {
-        return this.send(API.putConfiguration, { name: configuration.name, value: configuration.value });
+        return this.send(ApiMap.putConfiguration, { name: configuration.name, value: configuration.value });
     }
 
     /**
@@ -30,7 +31,7 @@ class ConfigurationAPI extends API {
      * @returns {Promise}
      */
     delete(name) {
-        return this.send(API.deleteConfiguration, { name: name });
+        return this.send(ApiMap.deleteConfiguration, { name: name });
     }
 }
 
