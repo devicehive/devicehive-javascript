@@ -42,7 +42,41 @@ class DeviceHive {
      * Connect and authorize
      */
     connect() {
-        return Promise.resolve(this);
+        const promise = new Promise((resolve, reject) => {
+            if (this.credentials.refreshToken) {
+
+                if (this.credentials.accessToken) {
+                    this.initTransport()
+                        .then(() => this.token.refresh(this.credentials))
+                        .then(({ accessToken }) => {
+                            this.credentials.accessToken = accessToken;
+                        })
+                        .then(() => this.authTransport(this.credentials))
+                        .then(() => resolve(this))
+                        .catch(reject);
+                } else {
+
+                    this.initTransport()
+                        .then(() => this.authTransport(this.credentials))
+                        .then(() => resolve(this))
+                        .catch(reject);
+                }
+            } else if (this.credentials.login && this.credentials.password) {
+
+                this.initTransport()
+                    .then(() => this.token.login(this.credentials))
+                    .then(({ accessToken, refreshToken }) => {
+                        this.credentials.accessToken = accessToken;
+                        this.credentials.refreshToken = refreshToken;
+                    })
+                    .then(() => this.authTransport(this.credentials))
+                    .then(() => resolve(this))
+                    .catch(reject);
+            }
+            
+        });
+
+        return promise;
     }
 }
 

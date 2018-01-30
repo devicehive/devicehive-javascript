@@ -26,7 +26,7 @@ class WebSocketApiResolver {
      */
     build(parameters, body) {
         const me = this;
-        const result = Utils.isObjectEmpty(parameters) && !me.bodyKey ? { ...body } : { ...parameters };
+        const result = Utils.isObjectEmpty(parameters) && !me.bodyKey ? body : parameters;
 
         result.action = me.action;
 

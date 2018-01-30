@@ -4,7 +4,8 @@ const Transport = require(`./base/Transport`);
 /**
  *
  */
-class WebSocket extends Transport {
+
+class WS extends Transport {
 
     static get TYPE() { return `ws`; }
 
@@ -13,13 +14,11 @@ class WebSocket extends Transport {
      */
     constructor({ mainServiceURL }) {
         super();
-
-        this.type = WebSocket.TYPE;
-
+        this.type = WS.TYPE;
         this.urls = { mainServiceURL };
 
         // if it's node.js environment
-        if (typeof WebSocket === 'undefined') {
+        if (!process.env.BROWSER) {
             this.WSClient = require('ws');
         } else {
             this.WSClient = WebSocket;
@@ -66,4 +65,4 @@ class WebSocket extends Transport {
 }
 
 
-module.exports = WebSocket;
+module.exports = WS;

@@ -12,12 +12,20 @@
   "license": "Apache-2.0",
   "dependencies": {
     "query-string": "^5.0.1",
+    "isomorphic-fetch": "^2.2.1",
     "randomstring": "^1.1.5",
-    "request": "^2.83.0",
     "string-template": "^1.0.0",
     "ws": "^3.3.3"
   },
   "devDependencies": {
+    "@babel/core": "^7.0.0-beta.38",
+    "@babel/preset-env": "^7.0.0-beta.38",
+    "babel-loader": "^8.0.0-beta.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-stage-2": "^6.24.1",
+    "bufferutil": "^3.0.3",
+    "json-loader": "^0.5.7",
+    "utf-8-validate": "^4.0.0",
     "webpack": "^3.10.0"
   }
 }
