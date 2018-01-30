@@ -1,7 +1,9 @@
 const webpack = require('webpack');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 
 module.exports = {
+    devtool: 'source-map',
     entry: `${__dirname}/index.js`,
     output: {
         path: `${__dirname}/dist`,
@@ -27,6 +29,9 @@ module.exports = {
         ]
     },
     plugins: [
+        new UglifyJsPlugin({
+            sourceMap: true
+        }),
         new webpack.DefinePlugin({
             "process.env": {
                 BROWSER: JSON.stringify(true)
