@@ -1,5 +1,5 @@
-const Transport = require(`./base/Transport`);
 require('isomorphic-fetch');
+const Transport = require(`./base/Transport`);
 
 
 /**
@@ -19,24 +19,17 @@ class HTTP extends Transport {
     }
 
     /**
-     * Init
-     */
-    init() {
-        return new Promise(resolve => resolve());
-    }
-
-    /**
      * Rest API send method
      */
-    //send({ method, endpoint, body }) {
-    //    return Promise.resolve(`HTTP send: ${method} ${endpoint} ${body ? JSON.stringify(body) : ''}`);
-    send({ endpoint, method, body, headers }) {
-        return Promise.resolve(`HTTP send: ${method} ${endpoint} ${body ? JSON.stringify(body) : ''}`);
-        // return fetch(endpoint, {
-        //     method,
-        //     headers,
-        //     body: body ? JSON.stringify(body) : undefined
-        // }).then(response => response.json());
+    send({ endpoint, method, body }) {
+        return fetch(endpoint, {
+            headers: {
+                "Content-type": "application/json",
+                "Accept": "application/json"
+            },
+            method: method,
+            body: body ? JSON.stringify(body) : ``
+        }).then(response => response.json());
     }
 }
 

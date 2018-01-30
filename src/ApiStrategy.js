@@ -48,6 +48,10 @@ class ApiStrategy extends EventEmitter {
         me.strategy.on(`message`, (message) => { me.emit(`message`, message) });
     }
 
+    setAccessToken(accessToken) {
+        console.log(accessToken);
+    }
+
     /**
      *
      * @param key

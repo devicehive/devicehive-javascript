@@ -23,16 +23,6 @@ class WS extends Transport {
         } else {
             this.WSClient = WebSocket;
         }
-
-        this.WSClient.on(`message`, message => {
-            data = JSON.parse(message);
-
-            if (data.requestId) {
-                this.emit(data.requestId, data);
-            } else {
-                this.emit(`message`, data);
-            }
-        })
     }
 
     /**
@@ -50,16 +40,7 @@ class WS extends Transport {
     /**
      * WebSocket API send method
      */
-    send(data) {
-        requestId = data.requestId;
-
-        return new Promise((resolve, reject) => {
-
-            ws.send(data);
-
-            ws.once(requestId, (message) => resolve(message))
-        })
-    }
+    send(data) { return Promise.resolve(`hi`) }
 
 }
 
