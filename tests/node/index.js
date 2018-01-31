@@ -9,23 +9,34 @@ const httpDeviceHive = new DeviceHive({
 });
 
 const CommandPollQuery = DeviceHive.models.query.CommandPollQuery;
+const DeviceListQuery = DeviceHive.models.query.DeviceListQuery;
+const Device = DeviceHive.models.Device;
 const query = new CommandPollQuery({
     deviceId: 'e50d6085-2aba-48e9-b1c3-73c673e414be',
     names: 'test'
 });
 
-let subscriptionId;
+const query1 = new DeviceListQuery({
+    networkId: 1
+});
+
+const device = new Device({
+    id: `myTestId`,
+    name: `myTestName`,
+    networkId: 1,
+    deviceTypeId: 1,
+    blocked: false
+});
 
 httpDeviceHive.on(`message`, (message) => {
     console.log(message);
 });
 
 httpDeviceHive.connect()
-    .then((httpDeviceHive) => httpDeviceHive.command.subscribe(query))
-    .then((data) => subscriptionId = data.subscriptionId)
+    .then(() => httpDeviceHive.device.list(query1))
+    .then((data) => console.log(data))
+    .then(() => httpDeviceHive.device.delete(device.id))
+    .then((data) => console.log(data))
+    .then(() => httpDeviceHive.device.list(query1))
+    .then((data) => console.log(data))
     .catch((error) => console.warn(error));
-
-setTimeout(() => {
-    httpDeviceHive.command.unsubscribe(subscriptionId)
-        .then((data) => subscriptionId = data.subscriptionId)
-}, 10000);

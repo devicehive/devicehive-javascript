@@ -59,7 +59,8 @@ class HTTP extends Transport {
             }
         } else {
             return fetch(endpoint, { headers: me._getHeaders(), method: method, body: JSON.stringify(body) })
-                .then(response => response.json());
+                .then(response => response.text())
+                .then(responseText => responseText ? JSON.parse(responseText) : responseText);
         }
     }
 
