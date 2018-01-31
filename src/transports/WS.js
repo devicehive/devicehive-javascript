@@ -1,5 +1,6 @@
 const Transport = require(`./base/Transport`);
 const randomString = require(`randomstring`);
+const WebSocket = require('universal-websocket-client');
 
 /**
  *
@@ -16,14 +17,7 @@ class WS extends Transport {
 
         this.type = WS.TYPE;
         this.isOpend = false;
-
-        if (!process.env.BROWSER) {
-             this.WSClient = require('ws');
-        } else {
-            this.WSClient = WebSocket;
-        }
-
-        this.socket = new this.WSClient(mainServiceURL);
+        this.socket = new WebSocket(mainServiceURL);
 
         this.socket.addEventListener('message', (event) => {
             try {

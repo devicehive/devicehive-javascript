@@ -1,7 +1,7 @@
 const randomString = require(`randomstring`);
 const EventEmitter = require('events');
 const HTTP = require('./transports/HTTP');
-const WebSocket = require('./transports/WebSocket');
+const WS = require('./transports/WS');
 const API = require(`./controllers/API`);
 
 
@@ -21,7 +21,7 @@ class ApiStrategy extends EventEmitter {
         if (url.startsWith('http') || url.startsWith('https')) {
             result = HTTP;
         } else if (url.startsWith('ws')) {
-            result = WebSocket;
+            result = WS;
         } else {
             //TODO
         }
@@ -74,7 +74,7 @@ class ApiStrategy extends EventEmitter {
             case HTTP.TYPE:
                 sendData.endpoint = `${me.urlsMap.get(sendData.base)}${sendData.endpoint}`;
                 break;
-            case WebSocket.TYPE:
+            case WS.TYPE:
                 sendData.requestId = randomString.generate();
                 break;
         }
