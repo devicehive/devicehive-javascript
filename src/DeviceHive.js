@@ -1,4 +1,14 @@
 const APIStrategy = require('./ApiStrategy');
+
+const Configuration = require('./models/Configuration');
+const Device = require('./models/Device');
+const DeviceType = require('./models/DeviceType');
+const Command = require('./models/Command');
+const Notification = require('./models/Notification');
+const Network = require('./models/Network');
+const Token = require('./models/Token');
+const User = require('./models/User');
+
 const InfoAPI = require('./controllers/ServerInfoAPI');
 const DeviceAPI = require('./controllers/DeviceAPI');
 const DeviceTypeAPI = require('./controllers/DeviceTypeAPI');
@@ -16,68 +26,100 @@ const UserAPI = require('./controllers/UserAPI');
 class DeviceHive {
 
     /**
+     * Returns an model of DeviceHive
+     * 
+     * @param {String} name (Configuration | Device | Command | Notification | Network | Token | User)
+     * @return {Object} Entity 
+     */
+    static model(name) {
+        // Entities
+        const models = {
+            Configuration,
+            Device,
+            DeviceType,
+            Command,
+            Notification,
+            Network,
+            Token,
+            User
+        };
+        const model = models[name];
+
+        if (!model) {
+            throw new Error('no such model');
+        }
+        return model;
+    }
+
+    /**
      * DeviceHive module
      */
     constructor({ accessToken, refreshToken, login, password, mainServiceURL, authServiceURL, pluginServiceURL }) {
-        const me = this;
+        this.strategy = new APIStrategy({ mainServiceURL, authServiceURL, pluginServiceURL });
 
-        me.strategy = new APIStrategy({ mainServiceURL, authServiceURL, pluginServiceURL });
+        this.info = new InfoAPI({ strategy: this.strategy });
+        this.device = new DeviceAPI({ strategy: this.strategy });
+        this.token = new TokenAPI({ strategy: this.strategy });
+        this.network = new NetworkAPI({ strategy: this.strategy });
+        this.deviceType = new DeviceTypeAPI({ strategy: this.strategy });
+        this.configuration = new ConfigurationAPI({ strategy: this.strategy });
+        this.command = new CommandAPI({ strategy: this.strategy });
+        this.notification = new NotificationAPI({ strategy: this.strategy });
+        this.user = new UserAPI({ strategy: this.strategy });
 
-        me.info = new InfoAPI({ strategy: me.strategy });
-        me.device = new DeviceAPI({ strategy: me.strategy });
-        me.token = new TokenAPI({ strategy: me.strategy });
-        me.network = new NetworkAPI({ strategy: me.strategy });
-        me.deviceType = new DeviceTypeAPI({ strategy: me.strategy });
-        me.configuration = new ConfigurationAPI({ strategy: me.strategy });
-        me.command = new CommandAPI({ strategy: me.strategy });
-        me.notification = new NotificationAPI({ strategy: me.strategy });
-        me.user = new UserAPI({ strategy: me.strategy });
+        // this.strategy.on('message', message => {
+        //     console.log(message);
+        // });
 
-        me.strategy.on(`message`, (message) => {
-            console.log(message);
+        // Credentials
+        this.credentials = new Token({
+            login,
+            password,
+            accessToken,
+            refreshToken
         });
+
     }
 
     /**
      * Connect and authorize
      */
     connect() {
-        return Promise.resolve(this);
-        // const promise = new Promise((resolve, reject) => {
-        //     if (this.credentials.refreshToken) {
-        //
-        //         if (this.credentials.accessToken) {
-        //             this.initTransport()
-        //                 .then(() => this.token.refresh(this.credentials))
-        //                 .then(({ accessToken }) => {
-        //                     this.credentials.accessToken = accessToken;
-        //                 })
-        //                 .then(() => this.authTransport(this.credentials))
-        //                 .then(() => resolve(this))
-        //                 .catch(reject);
-        //         } else {
-        //
-        //             this.initTransport()
-        //                 .then(() => this.authTransport(this.credentials))
-        //                 .then(() => resolve(this))
-        //                 .catch(reject);
-        //         }
-        //     } else if (this.credentials.login && this.credentials.password) {
-        //
-        //         this.initTransport()
-        //             .then(() => this.token.login(this.credentials))
-        //             .then(({ accessToken, refreshToken }) => {
-        //                 this.credentials.accessToken = accessToken;
-        //                 this.credentials.refreshToken = refreshToken;
-        //             })
-        //             .then(() => this.authTransport(this.credentials))
-        //             .then(() => resolve(this))
-        //             .catch(reject);
-        //     }
-        //
-        // });
-        //
-        // return promise;
+        const promise = new Promise((resolve, reject) => {
+            if (this.credentials.refreshToken) {
+        
+                if (this.credentials.accessToken) {
+                    this.strategy.initTransport()
+                        .then(() => this.token.refresh(this.credentials))
+                        .then(({ accessToken }) => {
+                            this.credentials.accessToken = accessToken;
+                        })
+                        .then(() => this.strategy.authTransport(this.credentials))
+                        .then(() => resolve(this))
+                        .catch(reject);
+                } else {
+
+                    this.initTransport()
+                        .then(() => this.strategy.authTransport(this.credentials))
+                        .then(() => resolve(this))
+                        .catch(reject);
+                }
+            } else if (this.credentials.login && this.credentials.password) {
+        
+                this.strategy.initTransport()
+                    .then(() => this.token.login(this.credentials))
+                    .then(({ accessToken, refreshToken }) => {
+                        this.credentials.accessToken = accessToken;
+                        this.credentials.refreshToken = refreshToken;
+                    })
+                    .then(() => this.strategy.authTransport(this.credentials))
+                    .then(() => resolve(this))
+                    .catch(reject);
+            }
+        
+        });
+        
+        return promise;
     }
 }
 
