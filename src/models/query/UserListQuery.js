@@ -2,54 +2,54 @@
 /**
  *
  */
-class DeviceListQuery {
+class UserListQuery {
 
     /**
      *
      */
-    constructor({ name, namePattern, networkId, networkName, sortField, sortOrder, take, skip }) {
+    constructor({ login, loginPattern, role, status, sortField, sortOrder, take, skip }) {
         const me = this;
 
-        me.name = name;
-        me.namePattern = namePattern;
-        me.networkId = networkId;
-        me.networkName = networkName;
+        me.login = login;
+        me.loginPattern = loginPattern;
+        me.role = role;
+        me.status = status;
         me.sortField = sortField;
         me.sortOrder = sortOrder;
         me.take = take;
         me.skip = skip;
     }
 
-    get name() {
-        return this._name;
+    get login() {
+        return this._login;
     }
 
-    set name(value) {
-        this._name = value;
+    set login(value) {
+        this._login = value;
     }
 
-    get namePattern() {
-        return this._namePattern;
+    get loginPattern() {
+        return this._loginPattern;
     }
 
-    set namePattern(value) {
-        this._namePattern = value;
+    set loginPattern(value) {
+        this._loginPattern = value;
     }
 
-    get networkId() {
-        return this._networkId;
+    get role() {
+        return this._role;
     }
 
-    set networkId(value) {
-        this._networkId = value;
+    set role(value) {
+        this._role = value;
     }
 
-    get networkName() {
-        return this._networkName;
+    get status() {
+        return this._status;
     }
 
-    set networkName(value) {
-        this._networkName = value;
+    set status(value) {
+        this._status = value;
     }
 
     get sortField() {
@@ -92,10 +92,10 @@ class DeviceListQuery {
         const me = this;
 
         return {
-            name: me.name,
-            namePattern: me.namePattern,
-            networkId: me.networkId,
-            networkName: me.networkName,
+            login: me.login,
+            loginPattern: me.loginPattern,
+            role: me.role,
+            status: me.status,
             sortField: me.sortField,
             sortOrder: me.sortOrder,
             take: me.take,
@@ -105,4 +105,4 @@ class DeviceListQuery {
 }
 
 
-module.exports = DeviceListQuery;
+module.exports = UserListQuery;

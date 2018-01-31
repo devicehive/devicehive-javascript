@@ -2,18 +2,16 @@
 /**
  *
  */
-class DeviceListQuery {
+class NetworkListQuery {
 
     /**
      *
      */
-    constructor({ name, namePattern, networkId, networkName, sortField, sortOrder, take, skip }) {
+    constructor({ name, namePattern, sortField, sortOrder, take, skip }) {
         const me = this;
 
         me.name = name;
         me.namePattern = namePattern;
-        me.networkId = networkId;
-        me.networkName = networkName;
         me.sortField = sortField;
         me.sortOrder = sortOrder;
         me.take = take;
@@ -34,22 +32,6 @@ class DeviceListQuery {
 
     set namePattern(value) {
         this._namePattern = value;
-    }
-
-    get networkId() {
-        return this._networkId;
-    }
-
-    set networkId(value) {
-        this._networkId = value;
-    }
-
-    get networkName() {
-        return this._networkName;
-    }
-
-    set networkName(value) {
-        this._networkName = value;
     }
 
     get sortField() {
@@ -94,8 +76,6 @@ class DeviceListQuery {
         return {
             name: me.name,
             namePattern: me.namePattern,
-            networkId: me.networkId,
-            networkName: me.networkName,
             sortField: me.sortField,
             sortOrder: me.sortOrder,
             take: me.take,
@@ -105,4 +85,4 @@ class DeviceListQuery {
 }
 
 
-module.exports = DeviceListQuery;
+module.exports = NetworkListQuery;

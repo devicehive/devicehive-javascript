@@ -9,20 +9,20 @@ class UserAPI extends API {
 
     /**
      * Return a list of users
-     * @param {object} query params
+     * @param {UserListQuery} userListQuery
      * @returns {Promise} list of users
      */
-    list(query) {
-        return this.send(ApiMap.listUser, query.toObject());
+    list(userListQuery) {
+        return this.send(ApiMap.listUser, userListQuery.toObject());
     }
 
     /**
      * Returns count of users
-     * @param {object} query params
+     * @param {UserCountQuery} userCountQuery
      * @returns {Promise} count of users
      */
-    count(query) {
-        return this.send(ApiMap.countUser, query.toObject());
+    count(userCountQuery) {
+        return this.send(ApiMap.countUser, userCountQuery.toObject());
     }
 
     /**

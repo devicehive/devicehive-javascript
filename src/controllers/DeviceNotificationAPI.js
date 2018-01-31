@@ -19,12 +19,11 @@ class DeviceNotificationAPI extends API {
 
     /**
      * Return a list of notifications
-     * @param {string} deviceId
-     * @param {Query} query
+     * @param {DeviceListQuery} deviceListQuery
      * @returns {Promise} list of notifications
      */
-    list(deviceId, query) {
-        return this.send(ApiMap.listNotification, query.toObject());
+    list(deviceListQuery) {
+        return this.send(ApiMap.listNotification, deviceListQuery.toObject());
     }
 
     /**
@@ -34,6 +33,42 @@ class DeviceNotificationAPI extends API {
      */
     insert(notification) {
         return this.send(ApiMap.insertNotification, { deviceId: notification.deviceId }, notification.toObject());
+    }
+
+    /**
+     *
+     * @param {NotificationPollQuery} notificationPollQuery
+     * @returns {*}
+     */
+    poll(notificationPollQuery) {
+        return this.send(ApiMap.pollCommand, notificationPollQuery.toObject());
+    }
+
+    /**
+     *
+     * @param {NotificationPollManyQuery} notificationPollManyQuery
+     * @returns {*}
+     */
+    pollMany(notificationPollManyQuery) {
+        return this.send(ApiMap.pollManyCommand, notificationPollManyQuery.toObject());
+    }
+
+    /**
+     *
+     * @param {NotificationPollQuery} notificationPollQuery
+     * @returns {Promise}
+     */
+    subscribe(notificationPollQuery) {
+        return this.send(ApiMap.subscribeCommand, notificationPollQuery.toObject());
+    }
+
+    /**
+     *
+     * @param {Number} subscriptionId
+     * @returns {Promise}
+     */
+    unsubscribe(subscriptionId) {
+        return this.send(ApiMap.unsubscribeCommand, { subscriptionId: subscriptionId });
     }
 }
 

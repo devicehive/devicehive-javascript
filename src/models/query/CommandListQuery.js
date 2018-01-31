@@ -2,54 +2,63 @@
 /**
  *
  */
-class DeviceListQuery {
+class CommandListQuery {
 
     /**
      *
      */
-    constructor({ name, namePattern, networkId, networkName, sortField, sortOrder, take, skip }) {
+    constructor({ deviceId, start, end, command, status, sortField, sortOrder, take, skip }) {
         const me = this;
 
-        me.name = name;
-        me.namePattern = namePattern;
-        me.networkId = networkId;
-        me.networkName = networkName;
+        me.deviceId = deviceId;
+        me.start = start;
+        me.end = end;
+        me.command = command;
+        me.status = status;
         me.sortField = sortField;
         me.sortOrder = sortOrder;
         me.take = take;
         me.skip = skip;
     }
 
-    get name() {
-        return this._name;
+    get deviceId() {
+        return this._deviceId;
     }
 
-    set name(value) {
-        this._name = value;
+    set deviceId(value) {
+        this._deviceId = value;
     }
 
-    get namePattern() {
-        return this._namePattern;
+    get start() {
+        return this._start;
     }
 
-    set namePattern(value) {
-        this._namePattern = value;
+    set start(value) {
+        this._start = value;
     }
 
-    get networkId() {
-        return this._networkId;
+    get end() {
+        return this._end;
     }
 
-    set networkId(value) {
-        this._networkId = value;
+    set end(value) {
+        this._end = value;
     }
 
-    get networkName() {
-        return this._networkName;
+    get command() {
+        return this._command;
     }
 
-    set networkName(value) {
-        this._networkName = value;
+    set command(value) {
+        this._command = value;
+    }
+
+    get status() {
+        return this._status;
+    }
+
+    set status(value) {
+        this._status = value;
     }
 
     get sortField() {
@@ -92,10 +101,11 @@ class DeviceListQuery {
         const me = this;
 
         return {
-            name: me.name,
-            namePattern: me.namePattern,
-            networkId: me.networkId,
-            networkName: me.networkName,
+            deviceId: me.deviceId,
+            start: me.start,
+            end: me.end,
+            command: me.command,
+            status: me.status,
             sortField: me.sortField,
             sortOrder: me.sortOrder,
             take: me.take,
@@ -105,4 +115,4 @@ class DeviceListQuery {
 }
 
 
-module.exports = DeviceListQuery;
+module.exports = CommandListQuery;

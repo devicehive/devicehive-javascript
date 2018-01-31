@@ -18,20 +18,20 @@ class NetworkAPI extends API {
 
     /**
      * Return a list of networks
-     * @param {Query} query params
+     * @param {NetworkListQuery} networkListQuery
      * @returns {Promise} list of networks
      */
-    list(query) {
-        return this.send(ApiMap.listNetwork, query.toObject());
+    list(networkListQuery) {
+        return this.send(ApiMap.listNetwork, networkListQuery.toObject());
     }
 
     /**
      * Returns count of networks
-     * @param {Query} query params
+     * @param {NetworkCountQuery} networkCountQuery
      * @returns {Promise} count of networks
      */
-    count(query) {
-        return this.send(ApiMap.countNetwork, query.toObject());
+    count(networkCountQuery) {
+        return this.send(ApiMap.countNetwork, networkCountQuery.toObject());
     }
 
     /**
