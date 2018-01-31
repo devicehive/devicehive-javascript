@@ -23,12 +23,14 @@ class HttpApiResolver {
      * @param uri
      * @param base
      */
-    constructor({ method, uri, base }) {
+    constructor({ method, uri, base, subscription, unsubscription }) {
         const me = this;
 
         me.method = method;
         me.uri = uri;
         me.base = base;
+        me.subscription = subscription;
+        me.unsubscription = unsubscription;
     }
 
     /**
@@ -39,14 +41,26 @@ class HttpApiResolver {
      */
     build(parameters, body) {
         const me = this;
-        const result = {
-            method: me.method,
-            endpoint: HttpApiResolver.buildUrl(me.uri, parameters),
-            base: me.base,
-        };
+        let result;
+        
+        if (me.unsubscription === true) {
+            result = {
+                unsubscription: me.unsubscription,
+                body: {
+                    subscriptionId: parameters.subscriptionId
+                }
+            };
+        } else {
+            result = {
+                method: me.method,
+                endpoint: HttpApiResolver.buildUrl(me.uri, parameters),
+                base: me.base,
+                subscription: me.subscription
+            };
 
-        if (body) {
-            result.body = body;
+            if (body) {
+                result.body = body;
+            }
         }
 
         return result;

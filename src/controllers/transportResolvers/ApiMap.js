@@ -96,6 +96,7 @@ class ApiMap {
      * @param key
      * @param parameters
      * @param body
+     * @returns {Object}
      */
     static build(transport, key, parameters, body) {
         let transportAPI;
@@ -145,19 +146,19 @@ apiMap.set(ApiMap.listCommand, { http: { method: 'GET ', uri: '/device/{deviceId
 apiMap.set(ApiMap.getCommand, { http: { method: 'GET ', uri: '/device/{deviceId}/command/{commandId}', base: ApiMap.MAIN_BASE}, ws: { action: 'command/get' } });
 apiMap.set(ApiMap.insertCommand, { http: { method: 'POST', uri: '/device/{deviceId}/command', base: ApiMap.MAIN_BASE}, ws: { action: 'command/insert', bodyKey: 'command' } });
 apiMap.set(ApiMap.updateCommand, { http: { method: 'POST', uri: '/device/{deviceId}/command/{commandId}', base: ApiMap.MAIN_BASE}, ws: { action: 'command/update', bodyKey: 'command' } });
-apiMap.set(ApiMap.pollCommand, { http: { method: 'GET', uri: '/device/{deviceId}/command/{commandId}/poll', base: ApiMap.MAIN_BASE} });
+apiMap.set(ApiMap.pollCommand, { http: { method: 'GET', uri: '/device/{deviceId}/command/poll', base: ApiMap.MAIN_BASE} });
 apiMap.set(ApiMap.pollManyCommand, { http: { method: 'GET', uri: '/device/command/poll', base: ApiMap.MAIN_BASE} });
 apiMap.set(ApiMap.waitCommand, { http: { method: 'GET', uri: '/device/{deviceId}/command/{commandId}/poll', base: ApiMap.MAIN_BASE} });
-apiMap.set(ApiMap.subscribeCommand, { ws: { action: 'command/subscribe' } }); 
-apiMap.set(ApiMap.unsubscribeCommand, { ws: { action: 'command/unsubscribe' } }); 
+apiMap.set(ApiMap.subscribeCommand, { http: { method: 'GET', uri: '/device/command/poll', base: ApiMap.MAIN_BASE, subscription: true }, ws: { action: 'command/subscribe' } });
+apiMap.set(ApiMap.unsubscribeCommand, { http: { unsubscription: true }, ws: { action: 'command/unsubscribe' } });
 
 apiMap.set(ApiMap.listNotification, { http: { method: 'GET ', uri: '/device/{deviceId}/notification', base: ApiMap.MAIN_BASE }, ws: { action: 'notification/list' } });
 apiMap.set(ApiMap.getNotification, { http: { method: 'GET ', uri: '/device/{deviceId}/notification/{notificationId}', base: ApiMap.MAIN_BASE }, ws: { action: 'notification/get' } });
 apiMap.set(ApiMap.insertNotification, { http: { method: 'POST', uri: '/device/{deviceId}/notification', base: ApiMap.MAIN_BASE }, ws: { action: 'notification/insert', bodyKey: 'notification' } });
 apiMap.set(ApiMap.pollNotification, { http: { method: 'GET', uri: '/device/{deviceId}/notification/poll', base: ApiMap.MAIN_BASE} });
 apiMap.set(ApiMap.pollManyNotification, { http: { method: 'GET', uri: '/device/notification/poll', base: ApiMap.MAIN_BASE} });
-apiMap.set(ApiMap.subscribeNotification, { ws: { action: 'notification/subscribe' } }); 
-apiMap.set(ApiMap.unsubscribeNotification, { ws: { action: 'notification/unsubscribe' } }); 
+apiMap.set(ApiMap.subscribeNotification, { http: { method: 'GET', uri: '/device/notification/poll', base: ApiMap.MAIN_BASE, subscription: true }, ws: { action: 'notification/subscribe' } });
+apiMap.set(ApiMap.unsubscribeNotification, { http: { unsubscription: true }, ws: { action: 'notification/unsubscribe' } });
 
 apiMap.set(ApiMap.listNetwork, { http: { method: 'GET', uri: '/network', base: ApiMap.MAIN_BASE }, ws: { action: 'network/list' } });
 apiMap.set(ApiMap.countNetwork, { http: { method: 'GET', uri: '/network/count', base: ApiMap.MAIN_BASE }, ws: { action: 'network/count' } });

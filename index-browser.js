@@ -1,0 +1,1 @@
+window.DeviceHive = require('./src/DeviceHive');

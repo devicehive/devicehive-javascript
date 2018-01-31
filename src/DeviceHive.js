@@ -1,3 +1,4 @@
+const EventEmitter = require('events');
 const APIStrategy = require('./ApiStrategy');
 
 const Configuration = require('./models/Configuration');
@@ -19,11 +20,18 @@ const CommandAPI = require('./controllers/DeviceCommandAPI');
 const NotificationAPI = require('./controllers/DeviceNotificationAPI');
 const UserAPI = require('./controllers/UserAPI');
 
+const CommandPollQuery = require(`./models/query/CommandPollQuery`);
 
 /**
  *
  */
-class DeviceHive {
+class DeviceHive extends EventEmitter {
+
+    static get models() {
+        return {
+            CommandPollQuery: CommandPollQuery
+        };
+    }
 
     /**
      * Returns an model of DeviceHive
@@ -55,71 +63,43 @@ class DeviceHive {
      * DeviceHive module
      */
     constructor({ accessToken, refreshToken, login, password, mainServiceURL, authServiceURL, pluginServiceURL }) {
-        this.strategy = new APIStrategy({ mainServiceURL, authServiceURL, pluginServiceURL });
+        super();
 
-        this.info = new InfoAPI({ strategy: this.strategy });
-        this.device = new DeviceAPI({ strategy: this.strategy });
-        this.token = new TokenAPI({ strategy: this.strategy });
-        this.network = new NetworkAPI({ strategy: this.strategy });
-        this.deviceType = new DeviceTypeAPI({ strategy: this.strategy });
-        this.configuration = new ConfigurationAPI({ strategy: this.strategy });
-        this.command = new CommandAPI({ strategy: this.strategy });
-        this.notification = new NotificationAPI({ strategy: this.strategy });
-        this.user = new UserAPI({ strategy: this.strategy });
+        const me = this;
+
+        me.accessToken = accessToken;
+        me.refreshToken = refreshToken;
+        me.login = login;
+        me.password = password;
+
+        me.strategy = new APIStrategy({ mainServiceURL, authServiceURL, pluginServiceURL });
 
         // this.strategy.on('message', message => {
         //     console.log(message);
         // });
 
-        // Credentials
-        this.credentials = new Token({
-            login,
-            password,
-            accessToken,
-            refreshToken
-        });
-
+        me.strategy.on(`message`, (message) => me.emit(`message`, message));
     }
 
     /**
      * Connect and authorize
      */
-    connect() {
-        const promise = new Promise((resolve, reject) => {
-            if (this.credentials.refreshToken) {
-        
-                if (this.credentials.accessToken) {
-                    this.strategy.initTransport()
-                        .then(() => this.token.refresh(this.credentials))
-                        .then(({ accessToken }) => {
-                            this.credentials.accessToken = accessToken;
-                        })
-                        .then(() => this.strategy.authTransport(this.credentials))
-                        .then(() => resolve(this))
-                        .catch(reject);
-                } else {
+    async connect() {
+        const me = this;
 
-                    this.initTransport()
-                        .then(() => this.strategy.authTransport(this.credentials))
-                        .then(() => resolve(this))
-                        .catch(reject);
-                }
-            } else if (this.credentials.login && this.credentials.password) {
-        
-                this.strategy.initTransport()
-                    .then(() => this.token.login(this.credentials))
-                    .then(({ accessToken, refreshToken }) => {
-                        this.credentials.accessToken = accessToken;
-                        this.credentials.refreshToken = refreshToken;
-                    })
-                    .then(() => this.strategy.authTransport(this.credentials))
-                    .then(() => resolve(this))
-                    .catch(reject);
-            }
-        
-        });
-        
-        return promise;
+        if (me.accessToken) {
+            await me.strategy.authorize(me.accessToken);
+        } else if (me.refreshToken) {
+            const accessToken = await me.token.refresh(me.refreshToken);
+            await me.strategy.authorize(accessToken);
+        } else if (me.login && me.password) {
+            const { accessToken } = await me.token.login(me.login, me.password);
+            await me.strategy.authorize(accessToken);
+        } else {
+            throw 'No auth credentials';
+        }
+
+        return me;
     }
 }
 
