@@ -48,7 +48,6 @@ class ApiStrategy extends EventEmitter {
         me.strategy.on(`message`, (message) => { me.emit(`message`, message) });
     }
 
-
     /**
      *
      * @param accessToken
@@ -80,6 +79,39 @@ class ApiStrategy extends EventEmitter {
         }
 
         return me.strategy.send(sendData);
+    }
+
+    /**
+     * Init method
+     * @returns {promise} when initialized
+     */
+    initTransport() {
+        return this.strategy.init();
+    }
+
+    /**
+     * Authorize method
+     * @param {object} credentials { accessToken }
+     * @returns {promise} when authorized
+     */
+    authTransport({ accessToken }) {
+        this.accessToken = accessToken;
+
+        let promise;
+
+        if (this.strategy.type === 'ws') {
+            promise = this.strategy.send({
+                apiType: 'authenticate',
+                body: {
+                    token: this.accessToken
+                }
+            });
+        } else {
+            promise = new Promise(resolve => resolve());
+        }
+
+
+        return promise;
     }
 }
 

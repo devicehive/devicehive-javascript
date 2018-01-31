@@ -50,7 +50,8 @@ class WS extends Transport {
      * WebSocket API send method
      */
     send(params) {
-        const requestId = params.requestId;
+        console.log(params);
+        const { requestId } = params;
 
         return new Promise((resolve, reject) => {
             // this.socket.once(requestId, message => resolve(message));
@@ -64,7 +65,7 @@ class WS extends Transport {
                     return reject(error);
                 }
                 if (messageData.requestId === requestId) {
-                    this.socket.removeEventListener(requestId, listener);
+                    this.socket.removeEventListener('message', listener);
                     if (messageData.status === 'success') {
                         resolve(messageData);
                     } else {
@@ -73,7 +74,7 @@ class WS extends Transport {
                 }
             }
 
-            this.socket.addEventListener(requestId, listener);
+            this.socket.addEventListener('message', listener);
         });
     }
 

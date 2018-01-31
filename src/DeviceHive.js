@@ -67,12 +67,24 @@ class DeviceHive extends EventEmitter {
 
         const me = this;
 
-        me.accessToken = accessToken;
-        me.refreshToken = refreshToken;
-        me.login = login;
-        me.password = password;
+        me.credentials = new Token({
+            accessToken,
+            refreshToken,
+            login,
+            password
+        });
 
         me.strategy = new APIStrategy({ mainServiceURL, authServiceURL, pluginServiceURL });
+        
+        me.info = new InfoAPI({ strategy: me.strategy });
+        me.device = new DeviceAPI({ strategy: me.strategy });
+        me.token = new TokenAPI({ strategy: me.strategy });
+        me.network = new NetworkAPI({ strategy: me.strategy });
+        me.deviceType = new DeviceTypeAPI({ strategy: me.strategy });
+        me.configuration = new ConfigurationAPI({ strategy: me.strategy });
+        me.command = new CommandAPI({ strategy: me.strategy });
+        me.notification = new NotificationAPI({ strategy: me.strategy });
+        me.user = new UserAPI({ strategy: me.strategy });
 
         // this.strategy.on('message', message => {
         //     console.log(message);
@@ -87,14 +99,20 @@ class DeviceHive extends EventEmitter {
     async connect() {
         const me = this;
 
-        if (me.accessToken) {
-            await me.strategy.authorize(me.accessToken);
-        } else if (me.refreshToken) {
-            const accessToken = await me.token.refresh(me.refreshToken);
+        if (me.credentials.accessToken) {
+            await me.strategy.initTransport();
+            await me.strategy.authorize(me.credentials.accessToken);
+            await me.strategy.authTransport(me.credentials);
+        } else if (me.credentials.refreshToken) {
+            await me.strategy.initTransport();
+            const accessToken = await me.token.refresh(me.credentials.refreshToken);
             await me.strategy.authorize(accessToken);
-        } else if (me.login && me.password) {
-            const { accessToken } = await me.token.login(me.login, me.password);
+            await me.strategy.authTransport(me.credentials);
+        } else if (me.credentials.login && me.credentials.password) {
+            await me.strategy.initTransport();
+            const { accessToken } = await me.token.login(me.credentials.login, me.credentials.password);
             await me.strategy.authorize(accessToken);
+            await me.strategy.authTransport(me.credentials);
         } else {
             throw 'No auth credentials';
         }
