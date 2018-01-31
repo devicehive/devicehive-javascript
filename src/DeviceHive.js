@@ -9,8 +9,30 @@ const ConfigurationAPI = require('./controllers/ConfigurationAPI');
 const CommandAPI = require('./controllers/DeviceCommandAPI');
 const NotificationAPI = require('./controllers/DeviceNotificationAPI');
 const UserAPI = require('./controllers/UserAPI');
-
+const Command = require(`./models/Command`);
+const Configuration = require(`./models/Configuration`);
+const Device = require(`./models/Device`);
+const DeviceType = require(`./models/DeviceType`);
+const Network = require(`./models/Network`);
+const Notification = require(`./models/Notification`);
+const Token = require(`./models/Token`);
+const User = require(`./models/User`);
+const CommandListQuery = require(`./models/query/CommandListQuery`);
+const CommandPollManyQuery = require(`./models/query/CommandPollManyQuery`);
 const CommandPollQuery = require(`./models/query/CommandPollQuery`);
+const CommandWaitQuery = require(`./models/query/CommandWaitQuery`);
+const DeviceCountQuery = require(`./models/query/DeviceCountQuery`);
+const DeviceListQuery = require(`./models/query/DeviceListQuery`);
+const DeviceTypeCountQuery = require(`./models/query/DeviceTypeCountQuery`);
+const DeviceTypeListQuery = require(`./models/query/DeviceTypeListQuery`);
+const NetworkCountQuery = require(`./models/query/NetworkCountQuery`);
+const NetworkListQuery = require(`./models/query/NetworkListQuery`);
+const NotificationListQuery = require(`./models/query/NotificationListQuery`);
+const NotificationPollManyQuery = require(`./models/query/NotificationPollManyQuery`);
+const NotificationPollQuery = require(`./models/query/NotificationPollQuery`);
+const UserCountQuery = require(`./models/query/UserCountQuery`);
+const UserListQuery = require(`./models/query/UserListQuery`);
+
 
 /**
  *
@@ -19,7 +41,31 @@ class DeviceHive extends EventEmitter {
 
     static get models() {
         return {
-            CommandPollQuery: CommandPollQuery
+            Command: Command,
+            Configuration: Configuration,
+            Device: Device,
+            DeviceType: DeviceType,
+            Network: Network,
+            Notification: Notification,
+            Token: Token,
+            User: User,
+            query: {
+                CommandListQuery: CommandListQuery,
+                CommandPollManyQuery: CommandPollManyQuery,
+                CommandPollQuery: CommandPollQuery,
+                CommandWaitQuery: CommandWaitQuery,
+                DeviceCountQuery: DeviceCountQuery,
+                DeviceListQuery: DeviceListQuery,
+                DeviceTypeCountQuery: DeviceTypeCountQuery,
+                DeviceTypeListQuery: DeviceTypeListQuery,
+                NetworkCountQuery: NetworkCountQuery,
+                NetworkListQuery: NetworkListQuery,
+                NotificationListQuery: NotificationListQuery,
+                NotificationPollManyQuery: NotificationPollManyQuery,
+                NotificationPollQuery: NotificationPollQuery,
+                UserCountQuery: UserCountQuery,
+                UserListQuery: UserListQuery
+            }
         };
     }
 
