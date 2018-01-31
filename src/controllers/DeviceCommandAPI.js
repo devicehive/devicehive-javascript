@@ -19,17 +19,17 @@ class DeviceCommandAPI extends API {
 
     /**
      * Return a list of commands
-     * @param {object} query - Params
+     * @param {CommandListQuery} commandListQuery
      * @returns {Promise} list of commands
      */
-    list(query) {
-        return this.send(ApiMap.listCommand, query.toObject());
+    list(commandListQuery) {
+        return this.send(ApiMap.listCommand, commandListQuery.toObject());
     }
 
     /**
      * Registers a command
      * @param {number} deviceId - Device ID
-     * @param {Command} command data
+     * @param {Command} command
      * @returns {Promise} count of commands
      */
     insert(deviceId, command) {
@@ -38,7 +38,7 @@ class DeviceCommandAPI extends API {
 
     /**
      * Updates a command
-     * @param {Command} command data
+     * @param {Command} command
      * @returns {Promise} count of commands
      */
     update(command) {
@@ -48,7 +48,7 @@ class DeviceCommandAPI extends API {
     /**
      *
      * @param {CommandPollQuery} commandPollQuery
-     * @returns {*}
+     * @returns {Promise}
      */
     poll(commandPollQuery) {
         return this.send(ApiMap.pollCommand, commandPollQuery.toObject());
@@ -56,18 +56,18 @@ class DeviceCommandAPI extends API {
 
     /**
      *
-     * @param query
-     * @returns {*}
+     * @param {CommandPollManyQuery} commandPollManyQuery
+     * @returns {Promise}
      */
-    pollMany(query) {
-        return this.send(ApiMap.pollManyCommand, query.toObject());
+    pollMany(commandPollManyQuery) {
+        return this.send(ApiMap.pollManyCommand, qcommandPollManyQueryuery.toObject());
     }
 
     /**
      *
      * @param deviceId
      * @param commandId
-     * @returns {*}
+     * @returns {Promise}
      */
     wait(deviceId, commandId) {
         return this.send(ApiMap.waitCommand, { deviceId: deviceId, commandId: commandId });

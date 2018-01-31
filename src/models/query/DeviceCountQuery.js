@@ -7,13 +7,13 @@ class DeviceListQuery {
     /**
      *
      */
-    constructor() {
+    constructor({ name, namePattern, networkId, networkName }) {
         const me = this;
 
         me.name = name;
-        me.namePattern = name;
-        me.networkId = name;
-        me.networkName = name;
+        me.namePattern = namePattern;
+        me.networkId = networkId;
+        me.networkName = networkName;
     }
 
     get name() {

@@ -2,18 +2,17 @@
 /**
  *
  */
-class CommandListQuery {
+class UserListQuery {
 
     /**
      *
      */
-    constructor({ deviceId, start, end, command, status, sortField, sortOrder, take, skip }) {
+    constructor({ login, loginPattern, role, status, sortField, sortOrder, take, skip }) {
         const me = this;
 
-        me.deviceId = deviceId;
-        me.start = start;
-        me.end = end;
-        me.command = command;
+        me.login = login;
+        me.loginPattern = loginPattern;
+        me.role = role;
         me.status = status;
         me.sortField = sortField;
         me.sortOrder = sortOrder;
@@ -21,36 +20,28 @@ class CommandListQuery {
         me.skip = skip;
     }
 
-    get deviceId() {
-        return this._deviceId;
+    get login() {
+        return this._login;
     }
 
-    set deviceId(value) {
-        this._deviceId = value;
+    set login(value) {
+        this._login = value;
     }
 
-    get start() {
-        return this._start;
+    get loginPattern() {
+        return this._loginPattern;
     }
 
-    set start(value) {
-        this._start = value;
+    set loginPattern(value) {
+        this._loginPattern = value;
     }
 
-    get end() {
-        return this._end;
+    get role() {
+        return this._role;
     }
 
-    set end(value) {
-        this._end = value;
-    }
-
-    get command() {
-        return this._command;
-    }
-
-    set command(value) {
-        this._command = value;
+    set role(value) {
+        this._role = value;
     }
 
     get status() {
@@ -101,10 +92,9 @@ class CommandListQuery {
         const me = this;
 
         return {
-            deviceId: me.deviceId,
-            start: me.start,
-            end: me.end,
-            command: me.command,
+            login: me.login,
+            loginPattern: me.loginPattern,
+            role: me.role,
             status: me.status,
             sortField: me.sortField,
             sortOrder: me.sortOrder,
@@ -115,4 +105,4 @@ class CommandListQuery {
 }
 
 
-module.exports = CommandListQuery;
+module.exports = UserListQuery;

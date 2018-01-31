@@ -19,12 +19,11 @@ class DeviceNotificationAPI extends API {
 
     /**
      * Return a list of notifications
-     * @param {string} deviceId
-     * @param {Query} query
+     * @param {DeviceListQuery} deviceListQuery
      * @returns {Promise} list of notifications
      */
-    list(deviceId, query) {
-        return this.send(ApiMap.listNotification, query.toObject());
+    list(deviceListQuery) {
+        return this.send(ApiMap.listNotification, deviceListQuery.toObject());
     }
 
     /**

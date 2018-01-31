@@ -27,11 +27,11 @@ class DeviceAPI extends API {
 
     /**
      * Returns count of devices
-     * @param {object} query params
+     * @param {DeviceCountQuery} deviceCountQuery
      * @returns {Promise} count of devices
      */
-    count(query) {
-        return this.send(ApiMap.countDevice, query.toObject());
+    count(deviceCountQuery) {
+        return this.send(ApiMap.countDevice, deviceCountQuery.toObject());
     }
 
     /**

@@ -18,20 +18,20 @@ class DeviceTypeAPI extends API {
 
     /**
      * Return a list of deviceTypes
-     * @param {Query} query params
+     * @param {DeviceTypeListQuery} deviceTypeListQuery
      * @returns {Promise} list of deviceTypes
      */
-    list(query) {
-        return this.send(ApiMap.listDeviceType, query.toObject());
+    list(deviceTypeListQuery) {
+        return this.send(ApiMap.listDeviceType, deviceTypeListQuery.toObject());
     }
 
     /**
      * Returns count of deviceTypes
-     * @param {Query} query params
+     * @param {DeviceTypeCountQuery} deviceTypeCountQuery
      * @returns {Promise} count of deviceTypes
      */
-    count(query) {
-        return this.send(ApiMap.countDeviceType, query.toObject());
+    count(deviceTypeCountQuery) {
+        return this.send(ApiMap.countDeviceType, deviceTypeCountQuery.toObject());
     }
 
     /**

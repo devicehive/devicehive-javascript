@@ -2,7 +2,7 @@
 /**
  *
  */
-class CommandListQuery {
+class NotificationListQuery {
 
     /**
      *
@@ -13,7 +13,7 @@ class CommandListQuery {
         me.deviceId = deviceId;
         me.start = start;
         me.end = end;
-        me.command = command;
+        me.notification = command;
         me.status = status;
         me.sortField = sortField;
         me.sortOrder = sortOrder;
@@ -45,12 +45,12 @@ class CommandListQuery {
         this._end = value;
     }
 
-    get command() {
-        return this._command;
+    get notification() {
+        return this._notification;
     }
 
-    set command(value) {
-        this._command = value;
+    set notification(value) {
+        this._notification = value;
     }
 
     get status() {
@@ -104,7 +104,7 @@ class CommandListQuery {
             deviceId: me.deviceId,
             start: me.start,
             end: me.end,
-            command: me.command,
+            notification: me.notification,
             status: me.status,
             sortField: me.sortField,
             sortOrder: me.sortOrder,
@@ -115,4 +115,4 @@ class CommandListQuery {
 }
 
 
-module.exports = CommandListQuery;
+module.exports = NotificationListQuery;
