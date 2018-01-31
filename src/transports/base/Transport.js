@@ -9,7 +9,7 @@ class Transport extends EventEmitter {
     /**
      *
      */
-    authorize() {}
+    authenticate(token) {}
 
     /**
      *

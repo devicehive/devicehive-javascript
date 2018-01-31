@@ -4,7 +4,6 @@ const Transport = require(`./base/Transport`);
 /**
  *
  */
-
 class WS extends Transport {
 
     static get TYPE() { return `ws`; }

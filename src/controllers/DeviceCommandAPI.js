@@ -42,7 +42,53 @@ class DeviceCommandAPI extends API {
      * @returns {Promise} count of commands
      */
     update(command) {
-        return this.send({ deviceId: command.deviceId, commandId: command.id }, command.toObject());
+        return this.send(ApiMap.updateCommand, { deviceId: command.deviceId, commandId: command.id }, command.toObject());
+    }
+
+    /**
+     *
+     * @param {CommandPollQuery} commandPollQuery
+     * @returns {*}
+     */
+    poll(commandPollQuery) {
+        return this.send(ApiMap.pollCommand, commandPollQuery.toObject());
+    }
+
+    /**
+     *
+     * @param query
+     * @returns {*}
+     */
+    pollMany(query) {
+        return this.send(ApiMap.pollManyCommand, query.toObject());
+    }
+
+    /**
+     *
+     * @param deviceId
+     * @param commandId
+     * @returns {*}
+     */
+    wait(deviceId, commandId) {
+        return this.send(ApiMap.waitCommand, { deviceId: deviceId, commandId: commandId });
+    }
+
+    /**
+     *
+     * @param {CommandPollQuery} commandPollQuery
+     * @returns {Promise}
+     */
+    subscribe(commandPollQuery) {
+        return this.send(ApiMap.subscribeCommand, commandPollQuery.toObject());
+    }
+
+    /**
+     *
+     * @param {Number} subscriptionId
+     * @returns {Promise}
+     */
+    unsubscribe(subscriptionId) {
+        return this.send(ApiMap.unsubscribeCommand, { subscriptionId: subscriptionId });
     }
 }
 

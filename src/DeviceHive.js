@@ -1,3 +1,4 @@
+const EventEmitter = require('events');
 const APIStrategy = require('./ApiStrategy');
 const InfoAPI = require('./controllers/ServerInfoAPI');
 const DeviceAPI = require('./controllers/DeviceAPI');
@@ -9,16 +10,25 @@ const CommandAPI = require('./controllers/DeviceCommandAPI');
 const NotificationAPI = require('./controllers/DeviceNotificationAPI');
 const UserAPI = require('./controllers/UserAPI');
 
+const CommandPollQuery = require(`./models/query/CommandPollQuery`);
 
 /**
  *
  */
-class DeviceHive {
+class DeviceHive extends EventEmitter {
+
+    static get models() {
+        return {
+            CommandPollQuery: CommandPollQuery
+        };
+    }
 
     /**
      * DeviceHive module
      */
     constructor({ accessToken, refreshToken, login, password, mainServiceURL, authServiceURL, pluginServiceURL }) {
+        super();
+
         const me = this;
 
         me.accessToken = accessToken;
@@ -38,9 +48,7 @@ class DeviceHive {
         me.notification = new NotificationAPI({ strategy: me.strategy });
         me.user = new UserAPI({ strategy: me.strategy });
 
-        me.strategy.on(`message`, (message) => {
-            console.log(message);
-        });
+        me.strategy.on(`message`, (message) => me.emit(`message`, message));
     }
 
     /**
@@ -50,13 +58,13 @@ class DeviceHive {
         const me = this;
 
         if (me.accessToken) {
-            me.strategy.setAccessToken(me.accessToken);
+            await me.strategy.authorize(me.accessToken);
         } else if (me.refreshToken) {
             const accessToken = await me.token.refresh(me.refreshToken);
-            me.strategy.setAccessToken(accessToken);
+            await me.strategy.authorize(accessToken);
         } else if (me.login && me.password) {
             const { accessToken } = await me.token.login(me.login, me.password);
-            me.strategy.setAccessToken(accessToken);
+            await me.strategy.authorize(accessToken);
         } else {
             throw 'No auth credentials';
         }

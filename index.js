@@ -10,5 +10,24 @@ const httpDeviceHive = new DeviceHive({
     pluginServiceURL: 'http://localhost:8110/dh/rest'
 });
 
-httpDeviceHive.connect();
+const CommandPollQuery = DeviceHive.models.CommandPollQuery;
+const query = new CommandPollQuery({
+    deviceId: 'e50d6085-2aba-48e9-b1c3-73c673e414be',
+    names: 'test'
+});
 
+let subscriptionId;
+
+httpDeviceHive.on(`message`, (message) => {
+    console.log(message);
+});
+
+httpDeviceHive.connect()
+    .then((httpDeviceHive) => httpDeviceHive.command.subscribe(query))
+    .then((data) => subscriptionId = data.subscriptionId)
+    .catch((error) => console.warn(error));
+
+setTimeout(() => {
+    httpDeviceHive.command.unsubscribe(subscriptionId)
+        .then((data) => subscriptionId = data.subscriptionId)
+}, 10000);

@@ -2,26 +2,21 @@ const webpack = require('webpack');
 
 
 module.exports = {
-    entry: `${__dirname}/index.js`,
+    entry: `${__dirname}/index-browser.js`,
     output: {
         path: `${__dirname}/dist`,
         filename: `bundle.js`,
-        libraryTarget: "commonjs2"
+        libraryTarget: "umd"
     },
     target: 'web',
     resolve: {
         modules: ["node_modules"]
     },
     module: {
-        rules: [
+        loaders: [
             {
-                test: /\.js$/,
-                exclude: /(node_modules|bower_components)/,
-                use: {
-                    loader: 'babel-loader',
-                    options: {
-                        presets: ['@babel/preset-env']
-                    }
+                test: /\.js/, exclude: /(node_modules|bower_components)/, loader: "babel-loader", options: {
+                    presets: ['@babel/preset-env']
                 }
             }
         ]

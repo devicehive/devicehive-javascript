@@ -18,11 +18,11 @@ class DeviceAPI extends API {
 
     /**
      * Return a list of devices
-     * @param {object} query params
+     * @param {DeviceListQuery} deviceListQuery
      * @returns {Promise} list of devices
      */
-    list(query) {
-        return this.send(ApiMap.listDevice, query.toObject());
+    list(deviceListQuery) {
+        return this.send(ApiMap.listDevice, deviceListQuery.toObject());
     }
 
     /**
