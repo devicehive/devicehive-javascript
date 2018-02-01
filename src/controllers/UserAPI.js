@@ -3,12 +3,12 @@ const ApiMap = require(`./transportResolvers/ApiMap`);
 
 
 /**
- *
+ * Return a list of users
  */
 class UserAPI extends API {
 
     /**
-     * Return a list of users
+     * Creates UserAPI
      * @param {UserListQuery} userListQuery
      * @returns {Promise} list of users
      */

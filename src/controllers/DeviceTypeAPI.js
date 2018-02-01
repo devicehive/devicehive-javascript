@@ -3,12 +3,12 @@ const ApiMap = require(`./transportResolvers/ApiMap`);
 
 
 /**
- *
+ * Returns information about the current deviceType
  */
 class DeviceTypeAPI extends API {
 
     /**
-     * Returns information about the current deviceType
+     * Creates DeviceTypeAPI
      * @param {number} deviceTypeId
      * @returns {Promise} selected deviceType
      */

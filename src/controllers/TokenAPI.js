@@ -3,12 +3,12 @@ const ApiMap = require(`./transportResolvers/ApiMap`);
 
 
 /**
- *
+ * Authentificate using login and password
  */
 class TokenAPI extends API {
 
     /**
-     * Authentificate using login and password
+     * Creates TokenAPI
      * @param {string} login
      * @param {string} password
      */

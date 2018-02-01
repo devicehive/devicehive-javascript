@@ -3,12 +3,12 @@ const ApiMap = require(`./transportResolvers/ApiMap`);
 
 
 /**
- *
+ * Returns information about the current notification
  */
 class DeviceNotificationAPI extends API {
 
     /**
-     * Returns information about the current notification
+     * Creates DeviceNotificationAPI
      * @param {number} deviceId - Device ID
      * @param {number} notificationId - Notification ID
      * @returns {Promise} selected notification
