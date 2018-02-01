@@ -6,7 +6,7 @@ const apiMap = new Map();
 
 
 /**
- *
+ * Api Map
  */
 class ApiMap {
 

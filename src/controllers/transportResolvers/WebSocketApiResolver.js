@@ -2,7 +2,7 @@ const Utils = require(`../../utils/Utils`);
 
 
 /**
- *
+ * WebSocketApiResolver
  */
 class WebSocketApiResolver {
 

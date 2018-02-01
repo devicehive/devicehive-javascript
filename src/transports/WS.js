@@ -3,14 +3,15 @@ const randomString = require(`randomstring`);
 const WebSocket = require('universal-websocket-client');
 
 /**
- *
+ * WebSocket Transport
  */
 class WS extends Transport {
-    
+
     static get TYPE() { return `ws`; }
-    
+
     /**
-     * WebSocket API
+     * Creates WS
+     * @param {string} mainServiceURL - WebSocket URL
      */
     constructor({ mainServiceURL }) {
         super();
@@ -34,6 +35,10 @@ class WS extends Transport {
         });
     }
 
+    /**
+     * Gettting socket according to if it opened
+     * @returns {promise} when socket opened
+     */
     _getSocket() {
         return new Promise((resolve) => {
             if (this.isOpend === true) {
@@ -46,8 +51,11 @@ class WS extends Transport {
             }
         });
     }
+
     /**
      * TODO
+     * Authenticate transport
+     * @param {string} token - Auth token
      */
     authenticate(token) {
         this.send({
@@ -65,7 +73,7 @@ class WS extends Transport {
                 const { requestId = randomString.generate() } = params;
 
                 params.requestId = requestId;
-                
+
                 return new Promise((resolve, reject) => {
                     this.socket.send(JSON.stringify(params));
 
@@ -87,6 +95,8 @@ class WS extends Transport {
     }
 
 }
+
+new WS
 
 
 module.exports = WS;

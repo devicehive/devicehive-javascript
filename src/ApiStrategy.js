@@ -6,12 +6,13 @@ const API = require(`./controllers/API`);
 
 
 /**
-* @event onMessage
+ * ApiStrategy
+ * @event onMessage
 */
 class ApiStrategy extends EventEmitter {
 
     /**
-     *
+     * 
      * @param url
      * @returns {Class} Transport Class
      */
@@ -30,7 +31,8 @@ class ApiStrategy extends EventEmitter {
     }
 
     /**
-     * ApiStrategy
+     * Creates ApiStrategy
+     * @param {object} urls ({ mainServiceURL, authServiceURL, pluginServiceURL })
      */
     constructor({ mainServiceURL, authServiceURL, pluginServiceURL }) {
         super();
@@ -70,7 +72,7 @@ class ApiStrategy extends EventEmitter {
         const me = this;
         const sendData = API.build(me.strategy.type, key, parameters, body);
 
-        switch(me.strategy.type) {
+        switch (me.strategy.type) {
             case HTTP.TYPE:
                 sendData.endpoint = `${me.urlsMap.get(sendData.base)}${sendData.endpoint}`;
                 break;

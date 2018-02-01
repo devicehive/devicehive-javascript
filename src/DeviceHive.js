@@ -35,7 +35,7 @@ const UserListQuery = require(`./models/query/UserListQuery`);
 
 
 /**
- *
+ * DeviceHive module
  */
 class DeviceHive extends EventEmitter {
 
@@ -71,7 +71,16 @@ class DeviceHive extends EventEmitter {
 
     /**
      * DeviceHive module
+     * @param {object} options - Initial settings
+     * @param {string} [options.accessToken] - Access token
+     * @param {string} [options.refreshToken] - Refresh token
+     * @param {string} [options.login] - Login
+     * @param {string} [options.password] - Paaword
+     * @param {string} options.mainServiceURL - Main Service URL
+     * @param {string} [options.authServiceURL] - Auth Service URL (required only for http)
+     * @param {string} [options.pluginServiceURL] - Alug inServi ceURL (required only for http)
      */
+
     constructor({ accessToken, refreshToken, login, password, mainServiceURL, authServiceURL, pluginServiceURL }) {
         super();
 
