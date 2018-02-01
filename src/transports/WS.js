@@ -35,7 +35,7 @@ class WS extends Transport {
     }
 
     _getSocket() {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             if (this.isOpend === true) {
                 resolve(this.socket);
             } else {
@@ -60,7 +60,6 @@ class WS extends Transport {
      * WebSocket API send method
      */
     send(params) {
-        console.log(params);
         return this._getSocket()
             .then(() => {
                 const { requestId = randomString.generate() } = params;

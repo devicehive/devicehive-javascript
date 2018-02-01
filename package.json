@@ -4,7 +4,8 @@
   "description": "DeviceHive JS Library",
   "main": "index.js",
   "scripts": {
-    "build": "browserify index-browser.js -t babelify | uglifyjs -mc > dist/bundle.js"
+    "build-development": "./node_modules/.bin/browserify index-browser.js -t ./node_modules/babelify -mc > dist/devicehive.js",
+    "build-production": "./node_modules/.bin/browserify index-browser.js -t ./node_modules/babelify | uglifyjs -mc > dist/devicehive.min.js"
   },
   "license": "Apache-2.0",
   "dependencies": {
@@ -19,7 +20,9 @@
     "@babel/preset-env": "^7.0.0-beta.38",
     "babel-core": "^6.26.0",
     "babel-loader": "^8.0.0-beta.0",
+    "babelify": "^8.0.0",
+    "browserify": "^15.2.0",
     "uglify-js": "^3.3.9",
-    "babelify": "^8.0.0"
+    "uglifyify": "^4.0.5"
   }
 }
