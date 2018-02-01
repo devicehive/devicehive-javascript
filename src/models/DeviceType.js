@@ -1,11 +1,11 @@
 
 /**
- *
+ * DeviceType model
  */
 class DeviceType {
 
     /**
-     * DeviceType model
+     * Creates DeviceType model
      * @param {object} options ({ id, name, description })
      */
     constructor({ id, name, description }) {

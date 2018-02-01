@@ -1,11 +1,11 @@
 
 /**
- *
+ * Configuration model
  */
 class Configuration {
 
     /**
-     * Configuration model
+     * Creates Configuration model
      * @param {object} options ({ name, value, entityVersion })
      */
     constructor({ name, value, entityVersion }) {

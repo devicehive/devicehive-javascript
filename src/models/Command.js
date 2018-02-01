@@ -1,6 +1,6 @@
 
 /**
- *
+ * DeviceCommand model
  */
 class DeviceCommand {
 

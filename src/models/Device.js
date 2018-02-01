@@ -1,11 +1,11 @@
 
 /**
- *
+ * Device model
  */
 class Device {
 
     /**
-     * Device model
+     * Creates Device model
      * @param {object} options ({ id, name, data, networkId, deviceTypeId, blocked })
      */
     constructor({ id, name, data, networkId, deviceTypeId, blocked }) {
