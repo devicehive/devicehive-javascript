@@ -1,11 +1,16 @@
 
 /**
- *
+ * Device Count Query model
  */
-class DeviceListQuery {
+class DeviceCountQuery {
     
     /**
-     *
+     * Creates Device Count Query model
+     * @param {object} options - Options for instance
+     * @param {string} options.name - Filter by device name
+     * @param {string} options.namePattern - Filter by device name pattern. In pattern wildcards '%' and '_' can be used
+     * @param {number} options.networkId - Filter by associated network identifier
+     * @param {string} options.networkName - Filter by associated network name
      */
     constructor({ name, namePattern, networkId, networkName }) {
         const me = this;
@@ -65,4 +70,4 @@ class DeviceListQuery {
 }
 
 
-module.exports = DeviceListQuery;
+module.exports = DeviceCountQuery;

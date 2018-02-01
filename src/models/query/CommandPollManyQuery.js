@@ -1,16 +1,24 @@
 
 /**
- *
+ * Command Poll Many Query model
  */
 class CommandPollManyQuery {
 
     /**
-     *
+     * Creates Command Poll Many Query model
+     * @param {object} options - Options for instance
+     * @param {string} options.deviceIds - List of device IDs
+     * @param {string} options.networkIds - List of network IDs
+     * @param {string} options.deviceTypeIds - List of devicetype IDs
+     * @param {string} options.names - Command names
+     * @param {number} options.timestamp - Timestamp to start from
+     * @param {number} options.waitTimeout - Wait timeout in seconds
+     * @param {number} options.limit - Limit number of commands
      */
-    constructor({ deviceId, networkIds, deviceTypeIds, names, timestamp, waitTimeout, limit }) {
+    constructor({ deviceIds, networkIds, deviceTypeIds, names, timestamp, waitTimeout, limit }) {
         const me = this;
 
-        me.deviceId = deviceId;
+        me.deviceIds = deviceIds;
         me.networkIds = networkIds;
         me.deviceTypeIds = deviceTypeIds;
         me.names = names;
@@ -19,12 +27,12 @@ class CommandPollManyQuery {
         me.limit = limit;
     }
 
-    get deviceId() {
-        return this._deviceId;
+    get deviceIds() {
+        return this._deviceIds;
     }
 
-    set deviceId(value) {
-        this._deviceId = value;
+    set deviceIds(value) {
+        this._deviceIds = value;
     }
 
     get networkIds() {
@@ -83,7 +91,7 @@ class CommandPollManyQuery {
         const me = this;
 
         return {
-            deviceId: me.deviceId,
+            deviceIds: me.deviceIds,
             networkIds: me.networkIds,
             deviceTypeIds: me.deviceTypeIds,
             names: me.names,

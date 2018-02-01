@@ -1,11 +1,18 @@
 
 /**
- *
+ * Command Poll Query model
  */
 class CommandPollQuery {
 
     /**
-     *
+     * Creates Command Poll Query model
+     * @param {object} options - Options for instance
+     * @param {string} options.deviceId - Device ID
+     * @param {string} options.names - Command names
+     * @param {number} options.timestamp - Timestamp to start from
+     * @param {boolean} options.returnUpdatedCommands - Checks if updated commands should be returned
+     * @param {number} options.waitTimeout - Wait timeout in seconds
+     * @param {number} options.limit - Limit number of commands
      */
     constructor({ deviceId, names, timestamp, returnUpdatedCommands, waitTimeout, limit }) {
         const me = this;

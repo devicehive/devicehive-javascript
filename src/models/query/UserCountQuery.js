@@ -1,11 +1,17 @@
 
 /**
- *
+ * User Count Query model
  */
 class UserCountQuery {
     
     /**
-     *
+     * Creates User Count Query
+     * @param {object} options - Options for instance
+     * @param {string} login - Filter by user login
+     * @param {string} loginPattern - Filter by user login pattern
+     * @param {number} role - Filter by user login patter
+     * @param {number} status - Filter by user status. 0 is Active, 1 is Locked Out, 2 is Disabled
+     * 
      */
     constructor({ login, loginPattern, role, status }) {
         const me = this;

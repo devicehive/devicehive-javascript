@@ -1,16 +1,23 @@
 
 /**
- *
+ * Notification Poll Many Query model
  */
 class NotificationPollManyQuery {
 
     /**
-     *
+     * Creates Notification Poll Many Query model
+     * @param {object} options - Options for instance
+     * @param {string} options.deviceIds - List of device IDs
+     * @param {string} options.networkIds - List of network IDs
+     * @param {string} options.deviceTypeIds - List of devicetype IDs
+     * @param {string} options.names - Notification names
+     * @param {number} options.timestamp - Timestamp to start from
+     * @param {number} options.waitTimeout - Wait timeout in seconds
      */
-    constructor({ deviceId, networkIds, deviceTypeIds, names, timestamp, waitTimeout }) {
+    constructor({ deviceIds, networkIds, deviceTypeIds, names, timestamp, waitTimeout }) {
         const me = this;
 
-        me.deviceId = deviceId;
+        me.deviceIds = deviceIds;
         me.networkIds = networkIds;
         me.deviceTypeIds = deviceTypeIds;
         me.names = names;
@@ -18,12 +25,12 @@ class NotificationPollManyQuery {
         me.waitTimeout = waitTimeout;
     }
 
-    get deviceId() {
-        return this._deviceId;
+    get deviceIds() {
+        return this._deviceIds;
     }
 
-    set deviceId(value) {
-        this._deviceId = value;
+    set deviceIds(value) {
+        this._deviceIds = value;
     }
 
     get networkIds() {
@@ -74,7 +81,7 @@ class NotificationPollManyQuery {
         const me = this;
 
         return {
-            deviceId: me.deviceId,
+            deviceIds: me.deviceIds,
             networkIds: me.networkIds,
             deviceTypeIds: me.deviceTypeIds,
             names: me.names,

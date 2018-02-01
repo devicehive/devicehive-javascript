@@ -1,11 +1,18 @@
 
 /**
- *
+ * Network List Query model
  */
 class NetworkListQuery {
 
     /**
-     *
+     * Creates Network List Query model
+     * @param {object} options - Options for instance
+     * @param {string} options.name - Filter by device type name
+     * @param {string} options.namePattern - Filter by device type name pattern. In pattern wildcards '%' and '_' can be used
+     * @param {string} options.sortField - Result list sort field
+     * @param {string} options.sortOrder - Result list sort order. The sortField should be specified
+     * @param {number} options.take - Number of records to take from the result list
+     * @param {number} options.skip - Number of records to skip from the result list
      */
     constructor({ name, namePattern, sortField, sortOrder, take, skip }) {
         const me = this;
