@@ -47,7 +47,7 @@ class WS extends Transport {
         });
     }
     /**
-     *
+     * TODO
      */
     authenticate(token) {
         this.send({

@@ -9,16 +9,17 @@
         const httpDeviceHive = new DeviceHive({
             login: `dhadmin`,
             password: `dhadmin_#911`,
-            // mainServiceURL: 'http://localhost:8080/dh/rest',
-            mainServiceURL: 'ws://localhost:8080/dh/websocket'
-            //authServiceURL: 'http://localhost:8090/dh/rest',
-            //pluginServiceURL: 'http://localhost:8110/dh/rest'
+            mainServiceURL: 'http://localhost:8080/dh/rest',
+            authServiceURL: 'http://localhost:8090/dh/rest',
+            pluginServiceURL: 'http://localhost:8110/dh/rest'
         });
 
         const CommandPollQuery = DeviceHive.models.query.CommandPollQuery;
         const NotificationPollQuery = DeviceHive.models.query.NotificationPollQuery;
         const DeviceListQuery = DeviceHive.models.query.DeviceListQuery;
+
         const Device = DeviceHive.models.Device;
+
         const query = new CommandPollQuery({
             deviceId: 'e50d6085-2aba-48e9-b1c3-73c673e414be',
             names: [ 'test' ]
@@ -46,7 +47,7 @@
         });
 
         httpDeviceHive.connect()
-            .then(() => httpDeviceHive.command.subscribe(query))
+            .then(() => httpDeviceHive.command.poll(query))
             .then((data) => console.log(data))
             .catch((error) => console.warn(error));
 

@@ -20,10 +20,10 @@ class ApiStrategy extends EventEmitter {
 
         if (url.startsWith('http') || url.startsWith('https')) {
             result = HTTP;
-        } else if (url.startsWith('ws')) {
+        } else if (url.startsWith('ws') || url.startsWith('wss')) {
             result = WS;
         } else {
-            //TODO
+            throw new UnsupportedTransportError();
         }
 
         return result;
