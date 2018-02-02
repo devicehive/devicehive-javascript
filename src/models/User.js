@@ -1,11 +1,11 @@
 
 /**
- *
+ * User model
  */
 class User {
 
     /**
-     * User model
+     * Creates User model
      * @param {object} options ({ id, login, role, status, lastLogin, data, password, introReviewed, allDeviceTypesAvailable })
      */
     constructor({ id, login, role, status, lastLogin, data, password, introReviewed, allDeviceTypesAvailable }) {

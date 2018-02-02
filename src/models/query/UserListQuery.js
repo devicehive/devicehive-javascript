@@ -1,11 +1,20 @@
 
 /**
- *
+ * User List Query
  */
 class UserListQuery {
 
     /**
-     *
+     * Creates User List Query
+     * @param {object} options - Options for instance]
+     * @param {string} login - Filter by user login
+     * @param {string} loginPattern - Filter by user login pattern
+     * @param {number} role - Filter by user login patter
+     * @param {number} status - Filter by user status. 0 is Active, 1 is Locked Out, 2 is Disabled
+     * @param {string} sortField - Result list sort field
+     * @param {string} sortOrder - Result list sort order. The sortField should be specified
+     * @param {number} take - Number of records to take from the result list
+     * @param {number} skip - Number of records to skip from the result list
      */
     constructor({ login, loginPattern, role, status, sortField, sortOrder, take, skip }) {
         const me = this;

@@ -3,12 +3,12 @@ const ApiMap = require(`./transportResolvers/ApiMap`);
 
 
 /**
- *
+ * Returns information about the current network
  */
 class NetworkAPI extends API {
 
     /**
-     * Returns information about the current network
+     * Creates
      * @param {number} networkId
      * @returns {Promise} selected network
      */

@@ -1,11 +1,11 @@
 
 /**
- *
+ * DeviceNotification model
  */
 class DeviceNotification {
 
     /**
-     * DeviceNotification model
+     * Creates DeviceNotification model
      * @param {object} options ({ id, notification, timestamp, parameters })
      */
     constructor({ id, notification, timestamp, parameters }) {

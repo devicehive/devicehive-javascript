@@ -1,11 +1,11 @@
 
 /**
- *
+ * Network model
  */
 class Network {
 
     /**
-     * Network model
+     * Creates Network model
      * @param {object} options ({ id, name, description })
      */
     constructor({ id, name, description }) {

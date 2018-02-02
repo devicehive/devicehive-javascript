@@ -1,11 +1,14 @@
 
 /**
- *
+ * Network Count Query model
  */
 class NetworkCountQuery {
     
     /**
-     *
+     * Creates Network Count Query model
+     * @param {object} options - Options for instance
+     * @param {string} options.name - Filter by device type name
+     * @param {string} options.namePattern - Filter by device type name pattern. In pattern wildcards '%' and '_' can be used
      */
     constructor({ name, namePattern }) {
         const me = this;

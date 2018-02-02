@@ -1,11 +1,20 @@
 
 /**
- *
+ * Device List Query model
  */
 class DeviceListQuery {
 
     /**
-     *
+     * Creates Device List Query model
+     * @param {object} options - Options for instance
+     * @param {string} options.name - Filter by device name
+     * @param {string} options.namePattern - Filter by device name pattern. In pattern wildcards '%' and '_' can be used
+     * @param {number} options.networkId - Filter by associated network identifier
+     * @param {string} options.networkName - Filter by associated network name
+     * @param {string} options.sortField - Result list sort field
+     * @param {string} options.sortOrder - Result list sort order. The sortField should be specified
+     * @param {number} options.take - Number of records to take from the result list
+     * @param {number} options.skip - Number of records to skip from the result list
      */
     constructor({ name, namePattern, networkId, networkName, sortField, sortOrder, take, skip }) {
         const me = this;

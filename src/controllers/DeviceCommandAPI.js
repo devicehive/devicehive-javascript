@@ -3,12 +3,12 @@ const ApiMap = require(`./transportResolvers/ApiMap`);
 
 
 /**
- *
+ * Returns information about the current command
  */
 class DeviceCommandAPI extends API {
 
     /**
-     * Returns information about the current command
+     * Creates DeviceCommandAPI
      * @param {number} deviceId - Device ID
      * @param {number} commandId - Command ID
      * @returns {Promise} selected command

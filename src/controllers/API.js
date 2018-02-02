@@ -1,7 +1,7 @@
 const ApiMap = require(`./transportResolvers/ApiMap`);
 
 /**
- *
+ * API
  */
 class API {
 
@@ -13,7 +13,7 @@ class API {
     static get PLUGIN_BASE() { return ApiMap.PLUGIN_BASE; }
 
     /**
-     *
+     * Builds data for selected transport
      * @param transport
      * @param key
      * @param parameters
@@ -25,7 +25,7 @@ class API {
 
 
     /**
-     * API
+     * Creates API
      */
     constructor({ strategy }) {
         const me = this;

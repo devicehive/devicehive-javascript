@@ -1,19 +1,29 @@
 
 /**
- *
+ * Notification List Query model
  */
 class NotificationListQuery {
 
     /**
-     *
+     * Creates Notification List Query model
+     * @param {object} options - Options for instance
+     * @param {string} options.deviceId - Device ID
+     * @param {string} options.start - Start timestamp
+     * @param {string} options.end - End timestamp
+     * @param {string} options.notification - Notification name
+     * @param {string} options.status - Command status
+     * @param {string} options.sortField - Sort field
+     * @param {string} options.sortOrder - Sort order
+     * @param {number} options.take - Limit param
+     * @param {number} options.skip - Skip param
      */
-    constructor({ deviceId, start, end, command, status, sortField, sortOrder, take, skip }) {
+    constructor({ deviceId, start, end, notification, status, sortField, sortOrder, take, skip }) {
         const me = this;
 
         me.deviceId = deviceId;
         me.start = start;
         me.end = end;
-        me.notification = command;
+        me.notification = notification;
         me.status = status;
         me.sortField = sortField;
         me.sortOrder = sortOrder;

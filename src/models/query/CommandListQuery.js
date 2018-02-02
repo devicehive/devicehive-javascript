@@ -1,11 +1,21 @@
 
 /**
- *
+ * Command List query model
  */
 class CommandListQuery {
 
     /**
-     *
+     * Creates Command List query model
+     * @param {object} options - Options for instance
+     * @param {string} options.deviceId - Device ID
+     * @param {string} options.start - Start timestamp
+     * @param {string} options.end - End timestamp
+     * @param {string} options.command - Command name
+     * @param {string} options.status - Command status
+     * @param {string} options.sortField - Sort field
+     * @param {string} options.sortOrder - Sort order
+     * @param {number} options.take - Limit param
+     * @param {number} options.skip - Skip param
      */
     constructor({ deviceId, start, end, command, status, sortField, sortOrder, take, skip }) {
         const me = this;
@@ -113,6 +123,5 @@ class CommandListQuery {
         }
     }
 }
-
 
 module.exports = CommandListQuery;

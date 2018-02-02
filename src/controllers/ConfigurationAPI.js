@@ -3,12 +3,12 @@ const ApiMap = require(`./transportResolvers/ApiMap`);
 
 
 /**
- *
+ * Returns information about the current configuration
  */
 class ConfigurationAPI extends API {
 
     /**
-     * Returns information about the current configuration
+     * Creates ConfigurationAPI
      * @param {number} name
      * @returns {Promise} selected configuration
      */

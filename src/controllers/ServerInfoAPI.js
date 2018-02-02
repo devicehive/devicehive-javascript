@@ -3,12 +3,12 @@ const ApiMap = require(`./transportResolvers/ApiMap`);
 
 
 /**
- *
+ * Get server info
  */
 class InfoAPI extends API {
 
     /**
-     * Get server info
+     * Creates InfoAPI
      */
     getServerInfo() {
         return this.strategy.send(ApiMap.getServerInfo);

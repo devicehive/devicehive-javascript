@@ -1,11 +1,11 @@
 
 /**
- *
+ * Token model
  */
 class Token {
 
     /**
-     * Token model
+     * Creates Token model
      * @param {object} options ({ login, password, accessToken, refreshToken })
      */
     constructor({ login, password, accessToken, refreshToken }) {

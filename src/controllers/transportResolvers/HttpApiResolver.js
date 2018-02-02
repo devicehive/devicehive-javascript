@@ -3,7 +3,7 @@ const queryString = require('query-string');
 
 
 /**
- *
+ * HttpApiResolver
  */
 class HttpApiResolver {
 

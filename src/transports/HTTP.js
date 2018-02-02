@@ -3,14 +3,14 @@ const Transport = require(`./base/Transport`);
 const randomString = require(`randomstring`);
 
 /**
- *
+ * Rest API
  */
 class HTTP extends Transport {
 
     static get TYPE() { return `http`; }
 
     /**
-     * Rest API
+     * Creates HTTP
      */
     constructor() {
         super();
@@ -22,11 +22,13 @@ class HTTP extends Transport {
         me.subscriptionMap = new Map();
     }
 
+    /**
+     * Authenticate transport
+     * @param {string} token - Auth token
+     */
     authenticate(token) {
         const me = this;
-
         me.token = token;
-
         return Promise.resolve();
     }
 
@@ -75,6 +77,9 @@ class HTTP extends Transport {
         const me = this;
         let stopped = false;
 
+        /**
+         * Poll notifications
+         */
         function poll () {
             me.send({ endpoint, method, body })
                 .then((data) => {
@@ -86,7 +91,12 @@ class HTTP extends Transport {
                 .catch((error) => console.warn(error));
         }
 
-        function stop () { stopped = true; }
+        /**
+         * Stop polling
+         */
+        function stop () {
+            stopped = true;
+        }
 
         return { poll, stop };
     }

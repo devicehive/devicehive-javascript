@@ -1,11 +1,13 @@
 
 /**
- *
+ * Command Poll Query model
  */
 class CommandWaitQuery {
 
     /**
-     *
+     * Creates Command Poll Query model
+     * @param {object} options - Options for instance
+     * @param {number} options.waitTimeout - Wait timeout in seconds (default: 30 seconds, maximum: 60 seconds). Specify 0 to disable waiting
      */
     constructor({ waitTimeout }) {
         const me = this;
