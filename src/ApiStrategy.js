@@ -4,6 +4,8 @@ const HTTP = require('./transports/HTTP');
 const WS = require('./transports/WS');
 const API = require(`./controllers/API`);
 
+const UnsupportedTransportError = require('./error/UnsupportedTransportError');
+
 
 /**
  * ApiStrategy
