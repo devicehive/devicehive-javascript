@@ -13,7 +13,7 @@ class UserCountQuery {
      * @param {number} status - Filter by user status. 0 is Active, 1 is Locked Out, 2 is Disabled
      * 
      */
-    constructor({ login, loginPattern, role, status }) {
+    constructor({ login, loginPattern, role, status } = {}) {
         const me = this;
 
         me.login = login;

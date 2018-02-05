@@ -8,7 +8,7 @@ class DeviceNotification {
      * Creates DeviceNotification model
      * @param {object} options ({ id, notification, timestamp, parameters })
      */
-    constructor({ id, notification, timestamp, parameters }) {
+    constructor({ id, notification, timestamp, parameters } = {}) {
         this.id = id;
         this.notification = notification;
         this.timestamp = timestamp;

@@ -12,7 +12,7 @@ class DeviceCountQuery {
      * @param {number} options.networkId - Filter by associated network identifier
      * @param {string} options.networkName - Filter by associated network name
      */
-    constructor({ name, namePattern, networkId, networkName }) {
+    constructor({ name, namePattern, networkId, networkName } = {}) {
         const me = this;
 
         me.name = name;

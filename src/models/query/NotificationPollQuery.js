@@ -12,7 +12,7 @@ class NotificationPollQuery {
      * @param {number} options.timestamp - Timestamp to start from
      * @param {number} options.waitTimeout - Wait timeout in seconds
      */
-    constructor({ deviceId, names, timestamp, waitTimeout }) {
+    constructor({ deviceId, names, timestamp, waitTimeout } = {}) {
         const me = this;
 
         me.deviceId = deviceId;

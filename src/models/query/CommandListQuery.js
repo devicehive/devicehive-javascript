@@ -17,7 +17,7 @@ class CommandListQuery {
      * @param {number} options.take - Limit param
      * @param {number} options.skip - Skip param
      */
-    constructor({ deviceId, start, end, command, status, sortField, sortOrder, take, skip }) {
+    constructor({ deviceId, start, end, command, status, sortField, sortOrder, take, skip } = {}) {
         const me = this;
 
         me.deviceId = deviceId;

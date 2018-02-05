@@ -14,7 +14,7 @@ class DeviceTypeListQuery {
      * @param {number} options.take - Number of records to take from the result list
      * @param {number} options.skip - Number of records to skip from the result list
      */
-    constructor({ name, namePattern, sortField, sortOrder, take, skip }) {
+    constructor({ name, namePattern, sortField, sortOrder, take, skip } = {}) {
         const me = this;
 
         me.name = name;

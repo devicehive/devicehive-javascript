@@ -8,7 +8,7 @@ class Token {
      * Creates Token model
      * @param {object} options ({ login, password, accessToken, refreshToken })
      */
-    constructor({ login, password, accessToken, refreshToken }) {
+    constructor({ login, password, accessToken, refreshToken } = {}) {
         this.login = login;
         this.password = password;
         this.accessToken = accessToken;

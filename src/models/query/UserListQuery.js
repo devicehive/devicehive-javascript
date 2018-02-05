@@ -16,7 +16,7 @@ class UserListQuery {
      * @param {number} take - Number of records to take from the result list
      * @param {number} skip - Number of records to skip from the result list
      */
-    constructor({ login, loginPattern, role, status, sortField, sortOrder, take, skip }) {
+    constructor({ login, loginPattern, role, status, sortField, sortOrder, take, skip } = {}) {
         const me = this;
 
         me.login = login;
