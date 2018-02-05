@@ -1,5 +1,7 @@
 const API = require('./API');
 const ApiMap = require(`./transportResolvers/ApiMap`);
+const NetworkListQuery = require('../models/query/NetworkListQuery');
+const NetworkCountQuery = require('../models/query/NetworkCountQuery');
 
 
 /**
@@ -21,7 +23,7 @@ class NetworkAPI extends API {
      * @param {NetworkListQuery} networkListQuery
      * @returns {Promise} list of networks
      */
-    list(networkListQuery) {
+    list(networkListQuery = new NetworkListQuery()) {
         return this.send(ApiMap.listNetwork, networkListQuery.toObject());
     }
 
@@ -30,7 +32,7 @@ class NetworkAPI extends API {
      * @param {NetworkCountQuery} networkCountQuery
      * @returns {Promise} count of networks
      */
-    count(networkCountQuery) {
+    count(networkCountQuery = new NetworkCountQuery()) {
         return this.send(ApiMap.countNetwork, networkCountQuery.toObject());
     }
 

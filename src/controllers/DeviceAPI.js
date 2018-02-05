@@ -1,5 +1,7 @@
 const API = require('./API');
 const ApiMap = require(`./transportResolvers/ApiMap`);
+const DeviceCountQuery = require('../models/query/DeviceCountQuery');
+const DeviceListQuery = require('../models/query/DeviceListQuery');
 
 
 /**
@@ -21,7 +23,7 @@ class DeviceAPI extends API {
      * @param {DeviceListQuery} deviceListQuery
      * @returns {Promise} list of devices
      */
-    list(deviceListQuery) {
+    list(deviceListQuery = new DeviceListQuery()) {
         return this.send(ApiMap.listDevice, deviceListQuery.toObject());
     }
 
@@ -30,7 +32,7 @@ class DeviceAPI extends API {
      * @param {DeviceCountQuery} deviceCountQuery
      * @returns {Promise} count of devices
      */
-    count(deviceCountQuery) {
+    count(deviceCountQuery = new DeviceCountQuery()) {
         return this.send(ApiMap.countDevice, deviceCountQuery.toObject());
     }
 

@@ -1,5 +1,7 @@
 const API = require('./API');
 const ApiMap = require(`./transportResolvers/ApiMap`);
+const UserListQuery = require('../models/query/UserListQuery');
+const UserCountQuery = require('../models/query/UserCountQuery');
 
 
 /**
@@ -12,7 +14,7 @@ class UserAPI extends API {
      * @param {UserListQuery} userListQuery
      * @returns {Promise} list of users
      */
-    list(userListQuery) {
+    list(userListQuery = new UserListQuery()) {
         return this.send(ApiMap.listUser, userListQuery.toObject());
     }
 
@@ -21,7 +23,7 @@ class UserAPI extends API {
      * @param {UserCountQuery} userCountQuery
      * @returns {Promise} count of users
      */
-    count(userCountQuery) {
+    count(userCountQuery = new UserCountQuery()) {
         return this.send(ApiMap.countUser, userCountQuery.toObject());
     }
 

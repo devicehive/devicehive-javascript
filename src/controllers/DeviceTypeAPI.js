@@ -1,5 +1,7 @@
 const API = require('./API');
 const ApiMap = require(`./transportResolvers/ApiMap`);
+const DeviceTypeListQuery = require('../models/query/DeviceTypeListQuery');
+const DeviceTypeCountQuery = require('../models/query/DeviceTypeCountQuery');
 
 
 /**
@@ -21,7 +23,7 @@ class DeviceTypeAPI extends API {
      * @param {DeviceTypeListQuery} deviceTypeListQuery
      * @returns {Promise} list of deviceTypes
      */
-    list(deviceTypeListQuery) {
+    list(deviceTypeListQuery = new DeviceTypeListQuery()) {
         return this.send(ApiMap.listDeviceType, deviceTypeListQuery.toObject());
     }
 
@@ -30,7 +32,7 @@ class DeviceTypeAPI extends API {
      * @param {DeviceTypeCountQuery} deviceTypeCountQuery
      * @returns {Promise} count of deviceTypes
      */
-    count(deviceTypeCountQuery) {
+    count(deviceTypeCountQuery = new DeviceTypeCountQuery()) {
         return this.send(ApiMap.countDeviceType, deviceTypeCountQuery.toObject());
     }
 

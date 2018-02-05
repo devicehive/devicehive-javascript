@@ -1,6 +1,8 @@
 const API = require('./API');
 const ApiMap = require(`./transportResolvers/ApiMap`);
-
+const NotificationListQuery = require('../models/query/NotificationListQuery');
+const NotificationPollQuery = require('../models/query/NotificationPollQuery');
+const NotificationPollManyQuery = require('../models/query/NotificationPollManyQuery');
 
 /**
  * Returns information about the current notification
@@ -19,10 +21,10 @@ class DeviceNotificationAPI extends API {
 
     /**
      * Return a list of notifications
-     * @param {DeviceListQuery} deviceListQuery
+     * @param {NotificationListQuery} notificationListQuery
      * @returns {Promise} list of notifications
      */
-    list(deviceListQuery) {
+    list(notificationListQuery = new NotificationListQuery()) {
         return this.send(ApiMap.listNotification, deviceListQuery.toObject());
     }
 
@@ -40,7 +42,7 @@ class DeviceNotificationAPI extends API {
      * @param {NotificationPollQuery} notificationPollQuery
      * @returns {*}
      */
-    poll(notificationPollQuery) {
+    poll(notificationPollQuery = new NotificationPollQuery()) {
         return this.send(ApiMap.pollCommand, notificationPollQuery.toObject());
     }
 
@@ -49,7 +51,7 @@ class DeviceNotificationAPI extends API {
      * @param {NotificationPollManyQuery} notificationPollManyQuery
      * @returns {*}
      */
-    pollMany(notificationPollManyQuery) {
+    pollMany(notificationPollManyQuery = new NotificationPollManyQuery()) {
         return this.send(ApiMap.pollManyCommand, notificationPollManyQuery.toObject());
     }
 
@@ -58,7 +60,7 @@ class DeviceNotificationAPI extends API {
      * @param {NotificationPollQuery} notificationPollQuery
      * @returns {Promise}
      */
-    subscribe(notificationPollQuery) {
+    subscribe(notificationPollQuery = new NotificationPollQuery()) {
         return this.send(ApiMap.subscribeCommand, notificationPollQuery.toObject());
     }
 
