@@ -119,23 +119,17 @@ class DeviceHive extends EventEmitter {
     async connect() {
         const me = this;
 
-        if (me.accessToken) {
+        if (me.accessToken || me.refreshToken || (me.login && me.password)) {
             try {
-                await me.strategy.authorize(me.accessToken);
-            } catch (error) {
-                throw new InvalidCredentialsError();
-            }
-        } else if (me.refreshToken) {
-            try {
-                const accessToken = await me.token.refresh(me.refreshToken);
-                await me.strategy.authorize(accessToken);
-            } catch (error) {
-                throw new InvalidCredentialsError();
-            }
-        } else if (me.login && me.password) {
-            try {
-                const { accessToken } = await me.token.login(me.login, me.password);
-                await me.strategy.authorize(accessToken);
+                if (me.accessToken) {
+                    await me.strategy.authorize(me.accessToken);
+                } else if (me.refreshToken) {
+                    const accessToken = await me.token.refresh(me.refreshToken);
+                    await me.strategy.authorize(accessToken);
+                } else if (me.login && me.password) {
+                    const { accessToken } = await me.token.login(me.login, me.password);
+                    await me.strategy.authorize(accessToken);
+                }
             } catch (error) {
                 throw new InvalidCredentialsError();
             }
