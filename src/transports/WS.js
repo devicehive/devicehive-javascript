@@ -96,7 +96,5 @@ class WS extends Transport {
 
 }
 
-new WS
-
 
 module.exports = WS;
