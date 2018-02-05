@@ -6,10 +6,10 @@ class UnsupportedApiTransportError extends Error {
     /**
      * Creates UnsupportedApiTransportError
      */
-    constructor() {
+    constructor({ key, transport }) {
         super();
 
-        this.message = `No API selected.\nPlease, choose one according to documentation.`;
+        this.message = `${key} API is not supported by the ${transport} transport.`;
     }
 }
 

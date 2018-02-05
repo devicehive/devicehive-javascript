@@ -9,10 +9,7 @@ class UnsupportedTransportError extends Error {
     constructor() {
         super();
 
-        this.message = `
-            You are trying to use unsupported transport type.
-            Please, use one of provided in documentation.
-        `;
+        this.message = `You are trying to use unsupported transport type.\nPlease, use one of provided in documentation.`;
     }
 }
 

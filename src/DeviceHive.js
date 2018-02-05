@@ -42,6 +42,9 @@ const InvalidCredentialsError = require('./error/InvalidCredentialsError');
  */
 class DeviceHive extends EventEmitter {
 
+    /**
+     * @type {Object} - Returns DeviceHive models
+     */
     static get models() {
         return {
             Command: Command,
@@ -107,6 +110,7 @@ class DeviceHive extends EventEmitter {
         me.user = new UserAPI({ strategy: me.strategy });
 
         me.strategy.on(`message`, message => me.emit(`message`, message));
+        me.strategy.on(`error`, error => me.emit(`error`, error));
     }
 
     /**

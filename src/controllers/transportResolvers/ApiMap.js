@@ -104,10 +104,14 @@ class ApiMap {
         let transportAPI;
 
         const apiObject = apiMap.get(key);
-        if (!apiObject) throw new NoApiError();
+        if (!apiObject) {
+            throw new NoApiError();
+        }
 
         const transportApiObject = apiObject[transport];
-        if (!transportApiObject) throw new UnsupportedApiTransportError();
+        if (!transportApiObject) {
+            throw new UnsupportedApiTransportError({ key, transport });
+        }
 
         switch (transport) {
             case ApiMap.HTTP_API:

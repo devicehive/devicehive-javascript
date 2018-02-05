@@ -1,10 +1,10 @@
 /**
  * Unsupported Transport Error
  */
-class noApi extends Error {
+class NoApiError extends Error {
 
     /**
-     * Creates noApi
+     * Creates NoApiError
      */
     constructor() {
         super();
@@ -13,4 +13,4 @@ class noApi extends Error {
     }
 }
 
-module.exports = noApi;
+module.exports = NoApiError;
