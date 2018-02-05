@@ -86,7 +86,7 @@ class UserAPI extends API {
      * @returns {Promise}
      */
     getDeviceTypes(userId) {
-        return this.send(ApiMap.updateCurrentUser, { userId: userId });
+        return this.send(ApiMap.getUserDeviceType, { userId: userId });
     }
 
     /**
@@ -95,7 +95,7 @@ class UserAPI extends API {
      * @returns {Promise}
      */
     unassignAllDeviceTypes(userId) {
-        return this.send(ApiMap.updateCurrentUser, { userId: userId });
+        return this.send(ApiMap.unassignAllDeviceTypes, { userId: userId });
     }
 
     /**
@@ -104,7 +104,7 @@ class UserAPI extends API {
      * @returns {Promise}
      */
     assignAllDeviceTypes(userId) {
-        return this.send(ApiMap.updateCurrentUser, { userId: userId });
+        return this.send(ApiMap.assignAllDeviceTypes, { userId: userId });
     }
 
     /**
@@ -114,7 +114,7 @@ class UserAPI extends API {
      * @returns {Promise}
      */
     unassignDeviceType(userId, deviceTypeId) {
-        return this.send(ApiMap.updateCurrentUser, { userId: userId, deviceTypeId: deviceTypeId });
+        return this.send(ApiMap.unassignDeviceType, { userId: userId, deviceTypeId: deviceTypeId });
     }
 
     /**
@@ -124,7 +124,7 @@ class UserAPI extends API {
      * @returns {Promise}
      */
     getDeviceType(userId, deviceTypeId) {
-        return this.send(ApiMap.updateCurrentUser, { userId: userId, deviceTypeId: deviceTypeId });
+        return this.send(ApiMap.getUserDeviceType, { userId: userId, deviceTypeId: deviceTypeId });
     }
 
     /**
@@ -134,7 +134,7 @@ class UserAPI extends API {
      * @returns {Promise}
      */
     assignDeviceType(userId, deviceTypeId) {
-        return this.send(ApiMap.updateCurrentUser, { userId: userId, deviceTypeId: deviceTypeId });
+        return this.send(ApiMap.assignDeviceType, { userId: userId, deviceTypeId: deviceTypeId });
     }
 
     /**

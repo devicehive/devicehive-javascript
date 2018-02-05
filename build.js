@@ -6,9 +6,9 @@ const exorcist = require('exorcist');
 const srcDir = __dirname;
 const outputDir = path.join(__dirname, 'dist');
 
-const outputProd = path.join(outputDir, 'devicehive.js');
-const outputDev = path.join(outputDir, 'devicehive.min.js');
-const mapDev = path.join(outputDir, 'devicehive.min.js.map');
+const outputDev = path.join(outputDir, 'devicehive.js');
+const outputProd = path.join(outputDir, 'devicehive.min.js');
+const mapDev = path.join(outputDir, 'devicehive.js.map');
 
 const bundlerProd = browserify(path.join(srcDir, 'index-browser.js'));
 const bundlerDev = browserify(path.join(srcDir, 'index-browser.js'), {
@@ -24,14 +24,13 @@ if (!fs.existsSync(outputDir)) {
 
 bundlerProd
     .transform('babelify')
-
-bundlerDev
-    .transform('babelify')
     .transform('uglifyify', {
         global: true,
         sourceMap: true
     });
 
+bundlerDev
+    .transform('babelify');
 
 // build
 
