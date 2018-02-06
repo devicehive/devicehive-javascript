@@ -9,6 +9,7 @@ const ConfigurationAPI = require('./controllers/ConfigurationAPI');
 const CommandAPI = require('./controllers/DeviceCommandAPI');
 const NotificationAPI = require('./controllers/DeviceNotificationAPI');
 const UserAPI = require('./controllers/UserAPI');
+const PluginAPI = require('./controllers/PluginAPI');
 const Command = require(`./models/Command`);
 const Configuration = require(`./models/Configuration`);
 const Device = require(`./models/Device`);
@@ -108,6 +109,8 @@ class DeviceHive extends EventEmitter {
         me.command = new CommandAPI({ strategy: me.strategy });
         me.notification = new NotificationAPI({ strategy: me.strategy });
         me.user = new UserAPI({ strategy: me.strategy });
+        me.plugin = new PluginAPI({ strategy: me.strategy });
+
 
         me.strategy.on(`message`, message => me.emit(`message`, message));
         me.strategy.on(`error`, error => me.emit(`error`, error));

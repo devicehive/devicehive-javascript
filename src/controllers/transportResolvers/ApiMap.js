@@ -83,6 +83,8 @@ class ApiMap {
     static get unassignNetwork() { return 'unassignNetwork'; };
 
     static get registerPlugin() { return 'registerPlugin'; };
+    static get deletePlugin() { return 'deletePlugin'; };
+    static get updatePlugin() { return 'updatePlugin'; };
 
     static get HTTP_API() { return `http`; }
     static get WS_API() { return `ws`; }
@@ -197,7 +199,9 @@ apiMap.set(ApiMap.getUserNetwork, { http: { method: 'GET', uri: '/user/{userId}/
 apiMap.set(ApiMap.assignNetwork, { http: { method: 'PUT', uri: '/user/{userId}/network/{networkId}', base: ApiMap.MAIN_BASE}, ws: { action: 'user/assignNetwork' } });
 apiMap.set(ApiMap.unassignNetwork, { http: { method: 'DELETE', uri: '/user/{userId}/network/{networkId}', base: ApiMap.MAIN_BASE}, ws: { action: 'user/unassignNetwork' } });
 
-apiMap.set(ApiMap.registerPlugin, { http: { method: 'POST', uri: '/plugin/register', base: ApiMap.PLUGIN_BASE} }); // TODO WS
+apiMap.set(ApiMap.registerPlugin, { http: { method: 'POST', uri: '/plugin', base: ApiMap.PLUGIN_BASE } }); // TODO WS
+apiMap.set(ApiMap.deletePlugin, { http: { method: 'DELETE', uri: '/plugin', base: ApiMap.PLUGIN_BASE } }); // TODO WS
+apiMap.set(ApiMap.updatePlugin, { http: { method: 'PUT', uri: '/plugin', base: ApiMap.PLUGIN_BASE} }); // TODO WS
 
 
 module.exports = ApiMap;
