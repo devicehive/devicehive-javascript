@@ -34,11 +34,17 @@ const UserCountQuery = require(`./models/query/UserCountQuery`);
 const UserListQuery = require(`./models/query/UserListQuery`);
 
 
+const NoAuthCredentialsError = require('./error/NoAuthCredentialsError');
+const InvalidCredentialsError = require('./error/InvalidCredentialsError');
+
 /**
  * DeviceHive module
  */
 class DeviceHive extends EventEmitter {
 
+    /**
+     * @type {Object} - Returns DeviceHive models
+     */
     static get models() {
         return {
             Command: Command,
@@ -103,7 +109,8 @@ class DeviceHive extends EventEmitter {
         me.notification = new NotificationAPI({ strategy: me.strategy });
         me.user = new UserAPI({ strategy: me.strategy });
 
-        me.strategy.on(`message`, (message) => me.emit(`message`, message));
+        me.strategy.on(`message`, message => me.emit(`message`, message));
+        me.strategy.on(`error`, error => me.emit(`error`, error));
     }
 
     /**
@@ -112,16 +119,22 @@ class DeviceHive extends EventEmitter {
     async connect() {
         const me = this;
 
-        if (me.accessToken) {
-            await me.strategy.authorize(me.accessToken);
-        } else if (me.refreshToken) {
-            const accessToken = await me.token.refresh(me.refreshToken);
-            await me.strategy.authorize(accessToken);
-        } else if (me.login && me.password) {
-            const { accessToken } = await me.token.login(me.login, me.password);
-            await me.strategy.authorize(accessToken);
+        if (me.accessToken || me.refreshToken || (me.login && me.password)) {
+            try {
+                if (me.accessToken) {
+                    await me.strategy.authorize(me.accessToken);
+                } else if (me.refreshToken) {
+                    const accessToken = await me.token.refresh(me.refreshToken);
+                    await me.strategy.authorize(accessToken);
+                } else if (me.login && me.password) {
+                    const { accessToken } = await me.token.login(me.login, me.password);
+                    await me.strategy.authorize(accessToken);
+                }
+            } catch (error) {
+                throw new InvalidCredentialsError();
+            }
         } else {
-            throw 'No auth credentials';
+            throw new NoAuthCredentialsError();
         }
 
         return me;

@@ -2,6 +2,8 @@ const Transport = require(`./base/Transport`);
 const randomString = require(`randomstring`);
 const WebSocket = require('universal-websocket-client');
 
+const WebSocketError = require('../error/WebSocketError');
+
 /**
  * WebSocket Transport
  */
@@ -20,9 +22,9 @@ class WS extends Transport {
         this.isOpend = false;
         this.socket = new WebSocket(mainServiceURL);
 
-        this.socket.addEventListener('message', (event) => {
+        this.socket.addEventListener('message', event => {
             try {
-                let messageData = JSON.parse(event.data);
+                const messageData = JSON.parse(event.data);
 
                 if (messageData.requestId) {
                     this.emit(messageData.requestId, messageData);
@@ -33,6 +35,10 @@ class WS extends Transport {
                 console.warn(error);
             }
         });
+
+        this.socket.addEventListener('error', error => {
+            this.emit('error', new WebSocketError(error));
+        });
     }
 
     /**
@@ -40,7 +46,7 @@ class WS extends Transport {
      * @returns {promise} when socket opened
      */
     _getSocket() {
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             if (this.isOpend === true) {
                 resolve(this.socket);
             } else {
@@ -95,8 +101,5 @@ class WS extends Transport {
     }
 
 }
-
-new WS
-
 
 module.exports = WS;

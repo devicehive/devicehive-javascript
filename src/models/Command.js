@@ -8,7 +8,7 @@ class DeviceCommand {
      * DeviceCommand model
      * @param {object} options ({ id, command, timestamp, lastUpdated, userId, deviceId, networkId, deviceTypeId, parameters, lifetime, status, result })
      */
-    constructor({ id, command, timestamp, lastUpdated, userId, deviceId, networkId, deviceTypeId, parameters, lifetime, status, result }) {
+    constructor({ id, command, timestamp, lastUpdated, userId, deviceId, networkId, deviceTypeId, parameters, lifetime, status, result } = {}) {
         this.id = id;
         this.command = command;
         this.timestamp = timestamp;

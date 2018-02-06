@@ -14,7 +14,7 @@ class CommandPollQuery {
      * @param {number} options.waitTimeout - Wait timeout in seconds
      * @param {number} options.limit - Limit number of commands
      */
-    constructor({ deviceId, names, timestamp, returnUpdatedCommands, waitTimeout, limit }) {
+    constructor({ deviceId, names, timestamp, returnUpdatedCommands, waitTimeout, limit } = {}) {
         const me = this;
 
         me.deviceId = deviceId;

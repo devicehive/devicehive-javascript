@@ -1,6 +1,8 @@
 const API = require('./API');
 const ApiMap = require(`./transportResolvers/ApiMap`);
-
+const CommandListQuery = require('../models/query/CommandListQuery');
+const CommandPollQuery = require('../models/query/CommandPollQuery');
+const CommandPollManyQuery = require('../models/query/CommandPollManyQuery');
 
 /**
  * Returns information about the current command
@@ -22,7 +24,7 @@ class DeviceCommandAPI extends API {
      * @param {CommandListQuery} commandListQuery
      * @returns {Promise} list of commands
      */
-    list(commandListQuery) {
+    list(commandListQuery = new CommandListQuery()) {
         return this.send(ApiMap.listCommand, commandListQuery.toObject());
     }
 
@@ -50,7 +52,7 @@ class DeviceCommandAPI extends API {
      * @param {CommandPollQuery} commandPollQuery
      * @returns {Promise}
      */
-    poll(commandPollQuery) {
+    poll(commandPollQuery = new CommandPollQuery()) {
         return this.send(ApiMap.pollCommand, commandPollQuery.toObject());
     }
 
@@ -59,7 +61,7 @@ class DeviceCommandAPI extends API {
      * @param {CommandPollManyQuery} commandPollManyQuery
      * @returns {Promise}
      */
-    pollMany(commandPollManyQuery) {
+    pollMany(commandPollManyQuery = new CommandPollManyQuery()) {
         return this.send(ApiMap.pollManyCommand, qcommandPollManyQueryuery.toObject());
     }
 
@@ -78,7 +80,7 @@ class DeviceCommandAPI extends API {
      * @param {CommandPollQuery} commandPollQuery
      * @returns {Promise}
      */
-    subscribe(commandPollQuery) {
+    subscribe(commandPollQuery = new CommandPollQuery()) {
         return this.send(ApiMap.subscribeCommand, commandPollQuery.toObject());
     }
 

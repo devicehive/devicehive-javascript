@@ -1,12 +1,15 @@
-
+/**
+ * Unsupported Transport Error
+ */
 class UnsupportedTransportError extends Error {
 
-    constructor(message) {
+    /**
+     * Creates UnsupportedTransportError
+     */
+    constructor() {
         super();
 
-        this.message = `
-            Currently 
-        `;
+        this.message = `You are trying to use unsupported transport type.\nPlease, use one of provided in documentation.`;
     }
 }
 

@@ -8,7 +8,7 @@ class Configuration {
      * Creates Configuration model
      * @param {object} options ({ name, value, entityVersion })
      */
-    constructor({ name, value, entityVersion }) {
+    constructor({ name, value, entityVersion } = {}) {
         this.name = name;
         this.value = value;
         this.entityVersion = entityVersion;

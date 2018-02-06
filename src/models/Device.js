@@ -8,7 +8,7 @@ class Device {
      * Creates Device model
      * @param {object} options ({ id, name, data, networkId, deviceTypeId, blocked })
      */
-    constructor({ id, name, data, networkId, deviceTypeId, blocked }) {
+    constructor({ id, name, data, networkId, deviceTypeId, blocked } = {}) {
         this.id = id;
         this.name = name;
         this.data = data;

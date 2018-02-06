@@ -14,7 +14,7 @@ class NotificationPollManyQuery {
      * @param {number} options.timestamp - Timestamp to start from
      * @param {number} options.waitTimeout - Wait timeout in seconds
      */
-    constructor({ deviceIds, networkIds, deviceTypeIds, names, timestamp, waitTimeout }) {
+    constructor({ deviceIds, networkIds, deviceTypeIds, names, timestamp, waitTimeout } = {}) {
         const me = this;
 
         me.deviceIds = deviceIds;

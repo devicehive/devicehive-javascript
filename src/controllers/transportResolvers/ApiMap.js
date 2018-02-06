@@ -1,6 +1,8 @@
 const HttpApiResolver = require(`./HttpApiResolver`);
 const WebSocketApiResolver = require(`./WebSocketApiResolver`);
 
+const NoApiError = require('../../error/NoApiError');
+const UnsupportedApiTransportError = require('../../error/UnsupportedApiTransportError');
 
 const apiMap = new Map();
 
@@ -101,12 +103,22 @@ class ApiMap {
     static build(transport, key, parameters, body) {
         let transportAPI;
 
+        const apiObject = apiMap.get(key);
+        if (!apiObject) {
+            throw new NoApiError();
+        }
+
+        const transportApiObject = apiObject[transport];
+        if (!transportApiObject) {
+            throw new UnsupportedApiTransportError({ key, transport });
+        }
+
         switch (transport) {
             case ApiMap.HTTP_API:
-                transportAPI = new HttpApiResolver(apiMap.get(key).http);
+                transportAPI = new HttpApiResolver(transportApiObject);
                 break;
             case ApiMap.WS_API:
-                transportAPI = new WebSocketApiResolver(apiMap.get(key).ws);
+                transportAPI = new WebSocketApiResolver(transportApiObject);
                 break;
         }
 
@@ -118,8 +130,8 @@ class ApiMap {
 apiMap.set(ApiMap.login, { http: { method: 'POST', uri: '/token', base: ApiMap.AUTH_BASE }, ws: { action: 'token' } });
 apiMap.set(ApiMap.createUserToken, { http: { method: 'POST', uri: '/token/create', base: ApiMap.AUTH_BASE }, ws: { action: 'token/create', bodyKey: 'payload' } });
 apiMap.set(ApiMap.refreshToken, { http: { method: 'POST', uri: '/token/refresh', base: ApiMap.AUTH_BASE }, ws: { action: 'token/refresh' } });
-apiMap.set(ApiMap.createPluginToken, { http: { method: 'POST', uri: '/token/plugin/create', base: ApiMap.AUTH_BASE }, ws: {} }); //TODO WS
-apiMap.set(ApiMap.authenticatePlugin, { http: { method: 'POST', uri: '/token/plugin/authenticate', base: ApiMap.AUTH_BASE }, ws: {} }); //TODO WS
+apiMap.set(ApiMap.createPluginToken, { http: { method: 'POST', uri: '/token/plugin/create', base: ApiMap.AUTH_BASE }}); //TODO WS
+apiMap.set(ApiMap.authenticatePlugin, { http: { method: 'POST', uri: '/token/plugin/authenticate', base: ApiMap.AUTH_BASE }}); //TODO WS
 
 apiMap.set(ApiMap.getServerInfo, { http: { method: 'GET', uri: '/info', base: ApiMap.MAIN_BASE }, ws: { action: 'server/info' } });
 apiMap.set(ApiMap.getCacheInfo, { http: { method: 'GET', uri: '/info/cache', base: ApiMap.MAIN_BASE }, ws: { action: 'cache/info' } });

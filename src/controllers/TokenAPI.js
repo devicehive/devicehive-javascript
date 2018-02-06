@@ -29,7 +29,7 @@ class TokenAPI extends API {
      * @param {string} refreshToken
      */
     refresh(refreshToken) {
-        return this.send(ApiMap.refreshToken, {}, refreshToken); //TODO
+        return this.send(ApiMap.refreshToken, {}, refreshToken); // TODO
     }
 }
 
