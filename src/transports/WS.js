@@ -1,5 +1,5 @@
 const Transport = require(`./base/Transport`);
-const randomString = require(`randomstring`);
+const Utils = require('../utils/Utils');
 const WebSocket = require('universal-websocket-client');
 
 const WebSocketError = require('../error/WebSocketError');
@@ -76,7 +76,7 @@ class WS extends Transport {
     send(params) {
         return this._getSocket()
             .then(() => {
-                const { requestId = randomString.generate() } = params;
+                const { requestId = Utils.randomString() } = params;
 
                 params.requestId = requestId;
 

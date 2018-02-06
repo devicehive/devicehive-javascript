@@ -31,7 +31,7 @@ class PluginAPI extends API {
      * @param {object} Plugin
      * @returns {Promise} Plugin
      */
-    delete({pluginId}) {
+    delete({ pluginId }) {
         return this.send(ApiMap.deletePlugin, { pluginId });
     }
 }
