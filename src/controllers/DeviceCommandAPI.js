@@ -62,7 +62,7 @@ class DeviceCommandAPI extends API {
      * @returns {Promise}
      */
     pollMany(commandPollManyQuery = new CommandPollManyQuery()) {
-        return this.send(ApiMap.pollManyCommand, qcommandPollManyQueryuery.toObject());
+        return this.send(ApiMap.pollManyCommand, commandPollManyQuery.toObject());
     }
 
     /**
