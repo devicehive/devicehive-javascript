@@ -30,11 +30,12 @@ class DeviceNotificationAPI extends API {
 
     /**
      * Registers a notification
+     * @param {Number} deviceId
      * @param {Notification} notification
      * @returns {Promise} count of notifications
      */
-    insert(notification) {
-        return this.send(ApiMap.insertNotification, { deviceId: notification.deviceId }, notification.toObject());
+    insert(deviceId, notification) {
+        return this.send(ApiMap.insertNotification, { deviceId }, notification.toObject());
     }
 
     /**
