@@ -33,6 +33,9 @@ const NotificationPollManyQuery = require(`./models/query/NotificationPollManyQu
 const NotificationPollQuery = require(`./models/query/NotificationPollQuery`);
 const UserCountQuery = require(`./models/query/UserCountQuery`);
 const UserListQuery = require(`./models/query/UserListQuery`);
+const PluginCountQuery = require(`./models/query/PluginCountQuery`);
+const PluginListQuery = require(`./models/query/PluginListQuery`);
+const PluginRegisterQuery = require(`./models/query/PluginRegisterQuery`);
 
 
 const NoAuthCredentialsError = require('./error/NoAuthCredentialsError');
@@ -71,7 +74,10 @@ class DeviceHive extends EventEmitter {
                 NotificationPollManyQuery: NotificationPollManyQuery,
                 NotificationPollQuery: NotificationPollQuery,
                 UserCountQuery: UserCountQuery,
-                UserListQuery: UserListQuery
+                UserListQuery: UserListQuery,
+                PluginCountQuery: PluginCountQuery,
+                PluginListQuery: PluginListQuery,
+                PluginRegisterQuery: PluginRegisterQuery
             }
         };
     }

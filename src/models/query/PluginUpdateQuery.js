@@ -17,7 +17,7 @@ class PluginUpdateQuery {
      * @param {boolean} [options.returnNotifications] - Checks if commands should be returned
      * @param {string} [options.status] - Plugin status - active or disabled (ACTIVE | DISABLED | CREATED)
      */
-    constructor({ deviceId, networkIds, deviceTypeIds, names } = {}) {
+    constructor({ deviceId, networkIds, deviceTypeIds, names, returnCommands, returnUpdatedCommands, returnNotifications, status } = {}) {
         this.deviceId = deviceId;
         this.networkIds = networkIds;
         this.deviceTypeIds = deviceTypeIds;

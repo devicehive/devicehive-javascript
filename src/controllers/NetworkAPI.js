@@ -10,7 +10,7 @@ const NetworkCountQuery = require('../models/query/NetworkCountQuery');
 class NetworkAPI extends API {
 
     /**
-     * Creates
+     * Returns a network
      * @param {number} networkId
      * @returns {Promise} selected network
      */

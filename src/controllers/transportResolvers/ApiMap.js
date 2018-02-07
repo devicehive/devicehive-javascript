@@ -82,6 +82,8 @@ class ApiMap {
     static get assignNetwork() { return 'assignNetwork'; };
     static get unassignNetwork() { return 'unassignNetwork'; };
 
+    static get listPlugin() { return 'listPlugin'; };
+    static get countPlugin() { return 'countPlugin'; };
     static get registerPlugin() { return 'registerPlugin'; };
     static get deletePlugin() { return 'deletePlugin'; };
     static get updatePlugin() { return 'updatePlugin'; };
@@ -199,6 +201,8 @@ apiMap.set(ApiMap.getUserNetwork, { http: { method: 'GET', uri: '/user/{userId}/
 apiMap.set(ApiMap.assignNetwork, { http: { method: 'PUT', uri: '/user/{userId}/network/{networkId}', base: ApiMap.MAIN_BASE}, ws: { action: 'user/assignNetwork' } });
 apiMap.set(ApiMap.unassignNetwork, { http: { method: 'DELETE', uri: '/user/{userId}/network/{networkId}', base: ApiMap.MAIN_BASE}, ws: { action: 'user/unassignNetwork' } });
 
+apiMap.set(ApiMap.listPlugin, { http: { method: 'GET', uri: '/plugin', base: ApiMap.PLUGIN_BASE } }); // TODO WS
+apiMap.set(ApiMap.countPlugin, { http: { method: 'GET', uri: '/plugin/count', base: ApiMap.PLUGIN_BASE } }); // TODO WS
 apiMap.set(ApiMap.registerPlugin, { http: { method: 'POST', uri: '/plugin', base: ApiMap.PLUGIN_BASE } }); // TODO WS
 apiMap.set(ApiMap.deletePlugin, { http: { method: 'DELETE', uri: '/plugin', base: ApiMap.PLUGIN_BASE } }); // TODO WS
 apiMap.set(ApiMap.updatePlugin, { http: { method: 'PUT', uri: '/plugin', base: ApiMap.PLUGIN_BASE} }); // TODO WS

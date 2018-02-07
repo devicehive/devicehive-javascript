@@ -15,7 +15,7 @@ class PluginRegisterQuery {
      * @param {boolean} [options.returnUpdatedCommands] - Checks if updated commands should be returned
      * @param {boolean} [options.returnNotifications] - Checks if commands should be returned
      */
-    constructor({ deviceId, networkIds, deviceTypeIds, names } = {}) {
+    constructor({ deviceId, networkIds, deviceTypeIds, names, returnCommands, returnUpdatedCommands, returnNotifications } = {}) {
         this.deviceId = deviceId;
         this.networkIds = networkIds;
         this.deviceTypeIds = deviceTypeIds;

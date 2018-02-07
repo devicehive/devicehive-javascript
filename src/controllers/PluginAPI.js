@@ -1,5 +1,8 @@
 const API = require('./API');
 const ApiMap = require(`./transportResolvers/ApiMap`);
+const PluginCountQuery = require('../models/query/PluginCountQuery');
+const PluginListQuery = require('../models/query/PluginListQuery');
+const PluginRegisterQuery = require('../models/query/PluginRegisterQuery');
 
 
 /**
@@ -8,18 +11,36 @@ const ApiMap = require(`./transportResolvers/ApiMap`);
 class PluginAPI extends API {
 
     /**
+     * Return a list of plugins
+     * @param {PluginListQuery} pluginListQuery
+     * @returns {Promise} list of plugins
+     */
+    list(pluginListQuery = new PluginListQuery()) {
+        return this.send(ApiMap.listPlugin, pluginListQuery.toObject());
+    }
+
+    /**
+     * Returns count of plugins
+     * @param {PluginCountQuery} pluginCountQuery
+     * @returns {Promise} count of plugins
+     */
+    count(pluginCountQuery = new PluginCountQuery()) {
+        return this.send(ApiMap.countPlugin, pluginCountQuery.toObject());
+    }
+
+    /**
      * Registers a plugin
      * @param {Plugin} plugin
      * @param {PluginRegisterQuery} pluginRegisterQuery
      * @returns {Promise} Plugin
      */
-    insert(plugin, pluginRegisterQuery) {
+    insert(plugin, pluginRegisterQuery = new PluginRegisterQuery()) {
         return this.send(ApiMap.registerPlugin, pluginRegisterQuery.toObject(), plugin.toObject());
     }
 
     /**
      * Updates a plugin
-     * @param {PluginUpdateQuery} pluginupdatequery
+     * @param {Promise} plugin
      * @returns {Promise} Plugin
      */
     update(plugin) {
@@ -31,8 +52,8 @@ class PluginAPI extends API {
      * @param {object} Plugin
      * @returns {Promise} Plugin
      */
-    delete({ pluginId }) {
-        return this.send(ApiMap.deletePlugin, { pluginId });
+    delete(plugin) {
+        return this.send(ApiMap.deletePlugin, { pluginId: plugin.pluginId });
     }
 }
 
