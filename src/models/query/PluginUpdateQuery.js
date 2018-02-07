@@ -15,9 +15,12 @@ class PluginUpdateQuery {
      * @param {boolean} [options.returnCommands] - Checks if commands should be returned
      * @param {boolean} [options.returnUpdatedCommands] - Checks if updated commands should be returned
      * @param {boolean} [options.returnNotifications] - Checks if commands should be returned
+     * @param {string} [options.status] - Plugin status - active or disabled (ACTIVE | DISABLED | CREATED)
+     * @param {string} [options.name] - Plugin name
+     * @param {string} [options.description] - Plugin description
      * @param {string} [options.parameters] - Plugin parameters
      */
-    constructor({ deviceId, networkIds, deviceTypeIds, names, returnCommands, returnUpdatedCommands, returnNotifications, parameters } = {}) {
+    constructor({ deviceId, networkIds, deviceTypeIds, names, returnCommands, returnUpdatedCommands, returnNotifications, status, parameters } = {}) {
         this.deviceId = deviceId;
         this.networkIds = networkIds;
         this.deviceTypeIds = deviceTypeIds;
@@ -25,6 +28,9 @@ class PluginUpdateQuery {
         this.returnCommands = returnCommands;
         this.returnUpdatedCommands = returnUpdatedCommands;
         this.returnNotifications = returnNotifications;
+        this.status = status;
+        this.name = name;
+        this.description = description;
         this.parameters = parameters;
     }
 
@@ -92,6 +98,30 @@ class PluginUpdateQuery {
         this._returnNotifications = value;
     }
 
+    get status() {
+        return this._status;
+    }
+
+    set status(value) {
+        this._status = value;
+    }
+
+    get name() {
+        return this._name;
+    }
+
+    set name(value) {
+        this._name = value;
+    }
+
+    get description() {
+        return this._description;
+    }
+
+    set description(value) {
+        this._description = value;
+    }
+
     get parameters() {
         return this._parameters;
     }
@@ -102,7 +132,7 @@ class PluginUpdateQuery {
 
     /**
      *
-     * @returns {{deviceId: string, networkIds: string, deviceTypeIds: string, names: string, returnCommands: boolean, returnUpdatedCommands: boolean, returnNotifications: boolean, parameters: number }}
+     * @returns {{deviceId: string, networkIds: string, deviceTypeIds: string, names: string, returnCommands: boolean, returnUpdatedCommands: boolean, returnNotifications: boolean, status: string,name: string, description: string, parameters: string }}
      */
     toObject() {
         return {
@@ -113,6 +143,9 @@ class PluginUpdateQuery {
             returnCommands: this.returnCommands,
             returnUpdatedCommands: this.returnUpdatedCommands,
             returnNotifications: this.returnNotifications,
+            status: this.status,
+            name: this.name,
+            description: this.description,
             parameters: this.parameters
         }
     }
