@@ -9,12 +9,14 @@ const ConfigurationAPI = require('./controllers/ConfigurationAPI');
 const CommandAPI = require('./controllers/DeviceCommandAPI');
 const NotificationAPI = require('./controllers/DeviceNotificationAPI');
 const UserAPI = require('./controllers/UserAPI');
+const PluginAPI = require('./controllers/PluginAPI');
 const Command = require(`./models/Command`);
 const Configuration = require(`./models/Configuration`);
 const Device = require(`./models/Device`);
 const DeviceType = require(`./models/DeviceType`);
 const Network = require(`./models/Network`);
 const Notification = require(`./models/Notification`);
+const Plugin = require(`./models/Plugin`);
 const Token = require(`./models/Token`);
 const User = require(`./models/User`);
 const CommandListQuery = require(`./models/query/CommandListQuery`);
@@ -25,6 +27,7 @@ const DeviceCountQuery = require(`./models/query/DeviceCountQuery`);
 const DeviceListQuery = require(`./models/query/DeviceListQuery`);
 const DeviceTypeCountQuery = require(`./models/query/DeviceTypeCountQuery`);
 const DeviceTypeListQuery = require(`./models/query/DeviceTypeListQuery`);
+const PluginUpdateQuery = require(`./models/query/PluginUpdateQuery`);
 const NetworkCountQuery = require(`./models/query/NetworkCountQuery`);
 const NetworkListQuery = require(`./models/query/NetworkListQuery`);
 const NotificationListQuery = require(`./models/query/NotificationListQuery`);
@@ -32,6 +35,9 @@ const NotificationPollManyQuery = require(`./models/query/NotificationPollManyQu
 const NotificationPollQuery = require(`./models/query/NotificationPollQuery`);
 const UserCountQuery = require(`./models/query/UserCountQuery`);
 const UserListQuery = require(`./models/query/UserListQuery`);
+const PluginCountQuery = require(`./models/query/PluginCountQuery`);
+const PluginListQuery = require(`./models/query/PluginListQuery`);
+const PluginRegisterQuery = require(`./models/query/PluginRegisterQuery`);
 
 
 const NoAuthCredentialsError = require('./error/NoAuthCredentialsError');
@@ -53,6 +59,7 @@ class DeviceHive extends EventEmitter {
             DeviceType: DeviceType,
             Network: Network,
             Notification: Notification,
+            Plugin: Plugin,
             Token: Token,
             User: User,
             query: {
@@ -64,13 +71,17 @@ class DeviceHive extends EventEmitter {
                 DeviceListQuery: DeviceListQuery,
                 DeviceTypeCountQuery: DeviceTypeCountQuery,
                 DeviceTypeListQuery: DeviceTypeListQuery,
+                PluginUpdateQuery: PluginUpdateQuery,
                 NetworkCountQuery: NetworkCountQuery,
                 NetworkListQuery: NetworkListQuery,
                 NotificationListQuery: NotificationListQuery,
                 NotificationPollManyQuery: NotificationPollManyQuery,
                 NotificationPollQuery: NotificationPollQuery,
                 UserCountQuery: UserCountQuery,
-                UserListQuery: UserListQuery
+                UserListQuery: UserListQuery,
+                PluginCountQuery: PluginCountQuery,
+                PluginListQuery: PluginListQuery,
+                PluginRegisterQuery: PluginRegisterQuery
             }
         };
     }
@@ -108,6 +119,8 @@ class DeviceHive extends EventEmitter {
         me.command = new CommandAPI({ strategy: me.strategy });
         me.notification = new NotificationAPI({ strategy: me.strategy });
         me.user = new UserAPI({ strategy: me.strategy });
+        me.plugin = new PluginAPI({ strategy: me.strategy });
+
 
         me.strategy.on(`message`, message => me.emit(`message`, message));
         me.strategy.on(`error`, error => me.emit(`error`, error));

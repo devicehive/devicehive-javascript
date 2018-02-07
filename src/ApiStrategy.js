@@ -1,8 +1,8 @@
-const randomString = require(`randomstring`);
 const EventEmitter = require('events');
 const HTTP = require('./transports/HTTP');
 const WS = require('./transports/WS');
 const API = require(`./controllers/API`);
+const Utils = require('./utils/Utils');
 
 const UnsupportedTransportError = require('./error/UnsupportedTransportError');
 
@@ -79,7 +79,7 @@ class ApiStrategy extends EventEmitter {
                 sendData.endpoint = `${me.urlsMap.get(sendData.base)}${sendData.endpoint}`;
                 break;
             case WS.TYPE:
-                sendData.requestId = randomString.generate();
+                sendData.requestId = Utils.randomString();
                 break;
         }
 

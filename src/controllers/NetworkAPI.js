@@ -10,7 +10,7 @@ const NetworkCountQuery = require('../models/query/NetworkCountQuery');
 class NetworkAPI extends API {
 
     /**
-     * Creates
+     * Returns a network
      * @param {number} networkId
      * @returns {Promise} selected network
      */
@@ -39,7 +39,7 @@ class NetworkAPI extends API {
     /**
      * Registers a network
      * @param {Network} network data
-     * @returns {Promise} count of networks
+     * @returns {Promise} Network
      */
     insert(network) {
         return this.send(ApiMap.addNetwork, {}, network.toObject());
@@ -49,7 +49,7 @@ class NetworkAPI extends API {
      * Updates a network
      * @param {number} networkId
      * @param {Network} network data
-     * @returns {Promise} count of networks
+     * @returns {Promise} Network
      */
     update(network) {
         return this.send(ApiMap.updateNetwork, { networkId: network.id }, network.toObject());
@@ -58,7 +58,7 @@ class NetworkAPI extends API {
     /**
      * Deletes an existing network
      * @param {number} networkId
-     * @returns {Promise}
+     * @returns {Promise} Network
      */
     delete(networkId) {
         return this.send(ApiMap.deleteNetwork, { networkId: networkId });

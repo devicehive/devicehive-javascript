@@ -8,11 +8,9 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "common-shakeify": "^0.4.5",
     "isomorphic-fetch": "^2.2.1",
     "minify-stream": "^1.1.0",
     "query-string": "^5.0.1",
-    "randomstring": "^1.1.5",
     "string-template": "^1.0.0",
     "universal-websocket-client": "^1.0.1"
   },
@@ -24,7 +22,6 @@
     "babelify": "^8.0.0",
     "browserify": "^15.2.0",
     "exorcist": "^1.0.0",
-    "uglify-js": "^3.3.9",
-    "uglifyify": "^4.0.5"
+    "tinyify": "^2.4.0"
   }
 }

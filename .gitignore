@@ -57,7 +57,9 @@ typings/
 # dotenv environment variables file
 .env
 
+
 jsconfig.json
 test.js
 dist
+docs
 .idea

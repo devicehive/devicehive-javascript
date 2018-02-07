@@ -1,6 +1,6 @@
 require('isomorphic-fetch');
 const Transport = require(`./base/Transport`);
-const randomString = require(`randomstring`);
+const Utils = require('../utils/Utils');
 
 /**
  * Rest API
@@ -39,7 +39,7 @@ class HTTP extends Transport {
         const me = this;
 
         if (subscription === true) {
-            const subscriptionId = randomString.generate();
+            const subscriptionId = Utils.randomString();
             const longPollingHandler = me.initLongPolling(endpoint, method, body);
 
             longPollingHandler.poll();
