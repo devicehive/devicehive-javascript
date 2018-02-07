@@ -241,7 +241,7 @@ class DeviceCommand {
 
     /**
      * Returns a stringified instance
-     * @returns {object} A stringified instance
+     * @returns {string} A stringified instance
      */
     toString() {
         return JSON.stringify(this.toObject());
