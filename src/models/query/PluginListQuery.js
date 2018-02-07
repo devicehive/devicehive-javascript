@@ -61,6 +61,14 @@ class PluginListQuery {
         this._status = value;
     }
 
+    get userId() {
+        return this._userId;
+    }
+
+    set userId(value) {
+        this._userId = value;
+    }
+
     get sortField() {
         return this._sortField;
     }

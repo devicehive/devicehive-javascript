@@ -3,6 +3,7 @@ const ApiMap = require(`./transportResolvers/ApiMap`);
 const PluginCountQuery = require('../models/query/PluginCountQuery');
 const PluginListQuery = require('../models/query/PluginListQuery');
 const PluginRegisterQuery = require('../models/query/PluginRegisterQuery');
+const PluginUpdateQuery = require('../models/query/PluginUpdateQuery');
 
 
 /**
@@ -34,26 +35,32 @@ class PluginAPI extends API {
      * @param {PluginRegisterQuery} pluginRegisterQuery
      * @returns {Promise} Plugin
      */
-    insert(plugin, pluginRegisterQuery = new PluginRegisterQuery()) {
-        return this.send(ApiMap.registerPlugin, pluginRegisterQuery.toObject(), plugin.toObject());
+    register(plugin, pluginRegisterQuery = new PluginRegisterQuery()) {
+        const pluginBody = {
+            name: plugin.name,
+            description: plugin.description,
+            parameters: plugin.parameters
+        };
+
+        return this.send(ApiMap.registerPlugin, pluginRegisterQuery.toObject(), pluginBody);
     }
 
     /**
      * Updates a plugin
-     * @param {Promise} plugin
+     * @param {PluginUpdateQuery} PluginUpdateQuery
      * @returns {Promise} Plugin
      */
-    update(plugin) {
-        return this.send(ApiMap.updatePlugin, plugin.toObject());
+    update(pluginUpdateQuery = new PluginUpdateQuery()) {
+        return this.send(ApiMap.updatePlugin, pluginUpdateQuery.toObject());
     }
 
     /**
      * Deletes an existing plugin
-     * @param {object} Plugin
+     * @param {string} topicName
      * @returns {Promise} Plugin
      */
-    delete(plugin) {
-        return this.send(ApiMap.deletePlugin, { pluginId: plugin.pluginId });
+    delete(topicName) {
+        return this.send(ApiMap.deletePlugin, { topicName });
     }
 }
 

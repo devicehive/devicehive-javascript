@@ -18,6 +18,7 @@ class PluginCountQuery {
         this.namePattern = namePattern;
         this.topicName = topicName;
         this.status = status;
+        this.userId = userId;
     }
 
     get name() {
@@ -50,6 +51,14 @@ class PluginCountQuery {
 
     set status(value) {
         this._status = value;
+    }
+
+    get userId() {
+        return this._userId;
+    }
+
+    set userId(value) {
+        this._userId = value;
     }
 
     /**
