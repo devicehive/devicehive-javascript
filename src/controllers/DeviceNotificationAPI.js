@@ -44,7 +44,7 @@ class DeviceNotificationAPI extends API {
      * @returns {*}
      */
     poll(notificationPollQuery = new NotificationPollQuery()) {
-        return this.send(ApiMap.pollCommand, notificationPollQuery.toObject());
+        return this.send(ApiMap.pollNotification, notificationPollQuery.toObject());
     }
 
     /**
@@ -53,7 +53,7 @@ class DeviceNotificationAPI extends API {
      * @returns {*}
      */
     pollMany(notificationPollManyQuery = new NotificationPollManyQuery()) {
-        return this.send(ApiMap.pollManyCommand, notificationPollManyQuery.toObject());
+        return this.send(ApiMap.pollManyNotification, notificationPollManyQuery.toObject());
     }
 
     /**
@@ -62,7 +62,7 @@ class DeviceNotificationAPI extends API {
      * @returns {Promise}
      */
     subscribe(notificationPollQuery = new NotificationPollQuery()) {
-        return this.send(ApiMap.subscribeCommand, notificationPollQuery.toObject());
+        return this.send(ApiMap.subscribeNotification, notificationPollQuery.toObject());
     }
 
     /**
@@ -71,7 +71,7 @@ class DeviceNotificationAPI extends API {
      * @returns {Promise}
      */
     unsubscribe(subscriptionId) {
-        return this.send(ApiMap.unsubscribeCommand, { subscriptionId: subscriptionId });
+        return this.send(ApiMap.unsubscribeNotification, { subscriptionId: subscriptionId });
     }
 }
 
