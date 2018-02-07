@@ -60,8 +60,9 @@ class DeviceHive extends EventEmitter {
             Network: Network,
             Notification: Notification,
             Plugin: Plugin,
-            Token: Token,
+            PluginToken: PluginToken,
             User: User,
+            UserToken: UserToken,
             query: {
                 CommandListQuery: CommandListQuery,
                 CommandPollManyQuery: CommandPollManyQuery,

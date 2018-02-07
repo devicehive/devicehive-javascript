@@ -13,15 +13,32 @@ class TokenAPI extends API {
      * @param {string} password
      */
     login(login, password) {
-        return this.send(ApiMap.login, {}, { login: login, password: password });
+        return this.send(ApiMap.login, {}, { login, password });
+    }
+
+    
+    /**
+     * Create user token
+     * @param {string} token Plugin token
+     */
+    authPlugin(token) {
+        return this.send(ApiMap.authPlugin, {}, { token });
     }
 
     /**
-     * Create token
-     * @param {Token} token
+     * Create user token
+     * @param {UserToken} userToken
      */
-    create(token) {
+    createUserToken(token) {
         return this.send(ApiMap.createUserToken, {}, token.toObject());
+    }
+
+    /**
+     * Create plugin token
+     * @param {PluginToken} pluginToken
+     */
+    createPluginToken(token) {
+        return this.send(ApiMap.createPluginToken, {}, token.toObject());
     }
 
     /**
