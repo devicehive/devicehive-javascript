@@ -175,7 +175,7 @@ class Plugin {
 
     /**
      * Returns a stringified instance
-     * @returns {object} A stringified instance
+     * @returns {string} A stringified instance
      */
     toString() {
         JSON.stringify(this.toObject());

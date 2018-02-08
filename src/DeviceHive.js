@@ -17,7 +17,8 @@ const DeviceType = require(`./models/DeviceType`);
 const Network = require(`./models/Network`);
 const Notification = require(`./models/Notification`);
 const Plugin = require(`./models/Plugin`);
-const Token = require(`./models/Token`);
+const UserToken = require(`./models/UserToken`);
+const PluginToken = require(`./models/PluginToken`);
 const User = require(`./models/User`);
 const CommandListQuery = require(`./models/query/CommandListQuery`);
 const CommandPollManyQuery = require(`./models/query/CommandPollManyQuery`);
@@ -60,8 +61,9 @@ class DeviceHive extends EventEmitter {
             Network: Network,
             Notification: Notification,
             Plugin: Plugin,
-            Token: Token,
+            PluginToken: PluginToken,
             User: User,
+            UserToken: UserToken,
             query: {
                 CommandListQuery: CommandListQuery,
                 CommandPollManyQuery: CommandPollManyQuery,

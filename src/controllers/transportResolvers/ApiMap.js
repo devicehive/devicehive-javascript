@@ -13,9 +13,10 @@ const apiMap = new Map();
 class ApiMap {
 
     static get login() { return 'login'; };
+    static get authPlugin() { return 'authPlugin'; };
     static get createUserToken() { return 'createUserToken'; };
-    static get refreshToken() { return 'refreshToken'; };
     static get createPluginToken() { return 'createPluginToken'; };
+    static get refreshToken() { return 'refreshToken'; };
     static get authenticatePlugin() { return 'authenticatePlugin'; };
 
     static get getServerInfo() { return 'getServerInfo'; };
@@ -132,7 +133,9 @@ class ApiMap {
 
 
 apiMap.set(ApiMap.login, { http: { method: 'POST', uri: '/token', base: ApiMap.AUTH_BASE }, ws: { action: 'token' } });
+apiMap.set(ApiMap.authPlugin, { http: { method: 'GET', uri: '/token/plugin/authenticate', base: ApiMap.AUTH_BASE }, ws: { action: 'token' } });
 apiMap.set(ApiMap.createUserToken, { http: { method: 'POST', uri: '/token/create', base: ApiMap.AUTH_BASE }, ws: { action: 'token/create', bodyKey: 'payload' } });
+apiMap.set(ApiMap.createPluginToken, { http: { method: 'POST', uri: '/token/plugin/create', base: ApiMap.AUTH_BASE }, ws: { action: 'token/create', bodyKey: 'payload' } });
 apiMap.set(ApiMap.refreshToken, { http: { method: 'POST', uri: '/token/refresh', base: ApiMap.AUTH_BASE }, ws: { action: 'token/refresh' } });
 apiMap.set(ApiMap.createPluginToken, { http: { method: 'POST', uri: '/token/plugin/create', base: ApiMap.AUTH_BASE }}); //TODO WS
 apiMap.set(ApiMap.authenticatePlugin, { http: { method: 'POST', uri: '/token/plugin/authenticate', base: ApiMap.AUTH_BASE }}); //TODO WS
