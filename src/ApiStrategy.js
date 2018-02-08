@@ -83,7 +83,8 @@ class ApiStrategy extends EventEmitter {
                 break;
         }
 
-        return me.strategy.send(sendData);
+        return me.strategy.send(sendData)
+            .then((response) => API.normalizeResponse(me.strategy.type, key, response));
     }
 }
 

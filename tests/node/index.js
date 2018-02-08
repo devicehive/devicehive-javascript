@@ -39,10 +39,10 @@ httpDeviceHive.on(`message`, (message) => {
     console.log(message);
 });
 
-httpDeviceHive.connect()
-    .then(() => httpDeviceHive.command.subscribe(query))
-    .then((data) => console.log(data))
-    .catch((error) => console.warn(error));
+// httpDeviceHive.connect()
+//     .then(() => httpDeviceHive.token.login('1', '2'))
+//     .then((data) => console.log(data))
+//     .catch((error) => console.warn(error));
 
 // httpDeviceHive.connect()
 //     .then(() => httpDeviceHive.device.list(query1))
@@ -56,3 +56,13 @@ httpDeviceHive.connect()
 //     .then(() => httpDeviceHive.device.list(query1))
 //     .then((data) => console.log(data))
 //     .catch((error) => console.warn(error));
+
+
+void async function start () {
+    try {
+        await httpDeviceHive.connect();
+        console.log(await httpDeviceHive.token.login('dhadmin', 'dhadmin_#911'));
+    } catch (error) {
+        console.warn(error);
+    }
+}();

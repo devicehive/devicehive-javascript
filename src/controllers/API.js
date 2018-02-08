@@ -23,9 +23,20 @@ class API {
         return ApiMap.build(transport, key, parameters, body);
     }
 
+    /**
+     *
+     * @param transport
+     * @param key
+     * @param response
+     * @returns {*}
+     */
+    static normalizeResponse(transport, key, response) {
+        return ApiMap.normalizeResponse(transport, key, response);
+    }
 
     /**
-     * Creates API
+     *
+     * @param strategy
      */
     constructor({ strategy }) {
         const me = this;
@@ -35,6 +46,10 @@ class API {
 
     /**
      *
+     * @param key
+     * @param parameters
+     * @param body
+     * @returns {*|void}
      */
     send(key, parameters, body) {
         const me = this;
