@@ -1,36 +1,33 @@
 
 
-# devicehive-node
+
+
+# DeviceHive-javascript
+
+DeviceHive-javascript is promise-based library for using DeviceHive.
 
 ## Installation Instructions
 
-DeviceHive Node Library
+For Node.js use case (Node v4.x on Mac, Linux, or Windows on a x86 or x64 processor), DeviceHive-javascript will install nice and easy with:
 
-In case yu want to use it in the browser:
+`npm install devicehive`
+
+### Generation bundle for browser usage
+
+In case you want to use DeviceHive-javascript in the browser:
 1. Clone repo;
-2. Inside repo folder run `npm i`;
+2. Inside repo folder run `npm install`;
 3. Inside repo folder run `npm run build`;
-4. Get `devicehive.js`/`devicehive.min.js` in `dist` folder. 
-
-## Installation
-Package is published in npm - https://www.npmjs.com/package/devicehive
-
-NPM >= 5.0.0
-
-`npm i devicehive`
-
-NPM < 5.0.0
-
-`npm i -S devicehive`
+4. Get `devicehive.js`/`devicehive.min.js` in `dist` folder.
 
 ## Usage
 
-During development you could use this library with Promises, Generators and Async/Await functions.
+During development you can use this library with Promises, and Async/Await functions.
 
 ### Connecting to DeviceHive
 
-#### Using HTTP
-*Note: Using HTTP you need to pass 3 different service URL`s: **mainServiceURL**, **authServiceURL** and **pluginServiceURL**.*
+#### Using HTTP/HTTPS
+*Note: Using HTTP/HTTPS you need to pass 3 different service URL`s: **mainServiceURL**, **authServiceURL** and **pluginServiceURL**.*
 
 ``` js
 const DeviceHive = require('devicehive');
@@ -45,7 +42,7 @@ httpDeviceHive.connect();
 ```
 
 #### Using WebSocket
-*Note: Using WebSocketyou need to pass only one service URL: **mainServiceURL**.*
+*Note: Using WebSocket you need to pass only one service URL: **mainServiceURL**.*
 ``` js
 const DeviceHive = require('devicehive');
 const wsDeviceHive= new DeviceHive({
@@ -56,8 +53,8 @@ const wsDeviceHive= new DeviceHive({
 wsDeviceHive.connect();
 ```
 
-#### Using Models
-You can use models provided in [DeviceHive.models](DeviceHive.models)
+### Using Models
+You can use models described in [DeviceHive.models](#DeviceHive.models)
 
 ``` js
 // Getting Device model
@@ -67,7 +64,12 @@ const Device = DeviceHive.models.Device;
 const DeviceListQuery = DeviceHive.models.query.DeviceListQuery;
 ```
 
-#### Full Example and using API
+### Full Example and using API
+
+You can use API described in [DeviceHive.command](#DeviceHive.command), [DeviceHive.configuration](#DeviceHive.configuration), [DeviceHive.device](#DeviceHive.device), [DeviceHive.deviceType](#DeviceHive.deviceType), [DeviceHive.info](#DeviceHive.info), [DeviceHive.notification](#DeviceHive.notification), [DeviceHive.network](#DeviceHive.network), [DeviceHive.plugin](#DeviceHive.plugin), [DeviceHive.token](#DeviceHive.token), [DeviceHive.user](#DeviceHive.user).
+
+Here is example of how you can use DeviceHive-javascript:
+
 ``` js
 const DeviceHive = require('devicehive');
 
@@ -83,7 +85,7 @@ const myDeviceHive = new DeviceHive({
     mainServiceURL: 'ws://<host>:<port>/<path>'
 });
 
-// Configurating Device List query
+// Configurating Device query
 const device = new Device({
     id: 'myTestId',
     name: 'myTestName',
@@ -92,28 +94,27 @@ const device = new Device({
     blocked: false
 });
 
-// Configurating Device query
+// Configurating Device List query
 const myDeviceListQuery = new DeviceListQuery({
     networkId: 1
 });
 
 // Connecting and usin API
-httpDeviceHive.connect()
-    .then(() => httpDeviceHive.device.list(myDeviceListQuery))
-    .then((data) => console.log(data))
-    .then(() => httpDeviceHive.device.add(device))
-    .then((data) => console.log(data))
-    .then(() => httpDeviceHive.device.list(myDeviceListQuery))
-    .then((data) => console.log(data))
-    .then(() => httpDeviceHive.device.delete(device.id))
-    .then((data) => console.log(data))
-    .then(() => httpDeviceHive.device.list(myDeviceListQuery))
-    .then((data) => console.log(data))
-    .catch((error) => console.warn(error))
+myDeviceHive.connect()
+    .then(() => myDeviceHive.device.list(myDeviceListQuery))
+    .then(data => console.log(data))
+    .then(() => myDeviceHive.device.add(device))
+    .then(data => console.log(data))
+    .then(() => myDeviceHive.device.list(myDeviceListQuery))
+    .then(data => console.log(data))
+    .then(() => myDeviceHive.device.delete(device.id))
+    .then(data => console.log(data))
+    .then(() => myDeviceHive.device.list(myDeviceListQuery))
+    .then(data => console.log(data))
+    .catch(error => console.warn(error));
 ```
 
 ## API Reference
-
   
 <a name="DeviceHive"></a>
 
@@ -159,7 +160,8 @@ Returns DeviceHive models
 * [DeviceType](#DeviceType)
 * [Network](#Network)
 * [Notification](#Notification)
-* [Token](#Token)
+* [UserToken](#UserToken)
+* [PluginToken](#PluginToken)
 * [User](#User)
 * query
     * [CommandListQuery](#CommandListQuery)
@@ -182,34 +184,44 @@ Returns DeviceHive models
     * [PluginListQuery](#PluginListQuery)
     * [PluginRegisterQuery](#PluginRegisterQuery)
 
+<a name="DeviceHive.command"></a>
 ### DeviceHive.command: <code>Object</code>
 Look at [DeviceCommandAPI](#DeviceCommandAPI).
 
+<a name="DeviceHive.configuration"></a>
 ### DeviceHive.configuration : <code>Object</code>
 Look at [ConfigurationAPI](#ConfigurationAPI).
 
+<a name="DeviceHive.device"></a>
 ### DeviceHive.device: <code>Object</code>
 Look at [DeviceAPI](#DeviceAPI).
 
+<a name="DeviceHive.deviceType"></a>
 ### DeviceHive.deviceType: <code>Object</code>
 Look at [deviceTypeAPI](#DeviceTypeAPI).
 
 
+<a name="DeviceHive.info"></a>
 ### DeviceHive.info: <code>Object</code>
 Look at [InfoAPI](#InfoAPI).
 
+<a name="DeviceHive.notification"></a>
 ### DeviceHive.notification: <code>Object</code>
 Look at [DeviceNotificationAPI](#DeviceNotificationAPI).
 
+<a name="DeviceHive.network"></a>
 ### DeviceHive.network: <code>Object</code>
 Look at [NetworkAPI](#NetworkAPI).
 
+<a name="DeviceHive.plugin"></a>
 ### DeviceHive.plugin: <code>Object</code>
 Look at [PluginAPI](#PluginAPI).
 
+<a name="DeviceHive.token"></a>
 ### DeviceHive.token: <code>Object</code>
 Look at [TokenAPI](#TokenAPI).
 
+<a name="DeviceHive.user"></a>
 ### DeviceHive.user: <code>Object</code>
 Look at [UserAPI](#UserAPI).
 
@@ -716,10 +728,13 @@ Get cluster info
 ## TokenAPI
 Authentificate using login and password
 
+**Kind**: global class
 
 * [TokenAPI](#TokenAPI)
     * [.login(login, password)](#TokenAPI+login)
-    * [.create(token)](#TokenAPI+create)
+    * [.authPlugin(token)](#TokenAPI+authPlugin)
+    * [.createUserToken(userToken)](#TokenAPI+createUserToken)
+    * [.createPluginToken(pluginToken)](#TokenAPI+createPluginToken)
     * [.refresh(refreshToken)](#TokenAPI+refresh)
 
 <a name="TokenAPI+login"></a>
@@ -727,31 +742,56 @@ Authentificate using login and password
 ### tokenAPI.login(login, password)
 Creates TokenAPI
 
+**Kind**: instance method of [<code>TokenAPI</code>](#TokenAPI)
 
 | Param | Type |
 | --- | --- |
-| login | <code>string</code> | 
-| password | <code>string</code> | 
+| login | <code>string</code> |
+| password | <code>string</code> |
 
-<a name="TokenAPI+create"></a>
+<a name="TokenAPI+authPlugin"></a>
 
-### tokenAPI.create(token)
-Create token
+### tokenAPI.authPlugin(token)
+Create user token
 
+**Kind**: instance method of [<code>TokenAPI</code>](#TokenAPI)
+
+| Param | Type | Description |
+| --- | --- | --- |
+| token | <code>string</code> | Plugin token |
+
+<a name="TokenAPI+createUserToken"></a>
+
+### tokenAPI.createUserToken(userToken)
+Create user token
+
+**Kind**: instance method of [<code>TokenAPI</code>](#TokenAPI)
 
 | Param | Type |
 | --- | --- |
-| token | <code>Token</code> | 
+| userToken | <code>UserToken</code> |
+
+<a name="TokenAPI+createPluginToken"></a>
+
+### tokenAPI.createPluginToken(pluginToken)
+Create plugin token
+
+**Kind**: instance method of [<code>TokenAPI</code>](#TokenAPI)
+
+| Param | Type |
+| --- | --- |
+| pluginToken | <code>PluginToken</code> |
 
 <a name="TokenAPI+refresh"></a>
 
 ### tokenAPI.refresh(refreshToken)
 Refresg token
 
+**Kind**: instance method of [<code>TokenAPI</code>](#TokenAPI)
 
 | Param | Type |
 | --- | --- |
-| refreshToken | <code>string</code> | 
+| refreshToken | <code>string</code> |
 
 <a name="UserAPI"></a>
 
@@ -1787,94 +1827,204 @@ Returns a stringified instance
 **Returns**: <code>object</code> - A stringified instance  
 <a name="Token"></a>
 
-## Token
-Token model
+
+<a name="UserToken"></a>
+
+## UserToken
+UserToken model
 
 
-* [Token](#Token)
-    * [new Token(options)](#new_Token_new)
-    * [.login](#Token+login) ⇒ <code>string</code>
-    * [.password](#Token+password) ⇒ <code>string</code>
-    * [.accessToken](#Token+accessToken) ⇒ <code>string</code>
-    * [.refreshToken](#Token+refreshToken) ⇒ <code>string</code>
-    * [.toObject()](#Token+toObject) ⇒ <code>object</code>
-    * [.toString()](#Token+toString) ⇒ <code>string</code>
+* [UserToken](#UserToken)
+    * [new UserToken(options)](#new_UserToken_new)
+    * [.userId](#UserToken+userId) ⇒ <code>string</code>
+    * [.actions](#UserToken+actions) ⇒ <code>string</code>
+    * [.networkIds](#UserToken+networkIds) ⇒ <code>string</code>
+    * [.deviceTypeIds](#UserToken+deviceTypeIds) ⇒ <code>string</code>
+    * [.expiration](#UserToken+expiration) ⇒ <code>string</code>
+    * [.toObject()](#UserToken+toObject) ⇒ <code>object</code>
+    * [.toString()](#UserToken+toString) ⇒ <code>string</code>
 
-<a name="new_Token_new"></a>
+<a name="new_UserToken_new"></a>
 
-### new Token(options)
-Creates Token model
+### new UserToken(options)
+Creates UserToken model
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| options | <code>object</code> | ({ login, password, accessToken, refreshToken }) |
+| options | <code>object</code> | ({ userId, actions, networkIds, deviceTypeIds, expiration }) |
 
-<a name="Token+login"></a>
+<a name="UserToken+userId"></a>
 
-### token.login ⇒ <code>string</code>
-**Returns**: <code>string</code> - login;  
-<a name="Token+login"></a>
+### userToken.userId ⇒ <code>string</code>
+**Returns**: <code>string</code> - userId;
+<a name="UserToken+userId"></a>
 
-### token.login ⇒ <code>string</code>
-**Returns**: <code>string</code> - login;  
-
-| Param | Type |
-| --- | --- |
-| value; | <code>string</code> | 
-
-<a name="Token+password"></a>
-
-### token.password ⇒ <code>string</code>
-**Returns**: <code>string</code> - password;  
-<a name="Token+password"></a>
-
-### token.password ⇒ <code>string</code>
-**Returns**: <code>string</code> - password;  
+### userToken.userId ⇒ <code>string</code>
+**Returns**: <code>string</code> - userId;
 
 | Param | Type |
 | --- | --- |
-| value; | <code>string</code> | 
+| value; | <code>string</code> |
 
-<a name="Token+accessToken"></a>
+<a name="UserToken+actions"></a>
 
-### token.accessToken ⇒ <code>string</code>
-**Returns**: <code>string</code> - accessToken;  
-<a name="Token+accessToken"></a>
+### userToken.actions ⇒ <code>string</code>
+**Returns**: <code>string</code> - actions;
+<a name="UserToken+actions"></a>
 
-### token.accessToken ⇒ <code>string</code>
-**Returns**: <code>string</code> - accessToken;  
-
-| Param | Type |
-| --- | --- |
-| value; | <code>string</code> | 
-
-<a name="Token+refreshToken"></a>
-
-### token.refreshToken ⇒ <code>string</code>
-**Returns**: <code>string</code> - refreshToken;  
-<a name="Token+refreshToken"></a>
-
-### token.refreshToken ⇒ <code>string</code>
-**Returns**: <code>string</code> - refreshToken;  
+### userToken.actions ⇒ <code>string</code>
+**Returns**: <code>string</code> - actions;
 
 | Param | Type |
 | --- | --- |
-| value; | <code>string</code> | 
+| value; | <code>string</code> |
 
-<a name="Token+toObject"></a>
+<a name="UserToken+networkIds"></a>
 
-### token.toObject() ⇒ <code>object</code>
+### userToken.networkIds ⇒ <code>string</code>
+**Returns**: <code>string</code> - networkIds;
+<a name="UserToken+networkIds"></a>
+
+### userToken.networkIds ⇒ <code>string</code>
+**Returns**: <code>string</code> - networkIds;
+
+| Param | Type |
+| --- | --- |
+| value; | <code>string</code> |
+
+<a name="UserToken+deviceTypeIds"></a>
+
+### userToken.deviceTypeIds ⇒ <code>string</code>
+**Returns**: <code>string</code> - deviceTypeIds;
+<a name="UserToken+deviceTypeIds"></a>
+
+### userToken.deviceTypeIds ⇒ <code>string</code>
+**Returns**: <code>string</code> - deviceTypeIds;
+
+| Param | Type |
+| --- | --- |
+| value; | <code>string</code> |
+
+<a name="UserToken+expiration"></a>
+
+### userToken.expiration ⇒ <code>string</code>
+**Returns**: <code>string</code> - expiration;
+<a name="UserToken+expiration"></a>
+
+### userToken.expiration ⇒ <code>string</code>
+**Returns**: <code>string</code> - expiration;
+
+| Param | Type |
+| --- | --- |
+| value; | <code>string</code> |
+
+<a name="UserToken+toObject"></a>
+
+### userToken.toObject() ⇒ <code>object</code>
 Returns a copy of instance
 
-**Returns**: <code>object</code> - A copy of instance  
-<a name="Token+toString"></a>
+**Returns**: <code>object</code> - A copy of instance
+<a name="UserToken+toString"></a>
 
-### token.toString() ⇒ <code>object</code>
+### userToken.toString() ⇒ <code>string</code>
 Returns a stringified instance
 
-**Returns**: <code>object</code> - A stringified instance  
-<a name="User"></a>
+**Returns**: <code>string</code> - A stringified instance
+
+<a name="PluginToken"></a>
+
+## PluginToken
+PluginToken model
+
+
+* [PluginToken](#PluginToken)
+    * [new PluginToken(options)](#new_PluginToken_new)
+    * [.actions](#PluginToken+actions) ⇒ <code>string</code>
+    * [.expiration](#PluginToken+expiration) ⇒ <code>string</code>
+    * [.type](#PluginToken+type) ⇒ <code>string</code>
+    * [.topicName](#PluginToken+topicName) ⇒ <code>string</code>
+    * [.toObject()](#PluginToken+toObject) ⇒ <code>object</code>
+    * [.toString()](#PluginToken+toString) ⇒ <code>string</code>
+
+<a name="new_PluginToken_new"></a>
+
+### new PluginToken(options)
+Creates PluginToken model
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | Options for instance |
+| options.actions | <code>Array</code> | Actions |
+| options.expiration | <code>string</code> | Expiration date (UTC) |
+| options.type | <code>number</code> | Token type (0 - REFRESH, 1 - ACCESS) |
+| options.topicName | <code>string</code> | Permitted topic name |
+
+<a name="PluginToken+actions"></a>
+
+### pluginToken.actions ⇒ <code>string</code>
+**Returns**: <code>string</code> - actions;
+<a name="PluginToken+actions"></a>
+
+### pluginToken.actions ⇒ <code>string</code>
+**Returns**: <code>string</code> - actions;
+
+| Param | Type |
+| --- | --- |
+| value; | <code>string</code> |
+
+<a name="PluginToken+expiration"></a>
+
+### pluginToken.expiration ⇒ <code>string</code>
+**Returns**: <code>string</code> - expiration;
+<a name="PluginToken+expiration"></a>
+
+### pluginToken.expiration ⇒ <code>string</code>
+**Returns**: <code>string</code> - expiration;
+
+| Param | Type |
+| --- | --- |
+| value; | <code>string</code> |
+
+<a name="PluginToken+type"></a>
+
+### pluginToken.type ⇒ <code>string</code>
+**Returns**: <code>string</code> - type;
+<a name="PluginToken+type"></a>
+
+### pluginToken.type ⇒ <code>string</code>
+**Returns**: <code>string</code> - type;
+
+| Param | Type |
+| --- | --- |
+| value; | <code>string</code> |
+
+<a name="PluginToken+topicName"></a>
+
+### pluginToken.topicName ⇒ <code>string</code>
+**Returns**: <code>string</code> - topicName;
+<a name="PluginToken+topicName"></a>
+
+### pluginToken.topicName ⇒ <code>string</code>
+**Returns**: <code>string</code> - topicName;
+
+| Param | Type |
+| --- | --- |
+| value; | <code>string</code> |
+
+<a name="PluginToken+toObject"></a>
+
+### pluginToken.toObject() ⇒ <code>object</code>
+Returns a copy of instance
+
+**Returns**: <code>object</code> - A copy of instance
+<a name="PluginToken+toString"></a>
+
+### pluginToken.toString() ⇒ <code>string</code>
+Returns a stringified instance
+
+**Returns**: <code>string</code> - A stringified instance
 
 ## User
 User model
