@@ -7,76 +7,76 @@ class PluginToken {
     /**
      * Creates PluginToken model
      * @param {object} options Options for instance
-     * @param {Array} options.a - Actions
-     * @param {string} options.e - Expiration date (UTC)
-     * @param {number} options.t - Token type (0 - REFRESH, 1 - ACCESS)
-     * @param {string} options.tpc - Permitted topic name
+     * @param {Array} options.actions - Actions
+     * @param {string} options.expiration - Expiration date (UTC)
+     * @param {number} options.type - Token type (0 - REFRESH, 1 - ACCESS)
+     * @param {string} options.topicName - Permitted topic name
      */
-    constructor({ a, e, t, tpc } = {}) {
-        this.a = a;
-        this.e = e;
-        this.t = t;
-        this.tpc = tpc;
+    constructor({ actions, expiration, type, topicName } = {}) {
+        this.actions = actions;
+        this.expiration = expiration;
+        this.type = type;
+        this.topicName = topicName;
     }
 
     /**
-     * @returns {string} a;
+     * @returns {string} actions;
      */
-    get a() {
-        return this._a;
-    }
-
-    /**
-     * @param {string} value;
-     * @returns {string} a;
-     */
-    set a(value) {
-        this._a = value;
-    }
-
-    /**
-     * @returns {string} e;
-     */
-    get e() {
-        return this._e;
+    get actions() {
+        return this._actions;
     }
 
     /**
      * @param {string} value;
-     * @returns {string} e;
+     * @returns {string} actions;
      */
-    set e(value) {
-        this._e = value;
+    set actions(value) {
+        this._actions = value;
     }
 
     /**
-     * @returns {string} t;
+     * @returns {string} expiration;
      */
-    get t() {
-        return this._t; 
-    }
-
-    /**
-     * @param {string} value;
-     * @returns {string} t;
-     */
-    set t(value) {
-        this._t = value;
-    }
-
-    /**
-     * @returns {string} tpc;
-     */
-    get tpc() {
-        return this._tpc;
+    get expiration() {
+        return this._expiration;
     }
 
     /**
      * @param {string} value;
-     * @returns {string} tpc;
+     * @returns {string} expiration;
      */
-    set tpc(value) {
-        this._tpc = value;
+    set expiration(value) {
+        this._expiration = value;
+    }
+
+    /**
+     * @returns {string} type;
+     */
+    get type() {
+        return this._type; 
+    }
+
+    /**
+     * @param {string} value;
+     * @returns {string} type;
+     */
+    set type(value) {
+        this._type = value;
+    }
+
+    /**
+     * @returns {string} topicName;
+     */
+    get topicName() {
+        return this._topicName;
+    }
+
+    /**
+     * @param {string} value;
+     * @returns {string} topicName;
+     */
+    set topicName(value) {
+        this._topicName = value;
     }
 
     /**
@@ -85,10 +85,10 @@ class PluginToken {
      */
     toObject() {
         return {
-            a: this.a,
-            e: this.e,
-            t: this.t,
-            tpc: this.tpc
+            a: this.actions,
+            e: this.expiration,
+            t: this.type,
+            tpc: this.topicName
         }
     }
 

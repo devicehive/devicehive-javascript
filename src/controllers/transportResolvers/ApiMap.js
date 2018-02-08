@@ -17,7 +17,6 @@ class ApiMap {
     static get createUserToken() { return 'createUserToken'; };
     static get createPluginToken() { return 'createPluginToken'; };
     static get refreshToken() { return 'refreshToken'; };
-    static get createPluginToken() { return 'createPluginToken'; };
     static get authenticatePlugin() { return 'authenticatePlugin'; };
 
     static get getServerInfo() { return 'getServerInfo'; };
