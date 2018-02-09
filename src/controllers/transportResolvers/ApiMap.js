@@ -194,55 +194,55 @@ apiMap.set(ApiMap.getDevice, { http: { method: 'GET', uri: '/device/{deviceId}',
 apiMap.set(ApiMap.addDevice, { http: { method: 'PUT', uri: '/device/{deviceId}', base: ApiMap.MAIN_BASE }, ws: { action: 'device/save', bodyKey: 'device', response: null } });
 apiMap.set(ApiMap.deleteDevice, { http: { method: 'DELETE', uri: '/device/{deviceId}', base: ApiMap.MAIN_BASE }, ws: { action: 'device/delete', response: null } });
 
-apiMap.set(ApiMap.listDeviceType, { http: { method: 'GET', uri: '/devicetype', base: ApiMap.MAIN_BASE }, ws: { action: 'devicetype/list' } });
-apiMap.set(ApiMap.countDeviceType, { http: { method: 'GET', uri: '/devicetype/count', base: ApiMap.MAIN_BASE }, ws: { action: 'devicetype/count' } });
-apiMap.set(ApiMap.getDeviceType, { http: { method: 'GET', uri: '/devicetype/{deviceTypeId}', base: ApiMap.MAIN_BASE }, ws: { action: 'devicetype/get' } });
-apiMap.set(ApiMap.addDeviceType, { http: { method: 'POST', uri: '/devicetype', base: ApiMap.MAIN_BASE }, ws: { action: 'devicetype/insert', bodyKey: 'deviceType' } });
-apiMap.set(ApiMap.updateDeviceType, { http: { method: 'PUT', uri: '/devicetype/{deviceTypeId}', base: ApiMap.MAIN_BASE }, ws: { action: 'devicetype/update', bodyKey: 'deviceType' } });
-apiMap.set(ApiMap.deleteDeviceType, { http: { method: 'DELETE', uri: '/devicetype/{deviceTypeId}', base: ApiMap.MAIN_BASE }, ws: { action: 'devicetype/delete' } });
+apiMap.set(ApiMap.listDeviceType, { http: { method: 'GET', uri: '/devicetype', base: ApiMap.MAIN_BASE }, ws: { action: 'devicetype/list', response: { bodyKey: 'deviceTypes' } } });
+apiMap.set(ApiMap.countDeviceType, { http: { method: 'GET', uri: '/devicetype/count', base: ApiMap.MAIN_BASE }, ws: { action: 'devicetype/count', response: [`count`] } });
+apiMap.set(ApiMap.getDeviceType, { http: { method: 'GET', uri: '/devicetype/{deviceTypeId}', base: ApiMap.MAIN_BASE }, ws: { action: 'devicetype/get', response: { bodyKey: 'deviceType' } } });
+apiMap.set(ApiMap.addDeviceType, { http: { method: 'POST', uri: '/devicetype', base: ApiMap.MAIN_BASE }, ws: { action: 'devicetype/insert', bodyKey: 'deviceType', response: { bodyKey: 'deviceType' } } });
+apiMap.set(ApiMap.updateDeviceType, { http: { method: 'PUT', uri: '/devicetype/{deviceTypeId}', base: ApiMap.MAIN_BASE }, ws: { action: 'devicetype/update', bodyKey: 'deviceType', response: null } });
+apiMap.set(ApiMap.deleteDeviceType, { http: { method: 'DELETE', uri: '/devicetype/{deviceTypeId}', base: ApiMap.MAIN_BASE }, ws: { action: 'devicetype/delete', response: null } });
 
-apiMap.set(ApiMap.listCommand, { http: { method: 'GET', uri: '/device/{deviceId}/command', base: ApiMap.MAIN_BASE }, ws: { action: 'command/list' } });
-apiMap.set(ApiMap.getCommand, { http: { method: 'GET', uri: '/device/{deviceId}/command/{commandId}', base: ApiMap.MAIN_BASE }, ws: { action: 'command/get' } });
-apiMap.set(ApiMap.insertCommand, { http: { method: 'POST', uri: '/device/{deviceId}/command', base: ApiMap.MAIN_BASE }, ws: { action: 'command/insert', bodyKey: 'command' } });
-apiMap.set(ApiMap.updateCommand, { http: { method: 'POST', uri: '/device/{deviceId}/command/{commandId}', base: ApiMap.MAIN_BASE }, ws: { action: 'command/update', bodyKey: 'command' } });
+apiMap.set(ApiMap.listCommand, { http: { method: 'GET', uri: '/device/{deviceId}/command', base: ApiMap.MAIN_BASE }, ws: { action: 'command/list', response: { bodyKey: 'commands' } } });
+apiMap.set(ApiMap.getCommand, { http: { method: 'GET', uri: '/device/{deviceId}/command/{commandId}', base: ApiMap.MAIN_BASE }, ws: { action: 'command/get', response: { bodyKey: 'command' } } });
+apiMap.set(ApiMap.insertCommand, { http: { method: 'POST', uri: '/device/{deviceId}/command', base: ApiMap.MAIN_BASE }, ws: { action: 'command/insert', bodyKey: 'command', response: { bodyKey: 'command' } } });
+apiMap.set(ApiMap.updateCommand, { http: { method: 'POST', uri: '/device/{deviceId}/command/{commandId}', base: ApiMap.MAIN_BASE }, ws: { action: 'command/update', bodyKey: 'command', response: null } });
 apiMap.set(ApiMap.pollCommand, { http: { method: 'GET', uri: '/device/{deviceId}/command/poll', base: ApiMap.MAIN_BASE } });
 apiMap.set(ApiMap.pollManyCommand, { http: { method: 'GET', uri: '/device/command/poll', base: ApiMap.MAIN_BASE } });
 apiMap.set(ApiMap.waitCommand, { http: { method: 'GET', uri: '/device/{deviceId}/command/{commandId}/poll', base: ApiMap.MAIN_BASE } });
-apiMap.set(ApiMap.subscribeCommand, { http: { method: 'GET', uri: '/device/command/poll', base: ApiMap.MAIN_BASE, subscription: true }, ws: { action: 'command/subscribe' } });
-apiMap.set(ApiMap.unsubscribeCommand, { http: { unsubscription: true }, ws: { action: 'command/unsubscribe' } });
+apiMap.set(ApiMap.subscribeCommand, { http: { method: 'GET', uri: '/device/command/poll', base: ApiMap.MAIN_BASE, subscription: true }, ws: { action: 'command/subscribe', response: null } });
+apiMap.set(ApiMap.unsubscribeCommand, { http: { unsubscription: true }, ws: { action: 'command/unsubscribe', response: null } });
 
-apiMap.set(ApiMap.listNotification, { http: { method: 'GET', uri: '/device/{deviceId}/notification', base: ApiMap.MAIN_BASE }, ws: { action: 'notification/list' } });
-apiMap.set(ApiMap.getNotification, { http: { method: 'GET', uri: '/device/{deviceId}/notification/{notificationId}', base: ApiMap.MAIN_BASE }, ws: { action: 'notification/get' } });
-apiMap.set(ApiMap.insertNotification, { http: { method: 'POST', uri: '/device/{deviceId}/notification', base: ApiMap.MAIN_BASE }, ws: { action: 'notification/insert', bodyKey: 'notification' } });
+apiMap.set(ApiMap.listNotification, { http: { method: 'GET', uri: '/device/{deviceId}/notification', base: ApiMap.MAIN_BASE }, ws: { action: 'notification/list', response: { bodyKey: 'notifications' } } });
+apiMap.set(ApiMap.getNotification, { http: { method: 'GET', uri: '/device/{deviceId}/notification/{notificationId}', base: ApiMap.MAIN_BASE }, ws: { action: 'notification/get', response: { bodyKey: 'notification' } } });
+apiMap.set(ApiMap.insertNotification, { http: { method: 'POST', uri: '/device/{deviceId}/notification', base: ApiMap.MAIN_BASE }, ws: { action: 'notification/insert', bodyKey: 'notification', response: { bodyKey: 'notification' } } });
 apiMap.set(ApiMap.pollNotification, { http: { method: 'GET', uri: '/device/{deviceId}/notification/poll', base: ApiMap.MAIN_BASE } });
 apiMap.set(ApiMap.pollManyNotification, { http: { method: 'GET', uri: '/device/notification/poll', base: ApiMap.MAIN_BASE } });
-apiMap.set(ApiMap.subscribeNotification, { http: { method: 'GET', uri: '/device/notification/poll', base: ApiMap.MAIN_BASE, subscription: true }, ws: { action: 'notification/subscribe' } });
-apiMap.set(ApiMap.unsubscribeNotification, { http: { unsubscription: true }, ws: { action: 'notification/unsubscribe' } });
+apiMap.set(ApiMap.subscribeNotification, { http: { method: 'GET', uri: '/device/notification/poll', base: ApiMap.MAIN_BASE, subscription: true }, ws: { action: 'notification/subscribe', response: null } });
+apiMap.set(ApiMap.unsubscribeNotification, { http: { unsubscription: true }, ws: { action: 'notification/unsubscribe', response: null } });
 
-apiMap.set(ApiMap.listNetwork, { http: { method: 'GET', uri: '/network', base: ApiMap.MAIN_BASE }, ws: { action: 'network/list' } });
-apiMap.set(ApiMap.countNetwork, { http: { method: 'GET', uri: '/network/count', base: ApiMap.MAIN_BASE }, ws: { action: 'network/count' } });
-apiMap.set(ApiMap.getNetwork, { http: { method: 'GET', uri: '/network/{networkId}', base: ApiMap.MAIN_BASE }, ws: { action: 'network/get' } });
-apiMap.set(ApiMap.addNetwork, { http: { method: 'POST', uri: '/network', base: ApiMap.MAIN_BASE }, ws: { action: 'network/insert', bodyKey: 'network' } });
-apiMap.set(ApiMap.updateNetwork, { http: { method: 'PUT', uri: '/network/{networkId}', base: ApiMap.MAIN_BASE }, ws: { action: 'network/update', bodyKey: 'network' } });
-apiMap.set(ApiMap.deleteNetwork, { http: { method: 'DELETE', uri: '/network/{networkId}', base: ApiMap.MAIN_BASE }, ws: { action: 'network/delete' } });
+apiMap.set(ApiMap.listNetwork, { http: { method: 'GET', uri: '/network', base: ApiMap.MAIN_BASE }, ws: { action: 'network/list', response: { bodyKey: 'networks' } } });
+apiMap.set(ApiMap.countNetwork, { http: { method: 'GET', uri: '/network/count', base: ApiMap.MAIN_BASE }, ws: { action: 'network/count', response: [`count`] } });
+apiMap.set(ApiMap.getNetwork, { http: { method: 'GET', uri: '/network/{networkId}', base: ApiMap.MAIN_BASE }, ws: { action: 'network/get', response: { bodyKey: 'network' } } });
+apiMap.set(ApiMap.addNetwork, { http: { method: 'POST', uri: '/network', base: ApiMap.MAIN_BASE }, ws: { action: 'network/insert', bodyKey: 'network', response: { bodyKey: 'network' } } });
+apiMap.set(ApiMap.updateNetwork, { http: { method: 'PUT', uri: '/network/{networkId}', base: ApiMap.MAIN_BASE }, ws: { action: 'network/update', bodyKey: 'network', response: null } });
+apiMap.set(ApiMap.deleteNetwork, { http: { method: 'DELETE', uri: '/network/{networkId}', base: ApiMap.MAIN_BASE }, ws: { action: 'network/delete', response: null } });
 
-apiMap.set(ApiMap.listUser, { http: { method: 'GET', uri: '/user', base: ApiMap.MAIN_BASE }, ws: { action: 'user/list' } });
-apiMap.set(ApiMap.countUser, { http: { method: 'GET', uri: '/user/count', base: ApiMap.MAIN_BASE }, ws: { action: 'user/count' } });
-apiMap.set(ApiMap.getUser, { http: { method: 'GET', uri: '/user/{userId}', base: ApiMap.MAIN_BASE }, ws: { action: 'user/get' } });
-apiMap.set(ApiMap.addUser, { http: { method: 'POST', uri: '/user', base: ApiMap.MAIN_BASE }, ws: { action: 'user/insert', bodyKey: 'user' } });
-apiMap.set(ApiMap.updateUser, { http: { method: 'PUT', uri: '/user/{userId}', base: ApiMap.MAIN_BASE }, ws: { action: 'user/update', bodyKey: 'user' } });
-apiMap.set(ApiMap.deleteUser, { http: { method: 'DELETE', uri: '/user/{userId}', base: ApiMap.MAIN_BASE }, ws: { action: 'user/delete' } });
-apiMap.set(ApiMap.getCurrentUser, { http: { method: 'GET', uri: '/user/current', base: ApiMap.MAIN_BASE }, ws: { action: 'user/getCurrent' } });
-apiMap.set(ApiMap.updateCurrentUser, { http: { method: 'PUT', uri: '/user/current', base: ApiMap.MAIN_BASE }, ws: { action: 'user/updateCurrent', bodyKey: 'user' } });
+apiMap.set(ApiMap.listUser, { http: { method: 'GET', uri: '/user', base: ApiMap.MAIN_BASE }, ws: { action: 'user/list', response: { bodyKey: 'users' } } });
+apiMap.set(ApiMap.countUser, { http: { method: 'GET', uri: '/user/count', base: ApiMap.MAIN_BASE }, ws: { action: 'user/count', response: [`count`] } });
+apiMap.set(ApiMap.getUser, { http: { method: 'GET', uri: '/user/{userId}', base: ApiMap.MAIN_BASE }, ws: { action: 'user/get', response: { bodyKey: 'user' } } });
+apiMap.set(ApiMap.addUser, { http: { method: 'POST', uri: '/user', base: ApiMap.MAIN_BASE }, ws: { action: 'user/insert', bodyKey: 'user', response: { bodyKey: 'user' } } });
+apiMap.set(ApiMap.updateUser, { http: { method: 'PUT', uri: '/user/{userId}', base: ApiMap.MAIN_BASE }, ws: { action: 'user/update', bodyKey: 'user', response: null } });
+apiMap.set(ApiMap.deleteUser, { http: { method: 'DELETE', uri: '/user/{userId}', base: ApiMap.MAIN_BASE }, ws: { action: 'user/delete', response: null } });
+apiMap.set(ApiMap.getCurrentUser, { http: { method: 'GET', uri: '/user/current', base: ApiMap.MAIN_BASE }, ws: { action: 'user/getCurrent', response: { bodyKey: 'current' } } });
+apiMap.set(ApiMap.updateCurrentUser, { http: { method: 'PUT', uri: '/user/current', base: ApiMap.MAIN_BASE }, ws: { action: 'user/updateCurrent', bodyKey: 'user', response: null } });
 apiMap.set(ApiMap.getUserDeviceTypes, { http: { method: 'GET', uri: '/user/{userId}/devicetype', base: ApiMap.MAIN_BASE } }); // TODO WS
 apiMap.set(ApiMap.unassignAllDeviceTypes, { http: { method: 'DELETE', uri: '/user/{userId}/devicetype/all', base: ApiMap.MAIN_BASE } }); // TODO WS
 apiMap.set(ApiMap.assignAllDeviceTypes, { http: { method: 'PUT', uri: '/user/{userId}/devicetype/all', base: ApiMap.MAIN_BASE } }); // TODO WS
 apiMap.set(ApiMap.unassignDeviceType, { http: { method: 'DELETE', uri: '/user/{userId}/devicetype/{deviceTypeId}', base: ApiMap.MAIN_BASE } }); // TODO WS
 apiMap.set(ApiMap.getUserDeviceType, { http: { method: 'GET', uri: '/user/{userId}/devicetype/{deviceTypeId}', base: ApiMap.MAIN_BASE } }); // TODO WS
 apiMap.set(ApiMap.assignDeviceType, { http: { method: 'PUT', uri: '/user/{userId}/devicetype/{deviceTypeId}', base: ApiMap.MAIN_BASE } }); // TODO WS
-apiMap.set(ApiMap.getUserNetwork, { http: { method: 'GET', uri: '/user/{userId}/network/{networkId}', base: ApiMap.MAIN_BASE }, ws: { action: 'user/getNetwork' } });
-apiMap.set(ApiMap.assignNetwork, { http: { method: 'PUT', uri: '/user/{userId}/network/{networkId}', base: ApiMap.MAIN_BASE }, ws: { action: 'user/assignNetwork' } });
-apiMap.set(ApiMap.unassignNetwork, { http: { method: 'DELETE', uri: '/user/{userId}/network/{networkId}', base: ApiMap.MAIN_BASE }, ws: { action: 'user/unassignNetwork' } });
+apiMap.set(ApiMap.getUserNetwork, { http: { method: 'GET', uri: '/user/{userId}/network/{networkId}', base: ApiMap.MAIN_BASE }, ws: { action: 'user/getNetwork', response: { bodyKey: 'network' } } });
+apiMap.set(ApiMap.assignNetwork, { http: { method: 'PUT', uri: '/user/{userId}/network/{networkId}', base: ApiMap.MAIN_BASE }, ws: { action: 'user/assignNetwork', response: null } });
+apiMap.set(ApiMap.unassignNetwork, { http: { method: 'DELETE', uri: '/user/{userId}/network/{networkId}', base: ApiMap.MAIN_BASE }, ws: { action: 'user/unassignNetwork', response: null } });
 
 apiMap.set(ApiMap.listPlugin, { http: { method: 'GET', uri: '/plugin', base: ApiMap.PLUGIN_BASE } }); // TODO WS
 apiMap.set(ApiMap.countPlugin, { http: { method: 'GET', uri: '/plugin/count', base: ApiMap.PLUGIN_BASE } }); // TODO WS
