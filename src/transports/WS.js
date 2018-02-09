@@ -39,6 +39,8 @@ class WS extends Transport {
         this.socket.addEventListener('error', error => {
             this.emit('error', new WebSocketError(error));
         });
+
+        this.socket.addEventListener('open', () => this.isOpend = true);
     }
 
     /**

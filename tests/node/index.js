@@ -3,65 +3,34 @@ const DeviceHive = require(`../../index`);
 const httpDeviceHive = new DeviceHive({
     login: `dhadmin`,
     password: `dhadmin_#911`,
-    //mainServiceURL: 'http://localhost:8080/dh/rest',
-    mainServiceURL: 'ws://localhost:8080/dh/websocket',
+    mainServiceURL: 'http://localhost:8080/dh/rest',
     authServiceURL: 'http://localhost:8090/dh/rest',
     pluginServiceURL: 'http://localhost:8110/dh/rest'
 });
 
-const CommandPollQuery = DeviceHive.models.query.CommandPollQuery;
-const NotificationPollQuery = DeviceHive.models.query.NotificationPollQuery;
-const DeviceListQuery = DeviceHive.models.query.DeviceListQuery;
-const Device = DeviceHive.models.Device;
-const query = new CommandPollQuery({
-    deviceId: 'e50d6085-2aba-48e9-b1c3-73c673e414be',
-    names: [ 'test' ]
+const wsDeviceHive = new DeviceHive({
+    login: `dhadmin`,
+    password: `dhadmin_#911`,
+    mainServiceURL: 'ws://localhost:8080/dh/websocket'
 });
 
-const nQuery = new NotificationPollQuery({
-    deviceId: 'e50d6085-2aba-48e9-b1c3-73c673e414be',
-    names: [ 'test' ]
-});
+const DeviceListQuery = DeviceHive.models.query.DeviceListQuery;
 
 const query1 = new DeviceListQuery({
     networkId: 1
 });
 
-const device = new Device({
-    id: `myTestId`,
-    name: `myTestName`,
-    networkId: 1,
-    deviceTypeId: 1,
-    blocked: false
-});
-
-httpDeviceHive.on(`message`, (message) => {
-    console.log(message);
-});
-
-// httpDeviceHive.connect()
-//     .then(() => httpDeviceHive.token.login('1', '2'))
-//     .then((data) => console.log(data))
-//     .catch((error) => console.warn(error));
-
-// httpDeviceHive.connect()
-//     .then(() => httpDeviceHive.device.list(query1))
-//     .then((data) => console.log(data))
-//     .then(() => httpDeviceHive.device.add(device))
-//     .then((data) => console.log(data))
-//     .then(() => httpDeviceHive.device.list(query1))
-//     .then((data) => console.log(data))
-//     .then(() => httpDeviceHive.device.delete(device.id))
-//     .then((data) => console.log(data))
-//     .then(() => httpDeviceHive.device.list(query1))
-//     .then((data) => console.log(data))
-//     .catch((error) => console.warn(error));
-
-
 void async function start () {
     try {
         await httpDeviceHive.connect();
+        await wsDeviceHive.connect();
+
         console.log(await httpDeviceHive.token.login('dhadmin', 'dhadmin_#911'));
+        console.log(await  httpDeviceHive.device.list(query1));
+
+
+        console.log(await wsDeviceHive.token.login('dhadmin', 'dhadmin_#911'));
+        console.log(await  wsDeviceHive.device.list(query1));
     } catch (error) {
         console.warn(error);
     }

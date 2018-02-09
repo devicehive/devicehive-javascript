@@ -13,7 +13,6 @@ const apiMap = new Map();
 class ApiMap {
 
     static get login() { return 'login'; }
-    static get authPlugin() { return 'authPlugin'; }
     static get createUserToken() { return 'createUserToken'; }
     static get createPluginToken() { return 'createPluginToken'; }
     static get refreshToken() { return 'refreshToken'; }
@@ -109,11 +108,13 @@ class ApiMap {
         let transportAPI;
 
         const apiObject = apiMap.get(key);
+
         if (!apiObject) {
             throw new NoApiError();
         }
 
         const transportApiObject = apiObject[transport];
+
         if (!transportApiObject) {
             throw new UnsupportedApiTransportError({ key, transport });
         }
@@ -138,46 +139,60 @@ class ApiMap {
      * @returns {*}
      */
     static normalizeResponse(transport, key, response) {
+        let normalizedResponse = {};
 
         switch (transport) {
             case ApiMap.HTTP_API:
                 if (response.error) {
                     throw response.message;
                 }
+
+                normalizedResponse = response;
                 break;
             case ApiMap.WS_API:
                 if (response.status === "error") {
                     throw response.error;
                 }
+
+                const responseNormalizationObject = apiMap.get(key)[transport].response;
+
+                if (responseNormalizationObject) {
+                    if (responseNormalizationObject.length) {
+                        responseNormalizationObject.forEach(responseField =>
+                            normalizedResponse[responseField] = response[responseField]);
+                    } else if (responseNormalizationObject.bodyKey) {
+                        normalizedResponse = response[responseNormalizationObject.bodyKey];
+                    }
+                } else if (responseNormalizationObject !== null) {
+                    normalizedResponse = response;
+                }
                 break;
         }
 
-        return response;
+        return normalizedResponse;
     }
 }
 
 
-apiMap.set(ApiMap.login, { http: { method: 'POST', uri: '/token', base: ApiMap.AUTH_BASE }, ws: { action: 'token' } });
-apiMap.set(ApiMap.authPlugin, { http: { method: 'GET', uri: '/token/plugin/authenticate', base: ApiMap.AUTH_BASE }, ws: { action: 'token' } });
-apiMap.set(ApiMap.createUserToken, { http: { method: 'POST', uri: '/token/create', base: ApiMap.AUTH_BASE }, ws: { action: 'token/create', bodyKey: 'payload' } });
-apiMap.set(ApiMap.createPluginToken, { http: { method: 'POST', uri: '/token/plugin/create', base: ApiMap.AUTH_BASE }, ws: { action: 'token/create', bodyKey: 'payload' } });
-apiMap.set(ApiMap.refreshToken, { http: { method: 'POST', uri: '/token/refresh', base: ApiMap.AUTH_BASE }, ws: { action: 'token/refresh' } });
-apiMap.set(ApiMap.createPluginToken, { http: { method: 'POST', uri: '/token/plugin/create', base: ApiMap.AUTH_BASE } }); //TODO WS
-apiMap.set(ApiMap.authenticatePlugin, { http: { method: 'POST', uri: '/token/plugin/authenticate', base: ApiMap.AUTH_BASE } }); //TODO WS
+apiMap.set(ApiMap.login, { http: { method: 'POST', uri: '/token', base: ApiMap.AUTH_BASE }, ws: { action: 'token', response: [`accessToken`, `refreshToken`] } });
+apiMap.set(ApiMap.createUserToken, { http: { method: 'POST', uri: '/token/create', base: ApiMap.AUTH_BASE }, ws: { action: 'token/create', bodyKey: 'payload', response: [`accessToken`, `refreshToken`] } });
+apiMap.set(ApiMap.createPluginToken, { http: { method: 'POST', uri: '/token/plugin/create', base: ApiMap.AUTH_BASE } });
+apiMap.set(ApiMap.refreshToken, { http: { method: 'POST', uri: '/token/refresh', base: ApiMap.AUTH_BASE }, ws: { action: 'token/refresh', response: [`accessToken`] } });
+apiMap.set(ApiMap.authenticatePlugin, { http: { method: 'POST', uri: '/token/plugin/authenticate', base: ApiMap.AUTH_BASE } });
 
-apiMap.set(ApiMap.getServerInfo, { http: { method: 'GET', uri: '/info', base: ApiMap.MAIN_BASE }, ws: { action: 'server/info' } });
-apiMap.set(ApiMap.getCacheInfo, { http: { method: 'GET', uri: '/info/cache', base: ApiMap.MAIN_BASE }, ws: { action: 'cache/info' } });
-apiMap.set(ApiMap.getClusterInfo, { http: { method: 'GET', uri: '/info/config/cluster', base: ApiMap.MAIN_BASE }, ws: { action: 'cluster/info' } });
+apiMap.set(ApiMap.getServerInfo, { http: { method: 'GET', uri: '/info', base: ApiMap.MAIN_BASE }, ws: { action: 'server/info', response: { bodyKey: `info` } } });
+apiMap.set(ApiMap.getCacheInfo, { http: { method: 'GET', uri: '/info/cache', base: ApiMap.MAIN_BASE } });
+apiMap.set(ApiMap.getClusterInfo, { http: { method: 'GET', uri: '/info/config/cluster', base: ApiMap.MAIN_BASE }, ws: { action: 'cluster/info', response: { bodyKey: `clusterInfo` } } });
 
-apiMap.set(ApiMap.getConfiguration, { http: { method: 'GET', uri: '/configuration/{name}', base: ApiMap.MAIN_BASE }, ws: { action: 'configuration/get' } });
-apiMap.set(ApiMap.putConfiguration, { http: { method: 'PUT', uri: '/configuration/{name}', base: ApiMap.MAIN_BASE }, ws: { action: 'configuration/put' } });
-apiMap.set(ApiMap.deleteConfiguration, { http: { method: 'DELETE', uri: '/configuration/{name}', base: ApiMap.MAIN_BASE }, ws: { action: 'configuration/delete' } });
+apiMap.set(ApiMap.getConfiguration, { http: { method: 'GET', uri: '/configuration/{name}', base: ApiMap.MAIN_BASE }, ws: { action: 'configuration/get', response: { bodyKey: `configuration` } } });
+apiMap.set(ApiMap.putConfiguration, { http: { method: 'PUT', uri: '/configuration/{name}', base: ApiMap.MAIN_BASE }, ws: { action: 'configuration/put', response: { bodyKey: `configuration` } } });
+apiMap.set(ApiMap.deleteConfiguration, { http: { method: 'DELETE', uri: '/configuration/{name}', base: ApiMap.MAIN_BASE }, ws: { action: 'configuration/delete', response: null } });
 
-apiMap.set(ApiMap.listDevice, { http: { method: 'GET', uri: '/device', base: ApiMap.MAIN_BASE }, ws: { action: 'device/list' } });
-apiMap.set(ApiMap.countDevice, { http: { method: 'GET', uri: '/device/count', base: ApiMap.MAIN_BASE }, ws: { action: 'device/count' } });
-apiMap.set(ApiMap.getDevice, { http: { method: 'GET', uri: '/device/{deviceId}', base: ApiMap.MAIN_BASE }, ws: { action: 'device/get' } });
-apiMap.set(ApiMap.addDevice, { http: { method: 'PUT', uri: '/device/{deviceId}', base: ApiMap.MAIN_BASE }, ws: { action: 'device/save', bodyKey: 'device' } });
-apiMap.set(ApiMap.deleteDevice, { http: { method: 'DELETE', uri: '/device/{deviceId}', base: ApiMap.MAIN_BASE }, ws: { action: 'device/delete' } });
+apiMap.set(ApiMap.listDevice, { http: { method: 'GET', uri: '/device', base: ApiMap.MAIN_BASE }, ws: { action: 'device/list', response: { bodyKey: `devices` } } });
+apiMap.set(ApiMap.countDevice, { http: { method: 'GET', uri: '/device/count', base: ApiMap.MAIN_BASE }, ws: { action: 'device/count', response: [`count`] } });
+apiMap.set(ApiMap.getDevice, { http: { method: 'GET', uri: '/device/{deviceId}', base: ApiMap.MAIN_BASE }, ws: { action: 'device/get', response: { bodyKey: `device` } } });
+apiMap.set(ApiMap.addDevice, { http: { method: 'PUT', uri: '/device/{deviceId}', base: ApiMap.MAIN_BASE }, ws: { action: 'device/save', bodyKey: 'device', response: null } });
+apiMap.set(ApiMap.deleteDevice, { http: { method: 'DELETE', uri: '/device/{deviceId}', base: ApiMap.MAIN_BASE }, ws: { action: 'device/delete', response: null } });
 
 apiMap.set(ApiMap.listDeviceType, { http: { method: 'GET', uri: '/devicetype', base: ApiMap.MAIN_BASE }, ws: { action: 'devicetype/list' } });
 apiMap.set(ApiMap.countDeviceType, { http: { method: 'GET', uri: '/devicetype/count', base: ApiMap.MAIN_BASE }, ws: { action: 'devicetype/count' } });
