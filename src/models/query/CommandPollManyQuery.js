@@ -11,7 +11,7 @@ class CommandPollManyQuery {
      * @param {string} options.networkIds - List of network IDs
      * @param {string} options.deviceTypeIds - List of devicetype IDs
      * @param {string} options.names - Command names
-     * @param {number} options.timestamp - Timestamp to start from
+     * @param {string} options.timestamp - Timestamp to start from
      * @param {number} options.waitTimeout - Wait timeout in seconds
      * @param {number} options.limit - Limit number of commands
      */

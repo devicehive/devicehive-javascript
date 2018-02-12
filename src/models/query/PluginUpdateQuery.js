@@ -20,7 +20,8 @@ class PluginUpdateQuery {
      * @param {string} [options.description] - Plugin description
      * @param {string} [options.parameters] - Plugin parameters
      */
-    constructor({ deviceId, networkIds, deviceTypeIds, names, returnCommands, returnUpdatedCommands, returnNotifications, status, parameters } = {}) {
+    constructor({ topicName, deviceId, networkIds, deviceTypeIds, names, returnCommands, returnUpdatedCommands, returnNotifications, status, name, description, parameters } = {}) {
+        this.topicName = topicName;
         this.deviceId = deviceId;
         this.networkIds = networkIds;
         this.deviceTypeIds = deviceTypeIds;
@@ -132,10 +133,11 @@ class PluginUpdateQuery {
 
     /**
      *
-     * @returns {{deviceId: string, networkIds: string, deviceTypeIds: string, names: string, returnCommands: boolean, returnUpdatedCommands: boolean, returnNotifications: boolean, status: string,name: string, description: string, parameters: string }}
+     * @returns {{topicName: string, deviceId: string, networkIds: string, deviceTypeIds: string, names: string, returnCommands: boolean, returnUpdatedCommands: boolean, returnNotifications: boolean, status: string,name: string, description: string, parameters: string }}
      */
     toObject() {
         return {
+            topicName: this.topicName,
             deviceId: this.deviceId,
             networkIds: this.networkIds,
             deviceTypeIds: this.deviceTypeIds,
