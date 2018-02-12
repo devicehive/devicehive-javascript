@@ -1,16 +1,20 @@
+const BaseModel = require(`../BaseModel`);
+
+
 /**
- * Command Poll Query model
+ * CommandWaitQuery class
  */
-class CommandWaitQuery {
+class CommandWaitQuery extends BaseModel {
 
     /**
-     * Creates Command Poll Query model
-     * @param {object} options - Options for instance
+     * Creates new CommandWaitQuery model
+     * @param {Object} options - model options object
+     * @param {Number} options.waitTimeout - wait timeout (sec)
      */
     constructor({ waitTimeout } = {}) {
-        const me = this;
+        super();
 
-        me.waitTimeout = waitTimeout;
+        this.waitTimeout = waitTimeout;
     }
 
     get waitTimeout() {
@@ -22,13 +26,11 @@ class CommandWaitQuery {
     }
 
     /**
-     *
+     * Returns instance as a plain JS object
      * @returns {Object}
      */
     toObject() {
-        const me = this;
-
-        return { waitTimeout: me.waitTimeout }
+        return { waitTimeout: this.waitTimeout }
     }
 }
 

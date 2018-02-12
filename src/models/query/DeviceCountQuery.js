@@ -1,23 +1,26 @@
+const BaseModel = require(`../BaseModel`);
+
+
 /**
- * Device Count Query model
+ * DeviceCountQuery class
  */
-class DeviceCountQuery {
+class DeviceCountQuery extends BaseModel {
 
     /**
-     * Creates Device Count Query model
-     * @param {object} options - Options for instance
+     * Creates new DeviceCountQuery model
+     * @param {object} options - model options object
      * @param {string} options.name - Filter by device name
      * @param {string} options.namePattern - Filter by device name pattern. In pattern wildcards '%' and '_' can be used
      * @param {number} options.networkId - Filter by associated network identifier
      * @param {string} options.networkName - Filter by associated network name
      */
     constructor({ name, namePattern, networkId, networkName } = {}) {
-        const me = this;
+        super();
 
-        me.name = name;
-        me.namePattern = namePattern;
-        me.networkId = networkId;
-        me.networkName = networkName;
+        this.name = name;
+        this.namePattern = namePattern;
+        this.networkId = networkId;
+        this.networkName = networkName;
     }
 
     get name() {
@@ -53,17 +56,15 @@ class DeviceCountQuery {
     }
 
     /**
-     *
+     * Returns instance as a plain JS object
      * @returns {Object}
      */
     toObject() {
-        const me = this;
-
         return {
-            name: me.name,
-            namePattern: me.namePattern,
-            networkId: me.networkId,
-            networkName: me.networkName
+            name: this.name,
+            namePattern: this.namePattern,
+            networkId: this.networkId,
+            networkName: this.networkName
         }
     }
 }

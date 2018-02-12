@@ -1,10 +1,10 @@
 /**
- * Unsupported Transport Error
+ * WebSocketError class
  */
 class WebSocketError extends Error {
 
     /**
-     * Creates WebSocketError
+     * Creates new WebSocketError
      */
     constructor(error) {
         super();
@@ -12,5 +12,6 @@ class WebSocketError extends Error {
         this.message = `Error using WebSocket.\nPlease, check server URL or try again later.\n${error.message}`;
     }
 }
+
 
 module.exports = WebSocketError;

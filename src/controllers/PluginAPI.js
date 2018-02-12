@@ -36,18 +36,16 @@ class PluginAPI extends API {
      * @returns {Promise} Plugin
      */
     register(plugin, pluginRegisterQuery = new PluginRegisterQuery()) {
-        const pluginBody = {
+        return this.send(ApiMap.registerPlugin, pluginRegisterQuery.toObject(), {
             name: plugin.name,
             description: plugin.description,
             parameters: plugin.parameters
-        };
-
-        return this.send(ApiMap.registerPlugin, pluginRegisterQuery.toObject(), pluginBody);
+        });
     }
 
     /**
      * Updates a plugin
-     * @param {PluginUpdateQuery} PluginUpdateQuery
+     * @param {PluginUpdateQuery} pluginUpdateQuery
      * @returns {Promise} Plugin
      */
     update(pluginUpdateQuery = new PluginUpdateQuery()) {

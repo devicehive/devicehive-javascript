@@ -1,10 +1,10 @@
 /**
- * Unsupported Transport Error
+ * NoApiError class
  */
 class NoApiError extends Error {
 
     /**
-     * Creates NoApiError
+     * Creates new NoApiError
      */
     constructor() {
         super();
@@ -12,5 +12,6 @@ class NoApiError extends Error {
         this.message = `No API selected.\nPlease, choose one according to documentation.`;
     }
 }
+
 
 module.exports = NoApiError;

@@ -1,21 +1,25 @@
+const BaseModel = require(`./BaseModel`);
+
+
 /**
  * DeviceNotification model
  */
-class DeviceNotification {
+class DeviceNotification extends BaseModel {
 
     /**
-     * Creates DeviceNotification model
-     * @param {Object} options ({
-     *      id,
-     *      deviceId,
-     *      networkId,
-     *      deviceTypeId,
-     *      notification,
-     *      timestamp,
-     *      parameters
-     * })
+     * Creates new DeviceNotification model
+     * @param {Object} options - model options object
+     * @param {} options.id
+     * @param {} options.deviceId
+     * @param {} options.networkId
+     * @param {} options.deviceTypeId
+     * @param {} options.notification
+     * @param {} options.timestamp
+     * @param {} options.parameters
      */
     constructor({ id, deviceId, networkId, deviceTypeId, notification, timestamp, parameters } = {}) {
+        super();
+
         this.id = id;
         this.deviceId = deviceId;
         this.networkId = networkId;
@@ -90,8 +94,8 @@ class DeviceNotification {
     }
 
     /**
-     * Returns a copy of instance
-     * @returns {object} A copy of instance
+     * Returns instance as a plain JS object
+     * @returns {Object}
      */
     toObject() {
         return {
@@ -103,14 +107,6 @@ class DeviceNotification {
             timestamp: this.timestamp,
             parameters: this.parameters
         };
-    }
-
-    /**
-     * Returns a stringified instance
-     * @returns {string} A stringified instance
-     */
-    toString() {
-        JSON.stringify(this.toObject());
     }
 }
 

@@ -47,7 +47,6 @@ class NetworkAPI extends API {
 
     /**
      * Updates a network
-     * @param {number} networkId
      * @param {Network} network data
      * @returns {Promise} Network
      */

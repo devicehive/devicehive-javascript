@@ -36,7 +36,7 @@
     "consistent-return" : "error",
     "curly" : "error",
     "dot-location" : ["error", "property"],
-    "dot-notation" : "error",
+    "dot-notation" : "warn",
     "eqeqeq" : "error",
     "no-case-declarations" : "error",
     "no-empty-function" : "error",
@@ -81,7 +81,6 @@
     "block-spacing" : "error",
     "camelcase" : "error",
     "comma-spacing" : ["error", {"before" : false, "after" : true}],
-    "id-blacklist": ["error", "e", "cb"],
     "key-spacing" : ["error", {"afterColon" : true}],
     "keyword-spacing" : "error",
     "new-cap" : "error",
@@ -94,14 +93,6 @@
     "no-whitespace-before-property" : "error",
     "object-curly-spacing": ["error", "always"],
     "operator-assignment" : ["error", "always"],
-    "require-jsdoc" : ["warn",
-      {
-        "require" : {
-          "FunctionDeclaration" : true,
-          "MethodDefinition" : true
-        }
-      }
-    ],
     "sort-imports" : "error",
     "arrow-spacing" : "error",
     "no-class-assign" : "error",

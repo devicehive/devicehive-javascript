@@ -4,6 +4,7 @@ const NotificationListQuery = require('../models/query/NotificationListQuery');
 const NotificationPollQuery = require('../models/query/NotificationPollQuery');
 const NotificationPollManyQuery = require('../models/query/NotificationPollManyQuery');
 
+
 /**
  * Returns information about the current notification
  */

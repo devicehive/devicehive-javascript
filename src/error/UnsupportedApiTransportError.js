@@ -1,10 +1,10 @@
 /**
- * Unsupported Transport Error
+ * UnsupportedApiTransportError class
  */
 class UnsupportedApiTransportError extends Error {
 
     /**
-     * Creates UnsupportedApiTransportError
+     * Creates new UnsupportedApiTransportError
      */
     constructor({ key, transport }) {
         super();
@@ -12,5 +12,6 @@ class UnsupportedApiTransportError extends Error {
         this.message = `${key} API is not supported by the ${transport} transport.`;
     }
 }
+
 
 module.exports = UnsupportedApiTransportError;

@@ -1,19 +1,23 @@
+const BaseModel = require(`./BaseModel`);
+
+
 /**
  * UserToken model
  */
-class UserToken {
+class UserToken extends BaseModel {
 
     /**
-     * Creates UserToken model
-     * @param {Object} options ({
-     *      userId,
-     *      actions,
-     *      networkIds,
-     *      deviceTypeIds,
-     *      expiration
-     * })
+     * Creates new UserToken model
+     * @param {Object} options - model options object
+     * @param {} options.userId
+     * @param {} options.actions
+     * @param {} options.networkIds
+     * @param {} options.deviceTypeIds
+     * @param {} options.expiration
      */
     constructor({ userId, actions, networkIds, deviceTypeIds, expiration } = {}) {
+        super();
+
         this.userId = userId;
         this.actions = actions;
         this.networkIds = networkIds;
@@ -62,8 +66,8 @@ class UserToken {
     }
 
     /**
-     * Returns a copy of instance
-     * @returns {object} A copy of instance
+     * Returns instance as a plain JS object
+     * @returns {Object}
      */
     toObject() {
         return {
@@ -73,14 +77,6 @@ class UserToken {
             deviceTypeIds: this.deviceTypeIds,
             expiration: this.expiration
         }
-    }
-
-    /**
-     * Returns a stringified instance
-     * @returns {string} A stringified instance
-     */
-    toString() {
-        JSON.stringify(this.toObject());
     }
 }
 

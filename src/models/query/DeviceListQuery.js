@@ -1,11 +1,14 @@
+const BaseModel = require(`../BaseModel`);
+
+
 /**
- * Device List Query model
+ * DeviceListQuery class
  */
-class DeviceListQuery {
+class DeviceListQuery extends BaseModel {
 
     /**
-     * Creates Device List Query model
-     * @param {object} options - Options for instance
+     * Creates new DeviceListQuery model
+     * @param {object} options - model options object
      * @param {string} options.name - Filter by device name
      * @param {string} options.namePattern - Filter by device name pattern. In pattern wildcards '%' and '_' can be used
      * @param {number} options.networkId - Filter by associated network identifier
@@ -16,16 +19,16 @@ class DeviceListQuery {
      * @param {number} options.skip - Number of records to skip from the result list
      */
     constructor({ name, namePattern, networkId, networkName, sortField, sortOrder, take, skip } = {}) {
-        const me = this;
+        super();
 
-        me.name = name;
-        me.namePattern = namePattern;
-        me.networkId = networkId;
-        me.networkName = networkName;
-        me.sortField = sortField;
-        me.sortOrder = sortOrder;
-        me.take = take;
-        me.skip = skip;
+        this.name = name;
+        this.namePattern = namePattern;
+        this.networkId = networkId;
+        this.networkName = networkName;
+        this.sortField = sortField;
+        this.sortOrder = sortOrder;
+        this.take = take;
+        this.skip = skip;
     }
 
     get name() {
@@ -93,21 +96,19 @@ class DeviceListQuery {
     }
 
     /**
-     *
+     * Returns instance as a plain JS object
      * @returns {Object}
      */
     toObject() {
-        const me = this;
-
         return {
-            name: me.name,
-            namePattern: me.namePattern,
-            networkId: me.networkId,
-            networkName: me.networkName,
-            sortField: me.sortField,
-            sortOrder: me.sortOrder,
-            take: me.take,
-            skip: me.skip
+            name: this.name,
+            namePattern: this.namePattern,
+            networkId: this.networkId,
+            networkName: this.networkName,
+            sortField: this.sortField,
+            sortOrder: this.sortOrder,
+            take: this.take,
+            skip: this.skip
         }
     }
 }

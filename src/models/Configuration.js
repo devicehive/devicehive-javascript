@@ -1,17 +1,21 @@
+const BaseModel = require(`./BaseModel`);
+
+
 /**
  * Configuration model
  */
-class Configuration {
+class Configuration extends BaseModel {
 
     /**
-     * Creates Configuration model
-     * @param {Object} params ({
-     *      name,
-     *      value,
-     *      entityVersion
-     * })
+     * Creates new Configuration model
+     * @param {Object} options - model options object
+     * @param {} options.name
+     * @param {} options.value
+     * @param {} options.entityVersion
      */
     constructor({ name, value, entityVersion } = {}) {
+        super();
+
         this.name = name;
         this.value = value;
         this.entityVersion = entityVersion;
@@ -42,8 +46,8 @@ class Configuration {
     }
 
     /**
-     * Returns a copy of instance
-     * @returns {object} A copy of instance
+     * Returns instance as a plain JS object
+     * @returns {Object}
      */
     toObject() {
         return {
@@ -51,14 +55,6 @@ class Configuration {
             value: this.value,
             entityVersion: this.entityVersion
         };
-    }
-
-    /**
-     * Returns a stringified instance
-     * @returns {string} A stringified instance
-     */
-    toString() {
-        JSON.stringify(this.toObject());
     }
 }
 

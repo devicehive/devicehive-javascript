@@ -1,17 +1,21 @@
+const BaseModel = require(`./BaseModel`);
+
+
 /**
  * Network model
  */
-class Network {
+class Network extends BaseModel {
 
     /**
-     * Creates Network model
-     * @param {Object} options ({
-     *      id,
-     *      name,
-     *      description
-     * })
+     * Creates new Network model
+     * @param {Object} options - model options object
+     * @param {} options.id
+     * @param {} options.name
+     * @param {} options.description
      */
     constructor({ id, name, description } = {}) {
+        super();
+
         this.id = id;
         this.name = name;
         this.description = description;
@@ -42,8 +46,8 @@ class Network {
     }
 
     /**
-     * Returns a copy of instance
-     * @returns {object} A copy of instance
+     * Returns instance as a plain JS object
+     * @returns {Object}
      */
     toObject() {
         return {
@@ -51,14 +55,6 @@ class Network {
             name: this.name,
             description: this.description
         };
-    }
-
-    /**
-     * Returns a stringified instance
-     * @returns {string} A stringified instance
-     */
-    toString() {
-        JSON.stringify(this.toObject());
     }
 }
 

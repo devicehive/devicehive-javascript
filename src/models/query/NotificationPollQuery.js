@@ -1,23 +1,26 @@
+const BaseModel = require(`../BaseModel`);
+
+
 /**
- * Notification Poll Query model
+ * NotificationPollQuery class
  */
-class NotificationPollQuery {
+class NotificationPollQuery extends BaseModel {
 
     /**
-     * Creates Notification Poll Query model
-     * @param {object} options - Options for instance
+     * Creates new NotificationPollQuery model
+     * @param {object} options - model options object
      * @param {string} options.deviceId - Device ID
      * @param {string} options.names - Notification names
      * @param {number} options.timestamp - Timestamp to start from
      * @param {number} options.waitTimeout - Wait timeout in seconds
      */
     constructor({ deviceId, names, timestamp, waitTimeout } = {}) {
-        const me = this;
+        super();
 
-        me.deviceId = deviceId;
-        me.names = names;
-        me.timestamp = timestamp;
-        me.waitTimeout = waitTimeout;
+        this.deviceId = deviceId;
+        this.names = names;
+        this.timestamp = timestamp;
+        this.waitTimeout = waitTimeout;
     }
 
     get deviceId() {
@@ -53,17 +56,15 @@ class NotificationPollQuery {
     }
 
     /**
-     *
-     * @returns {{deviceId: *, names: *, timestamp: *, returnUpdatedCommands: *, waitTimeout: *, limit: *}}
+     * Returns instance as a plain JS object
+     * @returns {Object}
      */
     toObject() {
-        const me = this;
-
         return {
-            deviceId: me.deviceId,
-            names: me.names,
-            timestamp: me.timestamp,
-            waitTimeout: me.waitTimeout
+            deviceId: this.deviceId,
+            names: this.names,
+            timestamp: this.timestamp,
+            waitTimeout: this.waitTimeout
         }
     }
 }

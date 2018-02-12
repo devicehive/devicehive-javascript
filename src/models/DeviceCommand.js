@@ -1,26 +1,31 @@
+const BaseModel = require(`./BaseModel`);
+
+
 /**
  * DeviceCommand model
  */
-class DeviceCommand {
+class DeviceCommand extends BaseModel {
 
     /**
-     * DeviceCommand model
-     * @param {Object} params ({
-     *      id,
-     *      command,
-     *      timestamp,
-     *      lastUpdated,
-     *      userId, deviceId,
-     *      networkId,
-     *      deviceTypeId,
-     *      parameters,
-     *      lifetime,
-     *      status,
-     *      result
-     * })
+     * Creates new DeviceCommand model
+     * @param {Object} options - model options object
+     * @param {} options.id
+     * @param {} options.command
+     * @param {} options.timestamp
+     * @param {} options.lastUpdated
+     * @param {} options.userId
+     * @param {} options.deviceId
+     * @param {} options.networkId
+     * @param {} options.deviceTypeId
+     * @param {} options.parameters
+     * @param {} options.lifetime
+     * @param {} options.status
+     * @param {} options.result
      */
     constructor({ id, command, timestamp, lastUpdated, userId, deviceId, networkId,
                     deviceTypeId, parameters, lifetime, status, result } = {}) {
+        super();
+
         this.id = id;
         this.command = command;
         this.timestamp = timestamp;
@@ -148,8 +153,8 @@ class DeviceCommand {
     }
 
     /**
-     * Returns a copy of instance
-     * @returns {object} A copy of instance
+     * Returns instance as a plain JS object
+     * @returns {Object}
      */
     toObject() {
         return {
@@ -166,14 +171,6 @@ class DeviceCommand {
             status: this.status,
             result: this.result
         };
-    }
-
-    /**
-     * Returns a stringified instance
-     * @returns {string} A stringified instance
-     */
-    toString() {
-        return JSON.stringify(this.toObject());
     }
 }
 

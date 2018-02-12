@@ -1,8 +1,8 @@
 const Transport = require(`./base/Transport`);
 const Utils = require('../utils/Utils');
 const WebSocket = require('universal-websocket-client');
-
 const WebSocketError = require('../error/WebSocketError');
+
 
 /**
  * WebSocket Transport
@@ -10,6 +10,7 @@ const WebSocketError = require('../error/WebSocketError');
 class WS extends Transport {
 
     static get TYPE() { return `ws`; }
+
 
     /**
      * Creates WS
@@ -97,7 +98,6 @@ class WS extends Transport {
                 });
             });
     }
-
 }
 
 

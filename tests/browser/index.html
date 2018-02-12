@@ -14,56 +14,50 @@
             pluginServiceURL: 'http://localhost:8110/dh/rest'
         });
 
-        const CommandPollQuery = DeviceHive.models.query.CommandPollQuery;
-        const NotificationPollQuery = DeviceHive.models.query.NotificationPollQuery;
+        const wsDeviceHive = new DeviceHive({
+            login: `dhadmin`,
+            password: `dhadmin_#911`,
+            mainServiceURL: 'ws://localhost:8080/dh/websocket'
+        });
+
         const DeviceListQuery = DeviceHive.models.query.DeviceListQuery;
+        const DeviceTypeListQuery = DeviceHive.models.query.DeviceTypeListQuery;
+        const NetworkListQuery = DeviceHive.models.query.NetworkListQuery;
 
-        const Device = DeviceHive.models.Device;
-
-        const query = new CommandPollQuery({
-            deviceId: 'e50d6085-2aba-48e9-b1c3-73c673e414be',
-            names: [ 'test' ]
-        });
-
-        const nQuery = new NotificationPollQuery({
-            deviceId: 'e50d6085-2aba-48e9-b1c3-73c673e414be',
-            names: [ 'test' ]
-        });
-
-        const query1 = new DeviceListQuery({
+        const deviceListQuery = new DeviceListQuery({
             networkId: 1
         });
 
-        const device = new Device({
-            id: `myTestId`,
-            name: `myTestName`,
-            networkId: 1,
-            deviceTypeId: 1,
-            blocked: false
-        });
+        const deviceTypeListQuery = new DeviceTypeListQuery();
+        const networkListQuery = new NetworkListQuery();
 
-        httpDeviceHive.on(`message`, (message) => {
-            console.log(message);
-        });
+        void async function start () {
+            try {
+                await httpDeviceHive.connect();
+                await wsDeviceHive.connect();
 
-        httpDeviceHive.connect()
-            .then(() => httpDeviceHive.command.poll(query))
-            .then((data) => console.log(data))
-            .catch((error) => console.warn(error));
+                {
+                    const {accessToken, refreshToken} = await httpDeviceHive.token.login('dhadmin', 'dhadmin_#911');
+                    console.log({accessToken, refreshToken});
+                    console.log(await  httpDeviceHive.device.list(deviceListQuery));
+                    console.log(await  httpDeviceHive.deviceType.list(deviceTypeListQuery));
+                    console.log(await  httpDeviceHive.network.list(networkListQuery));
+                    console.log(await  httpDeviceHive.network.list(networkListQuery));
+                    console.log(await  httpDeviceHive.token.refresh(refreshToken));
+                }
 
-        // httpDeviceHive.connect()
-        //     .then(() => httpDeviceHive.device.list(query1))
-        //     .then((data) => console.log(data))
-        //     .then(() => httpDeviceHive.device.add(device))
-        //     .then((data) => console.log(data))
-        //     .then(() => httpDeviceHive.device.list(query1))
-        //     .then((data) => console.log(data))
-        //     .then(() => httpDeviceHive.device.delete(device.id))
-        //     .then((data) => console.log(data))
-        //     .then(() => httpDeviceHive.device.list(query1))
-        //     .then((data) => console.log(data))
-        //     .catch((error) => console.warn(error));
-
+                {
+                    const {accessToken, refreshToken} = await wsDeviceHive.token.login('dhadmin', 'dhadmin_#911');
+                    console.log({accessToken, refreshToken});
+                    console.log(await  wsDeviceHive.device.list(deviceListQuery));
+                    console.log(await  wsDeviceHive.deviceType.list(deviceTypeListQuery));
+                    console.log(await  wsDeviceHive.network.list(networkListQuery));
+                    console.log(await  wsDeviceHive.token.refresh(refreshToken));
+                }
+            } catch (error) {
+                console.warn(error);
+            }
+        }();
     </script>
 </head>
 <body>

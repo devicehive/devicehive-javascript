@@ -1,23 +1,27 @@
+const BaseModel = require(`./BaseModel`);
+
+
 /**
  * Plugin model
  */
-class Plugin {
+class Plugin extends BaseModel {
 
     /**
-     * Creates Plugin model
-     * @param {Object} options ({
-     *      id,
-     *      name,
-     *      description,
-     *      topicName,
-     *      filter,
-     *      status,
-     *      subscriptionId,
-     *      userId,
-     *      parameters
-     * })
+     * Creates new Plugin model
+     * @param {Object} options - model options object
+     * @param {} options.id
+     * @param {} options.name
+     * @param {} options.description
+     * @param {} options.topicName
+     * @param {} options.filter
+     * @param {} options.status
+     * @param {} options.subscriptionId
+     * @param {} options.userId
+     * @param {} options.parameters
      */
     constructor({ id, name, description, topicName, filter, status, subscriptionId, userId, parameters } = {}) {
+        super();
+
         this.id = id;
         this.name = name;
         this.description = description;
@@ -102,8 +106,8 @@ class Plugin {
     }
 
     /**
-     * Returns a copy of instance
-     * @returns {object} A copy of instance
+     * Returns instance as a plain JS object
+     * @returns {Object}
      */
     toObject() {
         return {
@@ -117,14 +121,6 @@ class Plugin {
             userId: this.userId,
             parameters: this.parameters
         }
-    }
-
-    /**
-     * Returns a stringified instance
-     * @returns {string} A stringified instance
-     */
-    toString() {
-        JSON.stringify(this.toObject());
     }
 }
 

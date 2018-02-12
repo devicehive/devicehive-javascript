@@ -1,11 +1,10 @@
-
 /**
- * Unsupported Transport Error
+ * InvalidCredentialsError class
  */
 class InvalidCredentialsError extends Error {
 
     /**
-     * Creates InvalidCredentialsError
+     * Creates new InvalidCredentialsError
      */
     constructor() {
         super();
@@ -13,5 +12,6 @@ class InvalidCredentialsError extends Error {
         this.message = `Invalid credentials error during attempt to authenticate.`;
     }
 }
+
 
 module.exports = InvalidCredentialsError;

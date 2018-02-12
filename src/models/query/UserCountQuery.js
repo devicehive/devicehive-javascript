@@ -1,11 +1,14 @@
+const BaseModel = require(`../BaseModel`);
+
+
 /**
- * User Count Query model
+ * UserCountQuery class
  */
-class UserCountQuery {
+class UserCountQuery extends BaseModel {
     
     /**
-     * Creates User Count Query
-     * @param {object} options - Options for instance
+     * Creates new UserCountQuery model
+     * @param {object} options - model options object
      * @param {string} login - Filter by user login
      * @param {string} loginPattern - Filter by user login pattern
      * @param {number} role - Filter by user login patter
@@ -13,12 +16,12 @@ class UserCountQuery {
      * 
      */
     constructor({ login, loginPattern, role, status } = {}) {
-        const me = this;
+        super();
 
-        me.login = login;
-        me.loginPattern = loginPattern;
-        me.role = role;
-        me.status = status;
+        this.login = login;
+        this.loginPattern = loginPattern;
+        this.role = role;
+        this.status = status;
     }
 
     get login() {
@@ -54,17 +57,15 @@ class UserCountQuery {
     }
 
     /**
-     *
+     * Returns instance as a plain JS object
      * @returns {Object}
      */
     toObject() {
-        const me = this;
-
         return {
-            login: me.login,
-            loginPattern: me.loginPattern,
-            role: me.role,
-            status: me.status
+            login: this.login,
+            loginPattern: this.loginPattern,
+            role: this.role,
+            status: this.status
         }
     }
 }

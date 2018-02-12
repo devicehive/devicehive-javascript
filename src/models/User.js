@@ -1,23 +1,27 @@
+const BaseModel = require(`./BaseModel`);
+
+
 /**
  * User model
  */
-class User {
+class User extends BaseModel {
 
     /**
-     * Creates User model
-     * @param {Object} options ({
-     *      id,
-     *      login,
-     *      role,
-     *      status,
-     *      lastLogin,
-     *      data,
-     *      password,
-     *      introReviewed,
-     *      allDeviceTypesAvailable
-     * })
+     * Creates new User model
+     * @param {Object} options - model options object
+     * @param {} options.id
+     * @param {} options.login
+     * @param {} options.role
+     * @param {} options.status
+     * @param {} options.lastLogin
+     * @param {} options.data
+     * @param {} options.password
+     * @param {} options.introReviewed
+     * @param {} options.allDeviceTypesAvailable
      */
     constructor({ id, login, role, status, lastLogin, data, password, introReviewed, allDeviceTypesAvailable } = {}) {
+        super();
+
         this.id = id;
         this.login = login;
         this.role = role;
@@ -110,8 +114,8 @@ class User {
     }
 
     /**
-     * Returns a copy of instance
-     * @returns {object} A copy of instance
+     * Returns instance as a plain JS object
+     * @returns {Object}
      */
     toObject() {
         return {
@@ -125,14 +129,6 @@ class User {
             introReviewed: this.introReviewed,
             allDeviceTypesAvailable: this.allDeviceTypesAvailable
         }
-    }
-
-    /**
-     * Returns a stringified instance
-     * @returns {string} A stringified instance
-     */
-    toString() {
-        JSON.stringify(this.toObject());
     }
 }
 

@@ -7,14 +7,19 @@ const EventEmitter = require('events');
 class Transport extends EventEmitter {
 
     /**
-     *
+     * Authenticate transport with token
+     * @param token
      */
-    authenticate(token) {}
+    authenticate(token) {
+        console.warn(`Method "authenticate" should be implemented in nested classes`);
+    }
 
     /**
-     *
+     * Send message via transport
      */
-    send() {}
+    send() {
+        console.warn(`Method "send" should be implemented in nested classes`);
+    }
 }
 
 

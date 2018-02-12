@@ -1,11 +1,14 @@
+const BaseModel = require(`../BaseModel`);
+
+
 /**
- * User List Query
+ * UserListQuery class
  */
-class UserListQuery {
+class UserListQuery extends BaseModel {
 
     /**
-     * Creates User List Query
-     * @param {object} options - Options for instance]
+     * Creates new UserListQuery model
+     * @param {object} options - model options object
      * @param {string} login - Filter by user login
      * @param {string} loginPattern - Filter by user login pattern
      * @param {number} role - Filter by user login patter
@@ -16,16 +19,16 @@ class UserListQuery {
      * @param {number} skip - Number of records to skip from the result list
      */
     constructor({ login, loginPattern, role, status, sortField, sortOrder, take, skip } = {}) {
-        const me = this;
+        super();
 
-        me.login = login;
-        me.loginPattern = loginPattern;
-        me.role = role;
-        me.status = status;
-        me.sortField = sortField;
-        me.sortOrder = sortOrder;
-        me.take = take;
-        me.skip = skip;
+        this.login = login;
+        this.loginPattern = loginPattern;
+        this.role = role;
+        this.status = status;
+        this.sortField = sortField;
+        this.sortOrder = sortOrder;
+        this.take = take;
+        this.skip = skip;
     }
 
     get login() {
@@ -93,21 +96,19 @@ class UserListQuery {
     }
 
     /**
-     *
+     * Returns instance as a plain JS object
      * @returns {Object}
      */
     toObject() {
-        const me = this;
-
         return {
-            login: me.login,
-            loginPattern: me.loginPattern,
-            role: me.role,
-            status: me.status,
-            sortField: me.sortField,
-            sortOrder: me.sortOrder,
-            take: me.take,
-            skip: me.skip
+            login: this.login,
+            loginPattern: this.loginPattern,
+            role: this.role,
+            status: this.status,
+            sortField: this.sortField,
+            sortOrder: this.sortOrder,
+            take: this.take,
+            skip: this.skip
         }
     }
 }

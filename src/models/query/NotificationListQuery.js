@@ -1,11 +1,14 @@
+const BaseModel = require(`../BaseModel`);
+
+
 /**
- * Notification List Query model
+ * NotificationListQuery class
  */
-class NotificationListQuery {
+class NotificationListQuery extends BaseModel {
 
     /**
-     * Creates Notification List Query model
-     * @param {object} options - Options for instance
+     * Creates new NotificationListQuery model
+     * @param {object} options - model options object
      * @param {string} options.deviceId - Device ID
      * @param {string} options.start - Start timestamp
      * @param {string} options.end - End timestamp
@@ -17,17 +20,17 @@ class NotificationListQuery {
      * @param {number} options.skip - Skip param
      */
     constructor({ deviceId, start, end, notification, status, sortField, sortOrder, take, skip } = {}) {
-        const me = this;
+        super();
 
-        me.deviceId = deviceId;
-        me.start = start;
-        me.end = end;
-        me.notification = notification;
-        me.status = status;
-        me.sortField = sortField;
-        me.sortOrder = sortOrder;
-        me.take = take;
-        me.skip = skip;
+        this.deviceId = deviceId;
+        this.start = start;
+        this.end = end;
+        this.notification = notification;
+        this.status = status;
+        this.sortField = sortField;
+        this.sortOrder = sortOrder;
+        this.take = take;
+        this.skip = skip;
     }
 
     get deviceId() {
@@ -103,22 +106,20 @@ class NotificationListQuery {
     }
 
     /**
-     *
+     * Returns instance as a plain JS object
      * @returns {Object}
      */
     toObject() {
-        const me = this;
-
         return {
-            deviceId: me.deviceId,
-            start: me.start,
-            end: me.end,
-            notification: me.notification,
-            status: me.status,
-            sortField: me.sortField,
-            sortOrder: me.sortOrder,
-            take: me.take,
-            skip: me.skip
+            deviceId: this.deviceId,
+            start: this.start,
+            end: this.end,
+            notification: this.notification,
+            status: this.status,
+            sortField: this.sortField,
+            sortOrder: this.sortOrder,
+            take: this.take,
+            skip: this.skip
         }
     }
 }

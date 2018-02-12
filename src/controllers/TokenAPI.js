@@ -3,7 +3,7 @@ const ApiMap = require(`./transportResolvers/ApiMap`);
 
 
 /**
- * Authentificate using login and password
+ * Authenticate using login and password
  */
 class TokenAPI extends API {
 
@@ -29,24 +29,24 @@ class TokenAPI extends API {
      * Create user token
      * @param {UserToken} userToken
      */
-    createUserToken(token) {
-        return this.send(ApiMap.createUserToken, {}, token.toObject());
+    createUserToken(userToken) {
+        return this.send(ApiMap.createUserToken, {}, userToken.toObject());
     }
 
     /**
      * Create plugin token
      * @param {PluginToken} pluginToken
      */
-    createPluginToken(token) {
-        return this.send(ApiMap.createPluginToken, {}, token.toObject());
+    createPluginToken(pluginToken) {
+        return this.send(ApiMap.createPluginToken, {}, pluginToken.toObject());
     }
 
     /**
-     * Refresg token
+     * Refresh token
      * @param {string} refreshToken
      */
     refresh(refreshToken) {
-        return this.send(ApiMap.refreshToken, {}, refreshToken); // TODO
+        return this.send(ApiMap.refreshToken, {}, { refreshToken: refreshToken });
     }
 }
 

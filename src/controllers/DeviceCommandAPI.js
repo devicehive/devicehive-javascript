@@ -4,6 +4,7 @@ const CommandListQuery = require('../models/query/CommandListQuery');
 const CommandPollQuery = require('../models/query/CommandPollQuery');
 const CommandPollManyQuery = require('../models/query/CommandPollManyQuery');
 
+
 /**
  * Returns information about the current command
  */

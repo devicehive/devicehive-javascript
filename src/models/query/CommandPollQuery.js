@@ -1,11 +1,14 @@
+const BaseModel = require(`../BaseModel`);
+
+
 /**
- * Command Poll Query model
+ * CommandPollQuery class
  */
-class CommandPollQuery {
+class CommandPollQuery extends BaseModel {
 
     /**
-     * Creates Command Poll Query model
-     * @param {object} options - Options for instance
+     * Creates new CommandPollQuery model
+     * @param {object} options - model options object
      * @param {string} options.deviceId - Device ID
      * @param {string} options.names - Command names
      * @param {number} options.timestamp - Timestamp to start from
@@ -14,14 +17,14 @@ class CommandPollQuery {
      * @param {number} options.limit - Limit number of commands
      */
     constructor({ deviceId, names, timestamp, returnUpdatedCommands, waitTimeout, limit } = {}) {
-        const me = this;
+        super();
 
-        me.deviceId = deviceId;
-        me.names = names;
-        me.timestamp = timestamp;
-        me.returnUpdatedCommands = returnUpdatedCommands;
-        me.waitTimeout = waitTimeout;
-        me.limit = limit;
+        this.deviceId = deviceId;
+        this.names = names;
+        this.timestamp = timestamp;
+        this.returnUpdatedCommands = returnUpdatedCommands;
+        this.waitTimeout = waitTimeout;
+        this.limit = limit;
     }
 
     get deviceId() {
@@ -73,19 +76,17 @@ class CommandPollQuery {
     }
 
     /**
-     *
+     * Returns instance as a plain JS object
      * @returns {Object}
      */
     toObject() {
-        const me = this;
-
         return {
-            deviceId: me.deviceId,
-            names: me.names,
-            timestamp: me.timestamp,
-            returnUpdatedCommands: me.returnUpdatedCommands,
-            waitTimeout: me.waitTimeout,
-            limit: me.limit
+            deviceId: this.deviceId,
+            names: this.names,
+            timestamp: this.timestamp,
+            returnUpdatedCommands: this.returnUpdatedCommands,
+            waitTimeout: this.waitTimeout,
+            limit: this.limit
         }
     }
 }

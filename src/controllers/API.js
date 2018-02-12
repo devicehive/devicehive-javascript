@@ -1,7 +1,8 @@
 const ApiMap = require(`./transportResolvers/ApiMap`);
 
+
 /**
- * API
+ * API class
  */
 class API {
 
@@ -34,8 +35,9 @@ class API {
         return ApiMap.normalizeResponse(transport, key, response);
     }
 
+
     /**
-     *
+     * Creates new API class
      * @param strategy
      */
     constructor({ strategy }) {
@@ -49,7 +51,7 @@ class API {
      * @param key
      * @param parameters
      * @param body
-     * @returns {*|void}
+     * @returns {Promise}
      */
     send(key, parameters, body) {
         const me = this;

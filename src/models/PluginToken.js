@@ -1,19 +1,22 @@
+const BaseModel = require(`./BaseModel`);
+
 
 /**
  * PluginToken model
  */
-class PluginToken {
+class PluginToken extends BaseModel {
 
     /**
-     * Creates PluginToken model
-     * @param {Object} options ({
-     *      actions,
-     *      expiration,
-     *      type,
-     *      topicName
-     * })
+     * Creates new PluginToken model
+     * @param {Object} options - model options object
+     * @param {} options.actions
+     * @param {} options.expiration
+     * @param {} options.type
+     * @param {} options.topicName
      */
     constructor({ actions, expiration, type, topicName } = {}) {
+        super();
+
         this.actions = actions;
         this.expiration = expiration;
         this.type = type;
@@ -53,8 +56,8 @@ class PluginToken {
     }
 
     /**
-     * Returns a copy of instance
-     * @returns {object} A copy of instance
+     * Returns instance as a plain JS object
+     * @returns {Object}
      */
     toObject() {
         return {
@@ -63,14 +66,6 @@ class PluginToken {
             t: this.type,
             tpc: this.topicName
         }
-    }
-
-    /**
-     * Returns a stringified instance
-     * @returns {string} A stringified instance
-     */
-    toString() {
-        JSON.stringify(this.toObject());
     }
 }
 

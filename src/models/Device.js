@@ -1,20 +1,24 @@
+const BaseModel = require(`./BaseModel`);
+
+
 /**
  * Device model
  */
-class Device {
+class Device extends BaseModel {
 
     /**
-     * Creates Device model
-     * @param {Object} options ({
-     *      id,
-     *      name,
-     *      data,
-     *      networkId,
-     *      deviceTypeId,
-     *      blocked
-     * })
+     * Creates new Device model
+     * @param {Object} options - model options object
+     * @param {} options.id
+     * @param {} options.name
+     * @param {} options.data
+     * @param {} options.networkId
+     * @param {} options.deviceTypeId
+     * @param {} options.blocked
      */
     constructor({ id, name, data, networkId, deviceTypeId, blocked } = {}) {
+        super();
+
         this.id = id;
         this.name = name;
         this.data = data;
@@ -72,8 +76,8 @@ class Device {
     }
 
     /**
-     * Returns a copy of instance
-     * @returns {object} A copy of instance
+     * Returns instance as a plain JS object
+     * @returns {Object}
      */
     toObject() {
         return {
@@ -84,14 +88,6 @@ class Device {
             deviceTypeId: this.deviceTypeId,
             blocked: this.blocked
         };
-    }
-
-    /**
-     * Returns a stringified instance
-     * @returns {string} A stringified instance
-     */
-    toString() {
-        return JSON.stringify(this.toObject());
     }
 }
 
