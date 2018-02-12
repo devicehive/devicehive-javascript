@@ -39,6 +39,22 @@ class DeviceCommand {
     }
 
     /**
+     *
+     * @returns {*}
+     */
+    get command() {
+        return this._command;
+    }
+
+    /**
+     *
+     * @param value
+     */
+    set command(value) {
+        this._command = value;
+    }
+
+    /**
      * @returns {string} name;
      */
     get name() {
@@ -225,7 +241,7 @@ class DeviceCommand {
     toObject() {
         return {
             id: this.id,
-            command: this.command,
+            command: this._command,
             timestamp: this.timestamp,
             lastUpdated: this.lastUpdated,
             userId: this.userId,

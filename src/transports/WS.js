@@ -13,7 +13,7 @@ class WS extends Transport {
 
     /**
      * Creates WS
-     * @param {string} mainServiceURL - WebSocket URL
+     * @param {String} mainServiceURL - WebSocket URL
      */
     constructor({ mainServiceURL }) {
         super();
@@ -39,11 +39,13 @@ class WS extends Transport {
         this.socket.addEventListener('error', error => {
             this.emit('error', new WebSocketError(error));
         });
+
+        this.socket.addEventListener('open', () => this.isOpend = true);
     }
 
     /**
      * Gettting socket according to if it opened
-     * @returns {promise} when socket opened
+     * @returns {Promise} when socket opened
      */
     _getSocket() {
         return new Promise(resolve => {
@@ -61,7 +63,7 @@ class WS extends Transport {
     /**
      * TODO
      * Authenticate transport
-     * @param {string} token - Auth token
+     * @param {String} token - Auth token
      */
     authenticate(token) {
         this.send({
@@ -80,18 +82,14 @@ class WS extends Transport {
 
                 params.requestId = requestId;
 
-                return new Promise((resolve, reject) => {
+                return new Promise((resolve) => {
                     this.socket.send(JSON.stringify(params));
 
                     const listener = messageData => {
                         if (messageData.requestId === requestId) {
                             this.removeListener(params.requestId, listener);
 
-                            if (messageData.status === 'success') {
-                                resolve(messageData);
-                            } else {
-                                reject(messageData);
-                            }
+                            resolve(messageData);
                         }
                     };
 
