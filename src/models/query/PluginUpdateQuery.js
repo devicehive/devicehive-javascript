@@ -1,4 +1,3 @@
-
 /**
  * Plugin Update Query model
  */

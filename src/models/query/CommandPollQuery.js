@@ -1,4 +1,3 @@
-
 /**
  * Command Poll Query model
  */
@@ -86,7 +85,7 @@ class CommandPollQuery {
             timestamp: me.timestamp,
             returnUpdatedCommands: me.returnUpdatedCommands,
             waitTimeout: me.waitTimeout,
-            limit: me.limit,
+            limit: me.limit
         }
     }
 }

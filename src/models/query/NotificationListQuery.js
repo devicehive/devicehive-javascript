@@ -1,4 +1,3 @@
-
 /**
  * Notification List Query model
  */

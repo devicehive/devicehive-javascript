@@ -1,4 +1,3 @@
-
 /**
  * Network List Query model
  */

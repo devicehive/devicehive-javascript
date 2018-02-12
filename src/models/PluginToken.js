@@ -6,11 +6,12 @@ class PluginToken {
 
     /**
      * Creates PluginToken model
-     * @param {object} options Options for instance
-     * @param {Array} options.actions - Actions
-     * @param {string} options.expiration - Expiration date (UTC)
-     * @param {number} options.type - Token type (0 - REFRESH, 1 - ACCESS)
-     * @param {string} options.topicName - Permitted topic name
+     * @param {Object} options ({
+     *      actions,
+     *      expiration,
+     *      type,
+     *      topicName
+     * })
      */
     constructor({ actions, expiration, type, topicName } = {}) {
         this.actions = actions;
@@ -19,62 +20,34 @@ class PluginToken {
         this.topicName = topicName;
     }
 
-    /**
-     * @returns {string} actions;
-     */
     get actions() {
         return this._actions;
     }
 
-    /**
-     * @param {string} value;
-     * @returns {string} actions;
-     */
     set actions(value) {
         this._actions = value;
     }
 
-    /**
-     * @returns {string} expiration;
-     */
     get expiration() {
         return this._expiration;
     }
 
-    /**
-     * @param {string} value;
-     * @returns {string} expiration;
-     */
     set expiration(value) {
         this._expiration = value;
     }
 
-    /**
-     * @returns {string} type;
-     */
     get type() {
         return this._type; 
     }
 
-    /**
-     * @param {string} value;
-     * @returns {string} type;
-     */
     set type(value) {
         this._type = value;
     }
 
-    /**
-     * @returns {string} topicName;
-     */
     get topicName() {
         return this._topicName;
     }
 
-    /**
-     * @param {string} value;
-     * @returns {string} topicName;
-     */
     set topicName(value) {
         this._topicName = value;
     }

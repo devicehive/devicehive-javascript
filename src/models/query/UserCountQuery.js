@@ -1,4 +1,3 @@
-
 /**
  * User Count Query model
  */

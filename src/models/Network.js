@@ -1,4 +1,3 @@
-
 /**
  * Network model
  */
@@ -6,7 +5,11 @@ class Network {
 
     /**
      * Creates Network model
-     * @param {object} options ({ id, name, description })
+     * @param {Object} options ({
+     *      id,
+     *      name,
+     *      description
+     * })
      */
     constructor({ id, name, description } = {}) {
         this.id = id;
@@ -14,47 +17,26 @@ class Network {
         this.description = description;
     }
 
-    /**
-     * @returns {number} id;
-     */
     get id() {
         return this._id;
     }
 
-    /**
-    * @param {number} value;
-    * @returns {number} id;
-    */
     set id(value) {
         this._id = value;
     }
 
-    /**
-     * @returns {string} name;
-     */
     get name() {
         return this._name;
     }
 
-    /**
-     * @param {string} value;
-     * @returns {string} name;
-     */
     set name(value) {
         this._name = value;
     }
 
-    /**
-     * @returns {string} description;
-     */
     get description() {
         return this._description;
     }
 
-    /**
-     * @param {string} value;
-     * @returns {string} description;
-     */
     set description(value) {
         this._description = value;
     }
@@ -68,7 +50,7 @@ class Network {
             id: this.id,
             name: this.name,
             description: this.description
-        }
+        };
     }
 
     /**

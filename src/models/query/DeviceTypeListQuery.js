@@ -1,4 +1,3 @@
-
 /**
  * Device Type List Query model
  */

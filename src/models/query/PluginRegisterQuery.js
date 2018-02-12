@@ -1,4 +1,3 @@
-
 /**
  * Plugin Register Query model
  */
@@ -93,7 +92,7 @@ class PluginRegisterQuery {
             names: this.names,
             returnCommands: this.returnCommands,
             returnUpdatedCommands: this.returnUpdatedCommands,
-            returnNotifications: this.returnNotifications,
+            returnNotifications: this.returnNotifications
         }
     }
 }

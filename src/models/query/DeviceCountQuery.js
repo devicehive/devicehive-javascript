@@ -1,9 +1,8 @@
-
 /**
  * Device Count Query model
  */
 class DeviceCountQuery {
-    
+
     /**
      * Creates Device Count Query model
      * @param {object} options - Options for instance

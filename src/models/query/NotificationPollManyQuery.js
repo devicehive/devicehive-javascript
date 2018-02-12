@@ -1,4 +1,3 @@
-
 /**
  * Notification Poll Many Query model
  */

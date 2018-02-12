@@ -1,4 +1,3 @@
-
 /**
  * Command List query model
  */
@@ -123,5 +122,6 @@ class CommandListQuery {
         }
     }
 }
+
 
 module.exports = CommandListQuery;

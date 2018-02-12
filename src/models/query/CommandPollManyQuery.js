@@ -1,4 +1,3 @@
-
 /**
  * Command Poll Many Query model
  */
@@ -97,7 +96,7 @@ class CommandPollManyQuery {
             names: me.names,
             timestamp: me.timestamp,
             waitTimeout: me.waitTimeout,
-            limit: me.limit,
+            limit: me.limit
         }
     }
 }

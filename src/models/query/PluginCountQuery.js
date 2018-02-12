@@ -1,4 +1,3 @@
-
 /**
  * Plugin Count Query model
  */

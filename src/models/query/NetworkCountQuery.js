@@ -1,4 +1,3 @@
-
 /**
  * Network Count Query model
  */

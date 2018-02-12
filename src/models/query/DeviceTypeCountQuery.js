@@ -1,4 +1,3 @@
-
 /**
  * DevieType Count Query model
  */

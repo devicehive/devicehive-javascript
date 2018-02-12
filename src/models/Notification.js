@@ -1,4 +1,3 @@
-
 /**
  * DeviceNotification model
  */
@@ -6,86 +5,86 @@ class DeviceNotification {
 
     /**
      * Creates DeviceNotification model
-     * @param {object} options ({ id, notification, timestamp, parameters })
+     * @param {Object} options ({
+     *      id,
+     *      deviceId,
+     *      networkId,
+     *      deviceTypeId,
+     *      notification,
+     *      timestamp,
+     *      parameters
+     * })
      */
-    constructor({ id, notification, timestamp, parameters } = {}) {
+    constructor({ id, deviceId, networkId, deviceTypeId, notification, timestamp, parameters } = {}) {
         this.id = id;
+        this.deviceId = deviceId;
+        this.networkId = networkId;
+        this.deviceTypeId = deviceTypeId;
         this.notification = notification;
         this.timestamp = timestamp;
         this.parameters = parameters;
     }
 
-    /**
-     * @returns {number} id;
-     */
     get id() {
         return this._id;
     }
 
-    /**
-    * @param {number} value;
-    * @returns {number} id;
-    */
     set id(value) {
         this._id = value;
     }
 
-    /**
-     * @returns {string} name;
-     */
+    get deviceId() {
+        return this._deviceId;
+    }
+
+    set deviceId(value) {
+        this._deviceId = value;
+    }
+
+    get networkId() {
+        return this._networkId;
+    }
+
+    set networkId(value) {
+        this._networkId = value;
+    }
+
+    get deviceTypeId() {
+        return this._deviceTypeId;
+    }
+
+    set deviceTypeId(value) {
+        this._deviceTypeId = value;
+    }
+
     get name() {
         return this._name;
     }
 
-    /**
-     * @param {string} value;
-     * @returns {string} name;
-     */
     set name(value) {
         this._name = value;
     }
 
-    /**
-     * @returns {string} notification;
-     */
     get notification() {
         return this._notification;
     }
 
-    /**
-     * @param {string} value;
-     * @returns {string} notification;
-     */
     set notification(value) {
         this._notification = value;
     }
 
-    /**
-     * @returns {string} timestamp;
-     */
     get timestamp() {
         return this._timestamp;
     }
 
-    /**
-     * @param {string} value;
-     * @returns {string} timestamp;
-     */
     set timestamp(value) {
         this._timestamp = value;
     }
 
-    /**
-     * @returns {object} parameters;
-     */
     get parameters() {
         return this._parameters;
     }
 
-    /**
-     * @param {object} value;
-     * @returns {object} parameters;
-     */
     set parameters(value) {
         this._parameters = value;
     }
@@ -97,10 +96,13 @@ class DeviceNotification {
     toObject() {
         return {
             id: this.id,
+            deviceId: this.deviceId,
+            networkId: this.networkId,
+            deviceTypeId: this.deviceTypeId,
             notification: this.notification,
             timestamp: this.timestamp,
             parameters: this.parameters
-        }
+        };
     }
 
     /**
