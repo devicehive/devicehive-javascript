@@ -8,7 +8,7 @@ class UserToken {
      * Creates UserToken model
      * @param {object} options ({ userId, actions, networkIds, deviceTypeIds, expiration })
      */
-    constructor({ userId, actions, networkIds, deviceTypeIds } = {}) {
+    constructor({ userId, actions, networkIds, deviceTypeIds, expiration } = {}) {
         this.userId = userId;
         this.actions = actions;
         this.networkIds = networkIds;
