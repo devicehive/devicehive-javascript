@@ -7,7 +7,6 @@ const BaseModel = require(`../BaseModel`);
 class UserListQuery extends BaseModel {
 
     /**
-<<<<<<< HEAD
      * Creates User List Query
      * @param {object} options - Options for instance
      * @param {string} options.login - Filter by user login
@@ -18,18 +17,6 @@ class UserListQuery extends BaseModel {
      * @param {string} options.sortOrder - Result list sort order. The sortField should be specified
      * @param {number} options.take - Number of records to take from the result list
      * @param {number} options.skip - Number of records to skip from the result list
-=======
-     * Creates new UserListQuery model
-     * @param {object} options - model options object
-     * @param {string} login - Filter by user login
-     * @param {string} loginPattern - Filter by user login pattern
-     * @param {number} role - Filter by user login patter
-     * @param {number} status - Filter by user status. 0 is Active, 1 is Locked Out, 2 is Disabled
-     * @param {string} sortField - Result list sort field
-     * @param {string} sortOrder - Result list sort order. The sortField should be specified
-     * @param {number} take - Number of records to take from the result list
-     * @param {number} skip - Number of records to skip from the result list
->>>>>>> 134f4616982a179e7ff79ed99275e52ef24b77e0
      */
     constructor({ login, loginPattern, role, status, sortField, sortOrder, take, skip } = {}) {
         super();
