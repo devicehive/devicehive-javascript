@@ -3,7 +3,6 @@ const HTTP = require('./transports/HTTP');
 const WS = require('./transports/WS');
 const API = require(`./controllers/API`);
 const Utils = require('./utils/Utils');
-
 const UnsupportedTransportError = require('./error/UnsupportedTransportError');
 
 
@@ -16,7 +15,7 @@ class ApiStrategy extends EventEmitter {
     /**
      * 
      * @param url
-     * @returns {Class} Transport Class
+     * @returns Transport Class
      */
     static getType(url) {
         let result;

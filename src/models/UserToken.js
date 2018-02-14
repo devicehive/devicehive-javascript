@@ -1,14 +1,23 @@
+const BaseModel = require(`./BaseModel`);
+
 
 /**
  * UserToken model
  */
-class UserToken {
+class UserToken extends BaseModel {
 
     /**
-     * Creates UserToken model
-     * @param {object} options ({ userId, actions, networkIds, deviceTypeIds, expiration })
+     * Creates new UserToken model
+     * @param {Object} options - model options object
+     * @param {} options.userId
+     * @param {} options.actions
+     * @param {} options.networkIds
+     * @param {} options.deviceTypeIds
+     * @param {} options.expiration
      */
     constructor({ userId, actions, networkIds, deviceTypeIds, expiration } = {}) {
+        super();
+
         this.userId = userId;
         this.actions = actions;
         this.networkIds = networkIds;
@@ -16,84 +25,49 @@ class UserToken {
         this.expiration = expiration;
     }
 
-    /**
-     * @returns {string} userId;
-     */
     get userId() {
         return this._userId;
     }
 
-    /**
-     * @param {string} value;
-     * @returns {string} userId;
-     */
     set userId(value) {
         this._userId = value;
     }
 
-    /**
-     * @returns {string} actions;
-     */
     get actions() {
         return this._actions;
     }
 
-    /**
-     * @param {string} value;
-     * @returns {string} actions;
-     */
     set actions(value) {
         this._actions = value;
     }
 
-    /**
-     * @returns {string} networkIds;
-     */
     get networkIds() {
         return this._networkIds; 
     }
 
-    /**
-     * @param {string} value;
-     * @returns {string} networkIds;
-     */
     set networkIds(value) {
         this._networkIds = value;
     }
 
-    /**
-     * @returns {string} deviceTypeIds;
-     */
     get deviceTypeIds() {
         return this._deviceTypeIds;
     }
 
-    /**
-     * @param {string} value;
-     * @returns {string} deviceTypeIds;
-     */
     set deviceTypeIds(value) {
         this._deviceTypeIds = value;
     }
 
-    /**
-     * @returns {string} expiration;
-     */
     get expiration() {
         return this._expiration;
     }
 
-    /**
-     * @param {string} value;
-     * @returns {string} expiration;
-     */
     set expiration(value) {
         this._expiration = value;
     }
 
     /**
-     * Returns a copy of instance
-     * @returns {object} A copy of instance
+     * Returns instance as a plain JS object
+     * @returns {Object}
      */
     toObject() {
         return {
@@ -103,14 +77,6 @@ class UserToken {
             deviceTypeIds: this.deviceTypeIds,
             expiration: this.expiration
         }
-    }
-
-    /**
-     * Returns a stringified instance
-     * @returns {string} A stringified instance
-     */
-    toString() {
-        JSON.stringify(this.toObject());
     }
 }
 

@@ -1,4 +1,3 @@
-
 /**
  * Utils
  */
@@ -13,12 +12,18 @@ class Utils {
     }
 
     /**
-     * TODO (try to find another soultion)
      * Returns a twenty-character random string
      * @return {string} - Twenty-character random string
      */
     static randomString() {
-        return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        const firstPart = Math.random()
+            .toString(36)
+            .substring(2, 15);
+        const secondPart = Math.random()
+            .toString(36)
+            .substring(2, 15);
+
+        return `${firstPart}${secondPart}`;
     }
 }
 

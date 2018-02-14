@@ -2,12 +2,14 @@ require('isomorphic-fetch');
 const Transport = require(`./base/Transport`);
 const Utils = require('../utils/Utils');
 
+
 /**
  * Rest API
  */
 class HTTP extends Transport {
 
     static get TYPE() { return `http`; }
+
 
     /**
      * Creates HTTP
@@ -62,7 +64,9 @@ class HTTP extends Transport {
         } else {
             return fetch(endpoint, { headers: me._getHeaders(), method: method, body: JSON.stringify(body) })
                 .then(response => response.text())
-                .then(responseText => responseText ? JSON.parse(responseText) : responseText);
+                .then(responseText => {
+                    return responseText ? JSON.parse(responseText) : responseText
+                });
         }
     }
 
@@ -82,9 +86,9 @@ class HTTP extends Transport {
          */
         function poll () {
             me.send({ endpoint, method, body })
-                .then((data) => {
+                .then((messageList) => {
                     if (!stopped) {
-                        data.forEach((data) => me.emit(`message`, data));
+                        messageList.forEach((message) => me.emit(`message`, message));
                         poll(endpoint, method, body)
                     }
                 })

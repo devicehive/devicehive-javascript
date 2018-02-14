@@ -1,12 +1,14 @@
+const BaseModel = require(`../BaseModel`);
+
 
 /**
- * Device Type List Query model
+ * DeviceTypeListQuery class
  */
-class DeviceTypeListQuery {
+class DeviceTypeListQuery extends BaseModel {
 
     /**
-     * Creates Device Type List Query model
-     * @param {object} options - Options for instance
+     * Creates new DeviceTypeListQuery model
+     * @param {object} options - model options object
      * @param {string} options.name - Filter by device type name
      * @param {string} options.namePattern - Filter by device type name pattern. In pattern wildcards '%' and '_' can be used
      * @param {string} options.sortField - Result list sort field
@@ -15,14 +17,14 @@ class DeviceTypeListQuery {
      * @param {number} options.skip - Number of records to skip from the result list
      */
     constructor({ name, namePattern, sortField, sortOrder, take, skip } = {}) {
-        const me = this;
+        super();
 
-        me.name = name;
-        me.namePattern = namePattern;
-        me.sortField = sortField;
-        me.sortOrder = sortOrder;
-        me.take = take;
-        me.skip = skip;
+        this.name = name;
+        this.namePattern = namePattern;
+        this.sortField = sortField;
+        this.sortOrder = sortOrder;
+        this.take = take;
+        this.skip = skip;
     }
 
     get name() {
@@ -74,19 +76,17 @@ class DeviceTypeListQuery {
     }
 
     /**
-     *
+     * Returns instance as a plain JS object
      * @returns {Object}
      */
     toObject() {
-        const me = this;
-
         return {
-            name: me.name,
-            namePattern: me.namePattern,
-            sortField: me.sortField,
-            sortOrder: me.sortOrder,
-            take: me.take,
-            skip: me.skip
+            name: this.name,
+            namePattern: this.namePattern,
+            sortField: this.sortField,
+            sortOrder: this.sortOrder,
+            take: this.take,
+            skip: this.skip
         }
     }
 }

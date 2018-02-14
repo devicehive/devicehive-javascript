@@ -1,8 +1,10 @@
+const BaseModel = require(`../BaseModel`);
+
 
 /**
- * Plugin Update Query model
+ * PluginUpdateQuery class
  */
-class PluginUpdateQuery {
+class PluginUpdateQuery extends BaseModel {
 
     /**
      * Creates Plugin Update Query model
@@ -20,7 +22,10 @@ class PluginUpdateQuery {
      * @param {string} [options.description] - Plugin description
      * @param {string} [options.parameters] - Plugin parameters
      */
-    constructor({ topicName, deviceId, networkIds, deviceTypeIds, names, returnCommands, returnUpdatedCommands, returnNotifications, status, name, description, parameters } = {}) {
+    constructor({ topicName, deviceId, networkIds, deviceTypeIds, names, returnCommands, returnUpdatedCommands,
+                    returnNotifications, status, name, description, parameters } = {}) {
+        super();
+
         this.topicName = topicName;
         this.deviceId = deviceId;
         this.networkIds = networkIds;

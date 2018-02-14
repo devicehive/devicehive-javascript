@@ -20,9 +20,26 @@ class HttpApiResolver {
 
     /**
      *
-     * @param method
-     * @param uri
-     * @param base
+     * @param response
+     * @returns {{}}
+     */
+    static normalizeResponse(response) {
+        if (response.error) {
+            throw response.message;
+        }
+
+        return response;
+    }
+
+
+    /**
+     *
+     * @param options
+     * @param options.method
+     * @param options.uri
+     * @param options.base
+     * @param options.subscription
+     * @param options.unsubscription
      */
     constructor({ method, uri, base, subscription, unsubscription }) {
         const me = this;

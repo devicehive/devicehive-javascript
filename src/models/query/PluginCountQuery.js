@@ -1,12 +1,14 @@
+const BaseModel = require(`../BaseModel`);
+
 
 /**
- * Plugin Count Query model
+ * PluginCountQuery class
  */
-class PluginCountQuery {
+class PluginCountQuery extends BaseModel {
     
     /**
-     * Creates Plugin Count Query model
-     * @param {object} options - Options for instance
+     * Creates new PluginCountQuery model
+     * @param {object} options - model options object
      * @param {string} options.name - Filter by plugin name
      * @param {string} options.namePattern - Filter by plugin name pattern. In pattern wildcards '%' and '_' can be used
      * @param {string} options.topicName - Filter by plugin topic name
@@ -14,6 +16,8 @@ class PluginCountQuery {
      * @param {number} options.userId - Filter by associated user identifier. Only admin can see other users' plugins
      */
     constructor({ name, namePattern, topicName, status, userId } = {}) {
+        super();
+
         this.name = name;
         this.namePattern = namePattern;
         this.topicName = topicName;
@@ -62,7 +66,7 @@ class PluginCountQuery {
     }
 
     /**
-     *
+     * Returns instance as a plain JS object
      * @returns {Object}
      */
     toObject() {

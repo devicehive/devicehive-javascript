@@ -1,12 +1,14 @@
+const BaseModel = require(`../BaseModel`);
+
 
 /**
- * Plugin Register Query model
+ * PluginRegisterQuery class
  */
-class PluginRegisterQuery {
+class PluginRegisterQuery extends BaseModel {
 
     /**
-     * Creates Plugin Register Query model
-     * @param {object} options - Options for instance
+     * Creates new PluginRegisterQuery model
+     * @param {object} options - model options object
      * @param {string} [options.deviceId] - Device device_id
      * @param {string} [options.networkIds] - Network ids
      * @param {string} [options.deviceTypeIds] - Device type ids
@@ -16,6 +18,8 @@ class PluginRegisterQuery {
      * @param {boolean} [options.returnNotifications] - Checks if commands should be returned
      */
     constructor({ deviceId, networkIds, deviceTypeIds, names, returnCommands, returnUpdatedCommands, returnNotifications } = {}) {
+        super();
+
         this.deviceId = deviceId;
         this.networkIds = networkIds;
         this.deviceTypeIds = deviceTypeIds;
@@ -82,8 +86,8 @@ class PluginRegisterQuery {
     }
 
     /**
-     *
-     * @returns {{deviceId: string, networkIds: string, deviceTypeIds: string, names: string, returnCommands: boolean, returnUpdatedCommands: boolean, returnNotifications: boolean }}
+     * Returns instance as a plain JS object
+     * @returns {Object}
      */
     toObject() {
         return {
@@ -93,7 +97,7 @@ class PluginRegisterQuery {
             names: this.names,
             returnCommands: this.returnCommands,
             returnUpdatedCommands: this.returnUpdatedCommands,
-            returnNotifications: this.returnNotifications,
+            returnNotifications: this.returnNotifications
         }
     }
 }

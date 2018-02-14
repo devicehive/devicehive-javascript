@@ -1,12 +1,14 @@
+const BaseModel = require(`../BaseModel`);
+
 
 /**
- * Command List query model
+ * CommandListQuery class
  */
-class CommandListQuery {
+class CommandListQuery extends BaseModel {
 
     /**
-     * Creates Command List query model
-     * @param {object} options - Options for instance
+     * Creates new CommandListQuery model
+     * @param {object} options - model options object
      * @param {string} options.deviceId - Device ID
      * @param {string} options.start - Start timestamp
      * @param {string} options.end - End timestamp
@@ -18,17 +20,17 @@ class CommandListQuery {
      * @param {number} options.skip - Skip param
      */
     constructor({ deviceId, start, end, command, status, sortField, sortOrder, take, skip } = {}) {
-        const me = this;
+        super();
 
-        me.deviceId = deviceId;
-        me.start = start;
-        me.end = end;
-        me.command = command;
-        me.status = status;
-        me.sortField = sortField;
-        me.sortOrder = sortOrder;
-        me.take = take;
-        me.skip = skip;
+        this.deviceId = deviceId;
+        this.start = start;
+        this.end = end;
+        this.command = command;
+        this.status = status;
+        this.sortField = sortField;
+        this.sortOrder = sortOrder;
+        this.take = take;
+        this.skip = skip;
     }
 
     get deviceId() {
@@ -104,24 +106,23 @@ class CommandListQuery {
     }
 
     /**
-     *
+     * Returns instance as a plain JS object
      * @returns {Object}
      */
     toObject() {
-        const me = this;
-
         return {
-            deviceId: me.deviceId,
-            start: me.start,
-            end: me.end,
-            command: me.command,
-            status: me.status,
-            sortField: me.sortField,
-            sortOrder: me.sortOrder,
-            take: me.take,
-            skip: me.skip
+            deviceId: this.deviceId,
+            start: this.start,
+            end: this.end,
+            command: this.command,
+            status: this.status,
+            sortField: this.sortField,
+            sortOrder: this.sortOrder,
+            take: this.take,
+            skip: this.skip
         }
     }
 }
+
 
 module.exports = CommandListQuery;

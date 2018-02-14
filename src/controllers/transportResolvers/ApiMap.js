@@ -143,29 +143,11 @@ class ApiMap {
 
         switch (transport) {
             case ApiMap.HTTP_API:
-                if (response.error) {
-                    throw response.message;
-                }
-
-                normalizedResponse = response;
+                normalizedResponse = HttpApiResolver.normalizeResponse(response);
                 break;
             case ApiMap.WS_API:
-                if (response.status === "error") {
-                    throw response.error;
-                }
-
-                const responseNormalizationObject = apiMap.get(key)[transport].response;
-
-                if (responseNormalizationObject) {
-                    if (responseNormalizationObject.length) {
-                        responseNormalizationObject.forEach(responseField =>
-                            normalizedResponse[responseField] = response[responseField]);
-                    } else if (responseNormalizationObject.bodyKey) {
-                        normalizedResponse = response[responseNormalizationObject.bodyKey];
-                    }
-                } else if (responseNormalizationObject !== null) {
-                    normalizedResponse = response;
-                }
+                normalizedResponse = WebSocketApiResolver.normalizeResponse(response,
+                    apiMap.get(key)[transport].response);
                 break;
         }
 
@@ -234,21 +216,21 @@ apiMap.set(ApiMap.updateUser, { http: { method: 'PUT', uri: '/user/{userId}', ba
 apiMap.set(ApiMap.deleteUser, { http: { method: 'DELETE', uri: '/user/{userId}', base: ApiMap.MAIN_BASE }, ws: { action: 'user/delete', response: null } });
 apiMap.set(ApiMap.getCurrentUser, { http: { method: 'GET', uri: '/user/current', base: ApiMap.MAIN_BASE }, ws: { action: 'user/getCurrent', response: { bodyKey: 'current' } } });
 apiMap.set(ApiMap.updateCurrentUser, { http: { method: 'PUT', uri: '/user/current', base: ApiMap.MAIN_BASE }, ws: { action: 'user/updateCurrent', bodyKey: 'user', response: null } });
-apiMap.set(ApiMap.getUserDeviceTypes, { http: { method: 'GET', uri: '/user/{userId}/devicetype', base: ApiMap.MAIN_BASE } }); // TODO WS
-apiMap.set(ApiMap.unassignAllDeviceTypes, { http: { method: 'DELETE', uri: '/user/{userId}/devicetype/all', base: ApiMap.MAIN_BASE } }); // TODO WS
-apiMap.set(ApiMap.assignAllDeviceTypes, { http: { method: 'PUT', uri: '/user/{userId}/devicetype/all', base: ApiMap.MAIN_BASE } }); // TODO WS
-apiMap.set(ApiMap.unassignDeviceType, { http: { method: 'DELETE', uri: '/user/{userId}/devicetype/{deviceTypeId}', base: ApiMap.MAIN_BASE } }); // TODO WS
-apiMap.set(ApiMap.getUserDeviceType, { http: { method: 'GET', uri: '/user/{userId}/devicetype/{deviceTypeId}', base: ApiMap.MAIN_BASE } }); // TODO WS
-apiMap.set(ApiMap.assignDeviceType, { http: { method: 'PUT', uri: '/user/{userId}/devicetype/{deviceTypeId}', base: ApiMap.MAIN_BASE } }); // TODO WS
+apiMap.set(ApiMap.getUserDeviceTypes, { http: { method: 'GET', uri: '/user/{userId}/devicetype', base: ApiMap.MAIN_BASE } });
+apiMap.set(ApiMap.unassignAllDeviceTypes, { http: { method: 'DELETE', uri: '/user/{userId}/devicetype/all', base: ApiMap.MAIN_BASE } });
+apiMap.set(ApiMap.assignAllDeviceTypes, { http: { method: 'PUT', uri: '/user/{userId}/devicetype/all', base: ApiMap.MAIN_BASE } });
+apiMap.set(ApiMap.unassignDeviceType, { http: { method: 'DELETE', uri: '/user/{userId}/devicetype/{deviceTypeId}', base: ApiMap.MAIN_BASE } });
+apiMap.set(ApiMap.getUserDeviceType, { http: { method: 'GET', uri: '/user/{userId}/devicetype/{deviceTypeId}', base: ApiMap.MAIN_BASE } });
+apiMap.set(ApiMap.assignDeviceType, { http: { method: 'PUT', uri: '/user/{userId}/devicetype/{deviceTypeId}', base: ApiMap.MAIN_BASE } });
 apiMap.set(ApiMap.getUserNetwork, { http: { method: 'GET', uri: '/user/{userId}/network/{networkId}', base: ApiMap.MAIN_BASE }, ws: { action: 'user/getNetwork', response: { bodyKey: 'network' } } });
 apiMap.set(ApiMap.assignNetwork, { http: { method: 'PUT', uri: '/user/{userId}/network/{networkId}', base: ApiMap.MAIN_BASE }, ws: { action: 'user/assignNetwork', response: null } });
 apiMap.set(ApiMap.unassignNetwork, { http: { method: 'DELETE', uri: '/user/{userId}/network/{networkId}', base: ApiMap.MAIN_BASE }, ws: { action: 'user/unassignNetwork', response: null } });
 
-apiMap.set(ApiMap.listPlugin, { http: { method: 'GET', uri: '/plugin', base: ApiMap.PLUGIN_BASE } }); // TODO WS
-apiMap.set(ApiMap.countPlugin, { http: { method: 'GET', uri: '/plugin/count', base: ApiMap.PLUGIN_BASE } }); // TODO WS
-apiMap.set(ApiMap.registerPlugin, { http: { method: 'POST', uri: '/plugin', base: ApiMap.PLUGIN_BASE } }); // TODO WS
-apiMap.set(ApiMap.deletePlugin, { http: { method: 'DELETE', uri: '/plugin', base: ApiMap.PLUGIN_BASE } }); // TODO WS
-apiMap.set(ApiMap.updatePlugin, { http: { method: 'PUT', uri: '/plugin', base: ApiMap.PLUGIN_BASE } }); // TODO WS
+apiMap.set(ApiMap.listPlugin, { http: { method: 'GET', uri: '/plugin', base: ApiMap.PLUGIN_BASE } });
+apiMap.set(ApiMap.countPlugin, { http: { method: 'GET', uri: '/plugin/count', base: ApiMap.PLUGIN_BASE } });
+apiMap.set(ApiMap.registerPlugin, { http: { method: 'POST', uri: '/plugin', base: ApiMap.PLUGIN_BASE } });
+apiMap.set(ApiMap.deletePlugin, { http: { method: 'DELETE', uri: '/plugin', base: ApiMap.PLUGIN_BASE } });
+apiMap.set(ApiMap.updatePlugin, { http: { method: 'PUT', uri: '/plugin', base: ApiMap.PLUGIN_BASE } });
 
 
 module.exports = ApiMap;

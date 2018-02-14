@@ -1,12 +1,14 @@
+const BaseModel = require(`../BaseModel`);
+
 
 /**
- * Plugin List Query model
+ * PluginListQuery class
  */
-class PluginListQuery {
+class PluginListQuery extends BaseModel {
 
     /**
-     * Creates Plugin List Query model
-     * @param {object} options - Options for instance
+     * Creates new PluginListQuery model
+     * @param {object} options - model options object
      * @param {string} options.name - Filter by plugin name
      * @param {string} options.namePattern - Filter by plugin name pattern. In pattern wildcards '%' and '_' can be used
      * @param {string} options.topicName - Filter by plugin topic nathis.
@@ -18,6 +20,8 @@ class PluginListQuery {
      * @param {number} options.skip - Number of records to skip from the result list
      */
     constructor({ name, namePattern, topicName, status, userId, sortField, sortOrder, take, skip } = {}) {
+        super();
+
         this.name = name;
         this.namePattern = namePattern;
         this.topicName = topicName;
@@ -102,7 +106,7 @@ class PluginListQuery {
     }
 
     /**
-     *
+     * Returns instance as a plain JS object
      * @returns {Object}
      */
     toObject() {

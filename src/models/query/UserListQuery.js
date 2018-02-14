@@ -1,10 +1,13 @@
+const BaseModel = require(`../BaseModel`);
+
 
 /**
- * User List Query
+ * UserListQuery class
  */
-class UserListQuery {
+class UserListQuery extends BaseModel {
 
     /**
+<<<<<<< HEAD
      * Creates User List Query
      * @param {object} options - Options for instance
      * @param {string} options.login - Filter by user login
@@ -15,18 +18,30 @@ class UserListQuery {
      * @param {string} options.sortOrder - Result list sort order. The sortField should be specified
      * @param {number} options.take - Number of records to take from the result list
      * @param {number} options.skip - Number of records to skip from the result list
+=======
+     * Creates new UserListQuery model
+     * @param {object} options - model options object
+     * @param {string} login - Filter by user login
+     * @param {string} loginPattern - Filter by user login pattern
+     * @param {number} role - Filter by user login patter
+     * @param {number} status - Filter by user status. 0 is Active, 1 is Locked Out, 2 is Disabled
+     * @param {string} sortField - Result list sort field
+     * @param {string} sortOrder - Result list sort order. The sortField should be specified
+     * @param {number} take - Number of records to take from the result list
+     * @param {number} skip - Number of records to skip from the result list
+>>>>>>> 134f4616982a179e7ff79ed99275e52ef24b77e0
      */
     constructor({ login, loginPattern, role, status, sortField, sortOrder, take, skip } = {}) {
-        const me = this;
+        super();
 
-        me.login = login;
-        me.loginPattern = loginPattern;
-        me.role = role;
-        me.status = status;
-        me.sortField = sortField;
-        me.sortOrder = sortOrder;
-        me.take = take;
-        me.skip = skip;
+        this.login = login;
+        this.loginPattern = loginPattern;
+        this.role = role;
+        this.status = status;
+        this.sortField = sortField;
+        this.sortOrder = sortOrder;
+        this.take = take;
+        this.skip = skip;
     }
 
     get login() {
@@ -94,21 +109,19 @@ class UserListQuery {
     }
 
     /**
-     *
+     * Returns instance as a plain JS object
      * @returns {Object}
      */
     toObject() {
-        const me = this;
-
         return {
-            login: me.login,
-            loginPattern: me.loginPattern,
-            role: me.role,
-            status: me.status,
-            sortField: me.sortField,
-            sortOrder: me.sortOrder,
-            take: me.take,
-            skip: me.skip
+            login: this.login,
+            loginPattern: this.loginPattern,
+            role: this.role,
+            status: this.status,
+            sortField: this.sortField,
+            sortOrder: this.sortOrder,
+            take: this.take,
+            skip: this.skip
         }
     }
 }

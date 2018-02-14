@@ -1,10 +1,10 @@
 /**
- * NoAuthenticationCredentials
+ * NoAuthenticationCredentials class
  */
 class NoAuthenticationCredentials extends Error {
 
     /**
-     * Creates NoAuthenticationCredentials
+     * Creates new NoAuthenticationCredentials
      */
     constructor() {
         super();
@@ -12,5 +12,6 @@ class NoAuthenticationCredentials extends Error {
         this.message = `No authentication credentials provided.\nPlease, use credentials provided in documentation.`;
     }
 }
+
 
 module.exports = NoAuthenticationCredentials;

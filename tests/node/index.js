@@ -15,22 +15,39 @@ const wsDeviceHive = new DeviceHive({
 });
 
 const DeviceListQuery = DeviceHive.models.query.DeviceListQuery;
+const DeviceTypeListQuery = DeviceHive.models.query.DeviceTypeListQuery;
+const NetworkListQuery = DeviceHive.models.query.NetworkListQuery;
 
-const query1 = new DeviceListQuery({
+const deviceListQuery = new DeviceListQuery({
     networkId: 1
 });
+
+const deviceTypeListQuery = new DeviceTypeListQuery();
+const networkListQuery = new NetworkListQuery();
 
 void async function start () {
     try {
         await httpDeviceHive.connect();
         await wsDeviceHive.connect();
 
-        console.log(await httpDeviceHive.token.login('dhadmin', 'dhadmin_#911'));
-        console.log(await  httpDeviceHive.device.list(query1));
+        {
+            const {accessToken, refreshToken} = await httpDeviceHive.token.login('dhadmin', 'dhadmin_#911');
+            console.log({accessToken, refreshToken});
+            console.log(await  httpDeviceHive.device.list(deviceListQuery));
+            console.log(await  httpDeviceHive.deviceType.list(deviceTypeListQuery));
+            console.log(await  httpDeviceHive.network.list(networkListQuery));
+            console.log(await  httpDeviceHive.network.list(networkListQuery));
+            console.log(await  httpDeviceHive.token.refresh(refreshToken));
+        }
 
-
-        console.log(await wsDeviceHive.token.login('dhadmin', 'dhadmin_#911'));
-        console.log(await  wsDeviceHive.device.list(query1));
+        {
+            const {accessToken, refreshToken} = await wsDeviceHive.token.login('dhadmin', 'dhadmin_#911');
+            console.log({accessToken, refreshToken});
+            console.log(await  wsDeviceHive.device.list(deviceListQuery));
+            console.log(await  wsDeviceHive.deviceType.list(deviceTypeListQuery));
+            console.log(await  wsDeviceHive.network.list(networkListQuery));
+            console.log(await  wsDeviceHive.token.refresh(refreshToken));
+        }
     } catch (error) {
         console.warn(error);
     }

@@ -1,12 +1,14 @@
+const BaseModel = require(`../BaseModel`);
+
 
 /**
- * Notification Poll Many Query model
+ * NotificationPollManyQuery class
  */
-class NotificationPollManyQuery {
+class NotificationPollManyQuery extends BaseModel {
 
     /**
-     * Creates Notification Poll Many Query model
-     * @param {object} options - Options for instance
+     * Creates new NotificationPollManyQuery model
+     * @param {object} options - model options object
      * @param {string} options.deviceIds - List of device IDs
      * @param {string} options.networkIds - List of network IDs
      * @param {string} options.deviceTypeIds - List of devicetype IDs
@@ -15,14 +17,14 @@ class NotificationPollManyQuery {
      * @param {number} options.waitTimeout - Wait timeout in seconds
      */
     constructor({ deviceIds, networkIds, deviceTypeIds, names, timestamp, waitTimeout } = {}) {
-        const me = this;
+        super();
 
-        me.deviceIds = deviceIds;
-        me.networkIds = networkIds;
-        me.deviceTypeIds = deviceTypeIds;
-        me.names = names;
-        me.timestamp = timestamp;
-        me.waitTimeout = waitTimeout;
+        this.deviceIds = deviceIds;
+        this.networkIds = networkIds;
+        this.deviceTypeIds = deviceTypeIds;
+        this.names = names;
+        this.timestamp = timestamp;
+        this.waitTimeout = waitTimeout;
     }
 
     get deviceIds() {
@@ -78,15 +80,13 @@ class NotificationPollManyQuery {
      * @returns {Object}
      */
     toObject() {
-        const me = this;
-
         return {
-            deviceIds: me.deviceIds,
-            networkIds: me.networkIds,
-            deviceTypeIds: me.deviceTypeIds,
-            names: me.names,
-            timestamp: me.timestamp,
-            waitTimeout: me.waitTimeout
+            deviceIds: this.deviceIds,
+            networkIds: this.networkIds,
+            deviceTypeIds: this.deviceTypeIds,
+            names: this.names,
+            timestamp: this.timestamp,
+            waitTimeout: this.waitTimeout
         }
     }
 }

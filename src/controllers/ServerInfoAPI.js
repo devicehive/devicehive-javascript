@@ -8,7 +8,8 @@ const ApiMap = require(`./transportResolvers/ApiMap`);
 class InfoAPI extends API {
 
     /**
-     * Creates InfoAPI
+     * Get server info
+     * @returns {Promise}
      */
     getServerInfo() {
         return this.strategy.send(ApiMap.getServerInfo);
@@ -16,6 +17,7 @@ class InfoAPI extends API {
 
     /**
      * Get cache info
+     * @returns {Promise}
      */
     getCacheInfo() {
         return this.strategy.send(ApiMap.getCacheInfo);
@@ -23,6 +25,7 @@ class InfoAPI extends API {
 
     /**
      * Get cluster info
+     * @returns {Promise}
      */
     getClusterInfo() {
         return this.strategy.send(ApiMap.getClusterInfo);

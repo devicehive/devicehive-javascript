@@ -5,6 +5,7 @@ const CommandPollQuery = require('../models/query/CommandPollQuery');
 const CommandPollManyQuery = require('../models/query/CommandPollManyQuery');
 const CommandWaitQuery = require('../models/query/CommandWaitQuery');
 
+
 /**
  * Returns information about the current command
  */

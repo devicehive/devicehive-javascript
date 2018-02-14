@@ -1,82 +1,60 @@
+const BaseModel = require(`./BaseModel`);
+
 
 /**
  * DeviceType model
  */
-class DeviceType {
+class DeviceType extends BaseModel {
 
     /**
-     * Creates DeviceType model
-     * @param {object} options ({ id, name, description })
+     * Creates new DeviceType model
+     * @param {Object} options - model options object
+     * @param {} options.id
+     * @param {} options.name
+     * @param {} options.description
      */
     constructor({ id, name, description } = {}) {
+        super();
+
         this.id = id;
         this.name = name;
         this.description = description;
     }
 
-    /**
-     * @returns {number} id;
-     */
     get id() {
         return this._id;
     }
 
-    /**
-    * @param {number} value;
-    * @returns {number} id;
-    */
     set id(value) {
         this._id = value;
     }
 
-    /**
-     * @returns {string} name;
-     */
     get name() {
         return this._name;
     }
 
-    /**
-     * @param {string} value;
-     * @returns {string} name;
-     */
     set name(value) {
         this._name = value;
     }
 
-    /**
-     * @returns {string} description;
-     */
     get description() {
         return this._description;
     }
 
-    /**
-     * @param {string} value;
-     * @returns {string} description;
-     */
     set description(value) {
         this._description = value;
     }
 
     /**
-     * Returns a copy of instance
-     * @returns {object} A copy of instance
+     * Returns instance as a plain JS object
+     * @returns {Object}
      */
     toObject() {
         return {
             id: this.id,
             name: this.name,
             description: this.description
-        }
-    }
-
-    /**
-     * Returns a stringified instance
-     * @returns {string} A stringified instance
-     */
-    toString() {
-        JSON.stringify(this.toObject());
+        };
     }
 }
 

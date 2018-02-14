@@ -8,6 +8,33 @@ class WebSocketApiResolver {
 
     /**
      *
+     * @param response
+     * @param normalizationObject
+     * @returns {{}}
+     */
+    static normalizeResponse(response, normalizationObject) {
+        let result = {};
+
+        if (response.status === "error") {
+            throw response.error;
+        }
+
+        if (normalizationObject) {
+            if (normalizationObject.length) {
+                normalizationObject.forEach(responseField =>
+                    result[responseField] = response[responseField]);
+            } else if (normalizationObject.bodyKey) {
+                result = response[normalizationObject.bodyKey];
+            }
+        } else if (normalizationObject !== null) {
+            result = response;
+        }
+
+        return result;
+    }
+
+    /**
+     *
      * @param action
      * @param bodyKey
      */

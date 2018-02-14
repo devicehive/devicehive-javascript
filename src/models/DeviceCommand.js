@@ -1,14 +1,31 @@
+const BaseModel = require(`./BaseModel`);
+
 
 /**
  * DeviceCommand model
  */
-class DeviceCommand {
+class DeviceCommand extends BaseModel {
 
     /**
-     * DeviceCommand model
-     * @param {object} options ({ id, command, timestamp, lastUpdated, userId, deviceId, networkId, deviceTypeId, parameters, lifetime, status, result })
+     * Creates new DeviceCommand model
+     * @param {Object} options - model options object
+     * @param {} options.id
+     * @param {} options.command
+     * @param {} options.timestamp
+     * @param {} options.lastUpdated
+     * @param {} options.userId
+     * @param {} options.deviceId
+     * @param {} options.networkId
+     * @param {} options.deviceTypeId
+     * @param {} options.parameters
+     * @param {} options.lifetime
+     * @param {} options.status
+     * @param {} options.result
      */
-    constructor({ id, command, timestamp, lastUpdated, userId, deviceId, networkId, deviceTypeId, parameters, lifetime, status, result } = {}) {
+    constructor({ id, command, timestamp, lastUpdated, userId, deviceId, networkId,
+                    deviceTypeId, parameters, lifetime, status, result } = {}) {
+        super();
+
         this.id = id;
         this.command = command;
         this.timestamp = timestamp;
@@ -23,225 +40,126 @@ class DeviceCommand {
         this.result = result;
     }
 
-    /**
-     * @returns {number} id;
-     */
     get id() {
         return this._id;
     }
 
-    /**
-    * @param {number} value;
-    * @returns {number} id;
-    */
     set id(value) {
         this._id = value;
     }
 
-    /**
-     *
-     * @returns {*}
-     */
     get command() {
         return this._command;
     }
 
-    /**
-     *
-     * @param value
-     */
     set command(value) {
         this._command = value;
     }
 
-    /**
-     * @returns {string} name;
-     */
     get name() {
         return this._name;
     }
 
-    /**
-     * @param {string} value;
-     * @returns {string} name;
-     */
     set name(value) {
         this._name = value;
     }
 
-    /**
-     * @returns {string} notification;
-     */
     get notification() {
         return this._notification;
     }
 
-    /**
-     * @param {string} value;
-     * @returns {string} notification;
-     */
     set notification(value) {
         this._notification = value;
     }
 
-    /**
-     * @returns {string} timestamp;
-     */
     get timestamp() {
         return this._timestamp;
     }
 
-    /**
-     * @param {string} value;
-     * @returns {string} timestamp;
-     */
     set timestamp(value) {
         this._timestamp = value;
     }
 
-    /**
-     * @returns {string} lastUpdated;
-     */
     get lastUpdated() {
         return this._lastUpdated;
     }
 
-    /**
-     * @param {string} value;
-     * @returns {string} lastUpdated;
-     */
     set lastUpdated(value) {
         this._lastUpdated = value;
     }
 
-    /**
-     * @returns {number} userId;
-     */
     get userId() {
         return this._userId;
     }
 
-    /**
-    * @param {number} value;
-    * @returns {number} userId;
-    */
     set userId(value) {
         this._userId = value;
     }
 
-    /**
-     * @returns {number} deviceId;
-     */
     get deviceId() {
         return this._deviceId;
     }
 
-    /**
-    * @param {number} value;
-    * @returns {number} deviceId;
-    */
     set deviceId(value) {
         this._deviceId = value;
     }
 
-    /**
-     * @returns {number} networkId;
-     */
     get networkId() {
         return this._networkId;
     }
 
-    /**
-    * @param {number} value;
-    * @returns {number} networkId;
-    */
     set networkId(value) {
         this._networkId = value;
     }
 
-    /**
-     * @returns {number} deviceTypeId;
-     */
     get deviceTypeId() {
         return this._deviceTypeId;
     }
 
-    /**
-    * @param {number} value;
-    * @returns {number} deviceTypeId;
-    */
     set deviceTypeId(value) {
         this._deviceTypeId = value;
     }
 
-    /**
-     * @returns {object} parameters;
-     */
     get parameters() {
         return this._parameters;
     }
 
-    /**
-     * @param {object} value;
-     * @returns {object} parameters;
-     */
     set parameters(value) {
         this._parameters = value;
     }
 
-    /**
-     * @returns {number} lifetime;
-     */
     get lifetime() {
         return this._lifetime;
     }
 
-    /**
-    * @param {number} value;
-    * @returns {number} lifetime;
-    */
     set lifetime(value) {
         this._lifetime = value;
     }
 
-    /**
-     * @returns {string} status;
-     */
     get status() {
         return this._status;
     }
 
-    /**
-    * @param {string} value;
-    * @returns {string} status;
-    */
     set status(value) {
         this._status = value;
     }
 
-    /**
-     * @returns {string} status;
-     */
     get result() {
         return this._result;
     }
 
-    /**
-     * @param {string} value;
-     * @returns {string} status;
-     */
     set result(value) {
         this._result = value;
     }
 
     /**
-     * Returns a copy of instance
-     * @returns {object} A copy of instance
+     * Returns instance as a plain JS object
+     * @returns {Object}
      */
     toObject() {
         return {
             id: this.id,
-            command: this._command,
+            command: this.command,
             timestamp: this.timestamp,
             lastUpdated: this.lastUpdated,
             userId: this.userId,
@@ -251,16 +169,8 @@ class DeviceCommand {
             parameters: this.parameters,
             lifetime: this.lifetime,
             status: this.status,
-            result: this.result,
-        }
-    }
-
-    /**
-     * Returns a stringified instance
-     * @returns {string} A stringified instance
-     */
-    toString() {
-        return JSON.stringify(this.toObject());
+            result: this.result
+        };
     }
 }
 

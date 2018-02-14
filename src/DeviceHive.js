@@ -10,12 +10,12 @@ const CommandAPI = require('./controllers/DeviceCommandAPI');
 const NotificationAPI = require('./controllers/DeviceNotificationAPI');
 const UserAPI = require('./controllers/UserAPI');
 const PluginAPI = require('./controllers/PluginAPI');
-const Command = require(`./models/Command`);
+const Command = require(`./models/DeviceCommand`);
 const Configuration = require(`./models/Configuration`);
 const Device = require(`./models/Device`);
 const DeviceType = require(`./models/DeviceType`);
 const Network = require(`./models/Network`);
-const Notification = require(`./models/Notification`);
+const Notification = require(`./models/DeviceNotification`);
 const Plugin = require(`./models/Plugin`);
 const UserToken = require(`./models/UserToken`);
 const PluginToken = require(`./models/PluginToken`);
@@ -39,10 +39,9 @@ const UserListQuery = require(`./models/query/UserListQuery`);
 const PluginCountQuery = require(`./models/query/PluginCountQuery`);
 const PluginListQuery = require(`./models/query/PluginListQuery`);
 const PluginRegisterQuery = require(`./models/query/PluginRegisterQuery`);
-
-
 const NoAuthCredentialsError = require('./error/NoAuthCredentialsError');
 const InvalidCredentialsError = require('./error/InvalidCredentialsError');
+
 
 /**
  * DeviceHive module
@@ -129,7 +128,8 @@ class DeviceHive extends EventEmitter {
     }
 
     /**
-     * Connect and authorize
+     * Connect to the DeviceHive service
+     * @returns {Promise<DeviceHive>}
      */
     async connect() {
         const me = this;
