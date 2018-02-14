@@ -1,8 +1,8 @@
 const chai = require(`chai`);
 const assert = chai.assert;
-const Notification = require('../../../src/models/Notification.js');
+const DeviceNotification = require('../../../src/models/DeviceNotification.js');
 
-describe('Notification', () => {
+describe('DeviceNotification', () => {
 
     const expected = {
         id: 1,
@@ -14,9 +14,9 @@ describe('Notification', () => {
     };
 
 
-    describe(('Notification fileds'), () => {
+    describe(('DeviceNotification fileds'), () => {
         it('should create notification', () => {
-            const notification = new Notification(expected);
+            const notification = new DeviceNotification(expected);
 
             Object.keys(expected).forEach(key => {
                 assert.isTrue(typeof notification[key] !== 'undefined');
@@ -24,9 +24,9 @@ describe('Notification', () => {
         });
     });
 
-    describe(('Notification .toObject'), () => {
+    describe(('DeviceNotification .toObject'), () => {
         it('should convert notification to object', () => {
-            const notification = new Notification(expected);
+            const notification = new DeviceNotification(expected);
             const notificationObject = notification.toObject();
 
             Object.keys(expected).forEach(key => {

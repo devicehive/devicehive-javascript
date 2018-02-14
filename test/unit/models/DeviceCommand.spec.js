@@ -1,8 +1,8 @@
 const chai = require(`chai`);
 const assert = chai.assert;
-const Command = require('../../../src/models/Command.js');
+const DeviceCommand = require('../../../src/models/DeviceCommand.js');
 
-describe('Command', () => {
+describe('DeviceCommand', () => {
 
     const expected = {
         id: 1,
@@ -23,9 +23,9 @@ describe('Command', () => {
     };
 
 
-    describe(('Command fileds'), () => {
+    describe(('DeviceCommand fileds'), () => {
         it('should create command', () => {
-            const command = new Command(expected);
+            const command = new DeviceCommand(expected);
 
             Object.keys(expected).forEach(key => {
                 assert.isTrue(typeof command[key] !== 'undefined');
@@ -33,9 +33,9 @@ describe('Command', () => {
         });
     });
 
-    describe(('Command .toObject'), () => {
+    describe(('DeviceCommand .toObject'), () => {
         it('should convert command to object', () => {
-            const command = new Command(expected);
+            const command = new DeviceCommand(expected);
             const commandObject = command.toObject();
 
             Object.keys(expected).forEach(key => {

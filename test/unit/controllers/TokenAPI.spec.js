@@ -149,7 +149,7 @@ describe('TokenAPI', () => {
 
         const token = expectedBody;
 
-        deviceHive.token.refresh(token);
+        deviceHive.token.refresh(token.refreshToken);
 
         // sent data
         events.once('request', data => {

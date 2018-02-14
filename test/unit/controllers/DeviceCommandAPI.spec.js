@@ -11,7 +11,7 @@ const DeviceHive = require('../../../index');
 
 let authService, mainService, deviceHive;
 
-describe('CommandAPI', () => {
+describe('DeviceCommandAPI', () => {
 
     before(done => {
         // authService
@@ -62,7 +62,7 @@ describe('CommandAPI', () => {
         mainService.close();
     });
 
-    it('CommandAPI.get()', done => {
+    it('DeviceCommandAPI.get()', done => {
 
         const deviceId = 1;
         const commandId = 1;
@@ -77,7 +77,7 @@ describe('CommandAPI', () => {
         });
     });
 
-    it('CommandAPI.list()', done => {
+    it('DeviceCommandAPI.list()', done => {
 
         const expectedQuery = {
             deviceId: 'deviceId',
@@ -107,7 +107,7 @@ describe('CommandAPI', () => {
     });
 
 
-    it('CommandAPI.insert()', done => {
+    it('DeviceCommandAPI.insert()', done => {
 
         const deviceId = 1;
 
@@ -144,7 +144,7 @@ describe('CommandAPI', () => {
     });
 
 
-    it('CommandAPI.update()', done => {
+    it('DeviceCommandAPI.update()', done => {
 
         // Configurating Command model
         const expectedBody = {
@@ -178,7 +178,7 @@ describe('CommandAPI', () => {
         });
     });
 
-    it('CommandAPI.poll()', done => {
+    it('DeviceCommandAPI.poll()', done => {
 
         const expectedQuery = {
             deviceId: 'deviceId',
@@ -204,7 +204,7 @@ describe('CommandAPI', () => {
         });
     });
 
-    it('CommandAPI.pollMany()', done => {
+    it('DeviceCommandAPI.pollMany()', done => {
 
         const expectedQuery = {
             deviceIds: 'deviceIds',
@@ -231,7 +231,7 @@ describe('CommandAPI', () => {
         });
     });
 
-    it('CommandAPI.wait()', done => {
+    it('DeviceCommandAPI.wait()', done => {
 
         const expectedQuery = {
             deviceId: '1',
