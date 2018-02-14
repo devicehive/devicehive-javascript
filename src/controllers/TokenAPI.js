@@ -22,7 +22,7 @@ class TokenAPI extends API {
      * @param {string} token Plugin token
      */
     authPlugin(token) {
-        return this.send(ApiMap.authPlugin, {}, { token });
+        return this.send(ApiMap.authenticatePlugin, { token });
     }
 
     /**

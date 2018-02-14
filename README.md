@@ -85,7 +85,7 @@ const myDeviceHive = new DeviceHive({
     mainServiceURL: 'ws://<host>:<port>/<path>'
 });
 
-// Configurating Device query
+// Configurating Device model
 const device = new Device({
     id: 'myTestId',
     name: 'myTestName',

@@ -86,7 +86,7 @@ class UserAPI extends API {
      * @returns {Promise}
      */
     getDeviceTypes(userId) {
-        return this.send(ApiMap.getUserDeviceType, { userId: userId });
+        return this.send(ApiMap.getUserDeviceTypes, { userId: userId });
     }
 
     /**
