@@ -74,11 +74,10 @@ class DeviceCommandAPI extends API {
      * @returns {Promise}
      */
     wait(deviceId, commandId, commandWaitQuery = new CommandWaitQuery()) {
-        return this.send(ApiMap.waitCommand, {
+        return this.send(ApiMap.waitCommand, Object.assign({}, {
             deviceId,
             commandId,
-            ...commandWaitQuery.toObject()
-        });
+        }, commandWaitQuery.toObject()));
     }
 
     /**
