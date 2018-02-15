@@ -9,13 +9,13 @@ class DeviceNotification extends BaseModel {
     /**
      * Creates new DeviceNotification model
      * @param {object} options - model options object
-     * @param {number} options.id
-     * @param {string} options.deviceId
-     * @param {number} options.networkId
-     * @param {number} options.deviceTypeId
-     * @param {string} options.notification
-     * @param {string} options.timestamp
-     * @param {object} options.parameters
+     * @param {number} options.id - Notification identifier
+     * @param {string} options.deviceId - Device unique identifier
+     * @param {number} options.networkId - Network unique identifier
+     * @param {number} options.deviceTypeId - Device type unique identifier
+     * @param {string} options.notification - Notification name
+     * @param {string} options.timestamp - Notification UTC datetime (yyyy-MM-dd'T'HH:mm:ss.SSS ISO 8601)
+     * @param {object} options.parameters - Notification parameters, a JSON object with an arbitrary structure
      */
     constructor({ id, deviceId, networkId, deviceTypeId, notification, timestamp, parameters } = {}) {
         super();
