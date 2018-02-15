@@ -8,14 +8,14 @@ class DeviceNotification extends BaseModel {
 
     /**
      * Creates new DeviceNotification model
-     * @param {Object} options - model options object
-     * @param {} options.id
-     * @param {} options.deviceId
-     * @param {} options.networkId
-     * @param {} options.deviceTypeId
-     * @param {} options.notification
-     * @param {} options.timestamp
-     * @param {} options.parameters
+     * @param {object} options - model options object
+     * @param {number} options.id
+     * @param {string} options.deviceId
+     * @param {number} options.networkId
+     * @param {number} options.deviceTypeId
+     * @param {string} options.notification
+     * @param {string} options.timestamp
+     * @param {object} options.parameters
      */
     constructor({ id, deviceId, networkId, deviceTypeId, notification, timestamp, parameters } = {}) {
         super();

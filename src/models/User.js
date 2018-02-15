@@ -8,16 +8,16 @@ class User extends BaseModel {
 
     /**
      * Creates new User model
-     * @param {Object} options - model options object
-     * @param {} options.id
-     * @param {} options.login
-     * @param {} options.role
-     * @param {} options.status
-     * @param {} options.lastLogin
-     * @param {} options.data
-     * @param {} options.password
-     * @param {} options.introReviewed
-     * @param {} options.allDeviceTypesAvailable
+     * @param {object} options - model options object
+     * @param {numebr} options.id - User identifier
+     * @param {string} options.login - User login using during authentication
+     * @param {number} options.role - User role. Available values: 0: Administrator role, 1: Client role.
+     * @param {number} options.status - User status. Available values: 0: The user is active, 1: The user has been locked out due to invalid login attempts, 2: The user has been disabled
+     * @param {string} options.lastLogin User last login timestamp (UTC)
+     * @param {object} options.data - User data, a JSON object with an arbitrary structure
+     * @param {string} options.password - User Password
+     * @param {boolean} options.introReviewed - Indicates if user reviewed an intro
+     * @param {boolean} options.allDeviceTypesAvailable - Is all device types awailable
      */
     constructor({ id, login, role, status, lastLogin, data, password, introReviewed, allDeviceTypesAvailable } = {}) {
         super();

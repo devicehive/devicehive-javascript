@@ -8,16 +8,16 @@ class Plugin extends BaseModel {
 
     /**
      * Creates new Plugin model
-     * @param {Object} options - model options object
-     * @param {} options.id
-     * @param {} options.name
-     * @param {} options.description
-     * @param {} options.topicName
-     * @param {} options.filter
-     * @param {} options.status
-     * @param {} options.subscriptionId
-     * @param {} options.userId
-     * @param {} options.parameters
+     * @param {object} options - model options object
+     * @param {id} options.id - Plgin unique idnetifier
+     * @param {string} options.name - Plugin name
+     * @param {string} options.description - Plugin description
+     * @param {string} options.topicName - Plugin topic name
+     * @param {string} options.filter - Plugin filter
+     * @param {string} options.status - Plugin status
+     * @param {string} options.subscriptionId - Plugin subscribtion id
+     * @param {number} options.userId - Plugin user id
+     * @param {object} options.parameters - Json object with parameters
      */
     constructor({ id, name, description, topicName, filter, status, subscriptionId, userId, parameters } = {}) {
         super();

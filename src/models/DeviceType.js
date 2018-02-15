@@ -8,10 +8,10 @@ class DeviceType extends BaseModel {
 
     /**
      * Creates new DeviceType model
-     * @param {Object} options - model options object
-     * @param {} options.id
-     * @param {} options.name
-     * @param {} options.description
+     * @param {object} options - model options object
+     * @param {number} options.id - Device type identifier
+     * @param {string} options.name - Device type name
+     * @param {string} options.description - Device type description
      */
     constructor({ id, name, description } = {}) {
         super();

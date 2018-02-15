@@ -8,12 +8,12 @@ class UserToken extends BaseModel {
 
     /**
      * Creates new UserToken model
-     * @param {Object} options - model options object
-     * @param {} options.userId
-     * @param {} options.actions
-     * @param {} options.networkIds
-     * @param {} options.deviceTypeIds
-     * @param {} options.expiration
+     * @param {object} options - model options object
+     * @param {number} options.userId - User id
+     * @param {Array} options.actions - User Actions
+     * @param {Array} options.networkIds - Network id's
+     * @param {Array} options.deviceTypeIds - Devicetype id's
+     * @param {string} options.expiration - Token expiration datetme
      */
     constructor({ userId, actions, networkIds, deviceTypeIds, expiration } = {}) {
         super();
