@@ -11,7 +11,7 @@ const DeviceHive = require('../../../index');
 
 let authService, mainService, deviceHive;
 
-describe('DeviceTypeAPI', () => {
+describe('DeviceTypeAPI HTTP', () => {
 
     before(done => {
         // authService
@@ -172,14 +172,14 @@ describe('DeviceTypeAPI', () => {
 
     it('DeviceTypeAPI.delete()', done => {
 
-        const name = 'name';
+        const id = '1';
 
-        deviceHive.deviceType.delete(name);
+        deviceHive.deviceType.delete(id);
 
         // sent data
         events.once('request', data => {
             assert.equal(data.method, 'DELETE', 'Not correct method');
-            assert.equal(data.url.pathname, `/devicetype/${name}`, 'Not correct URL');
+            assert.equal(data.url.pathname, `/devicetype/${id}`, 'Not correct URL');
 
             done();
         });

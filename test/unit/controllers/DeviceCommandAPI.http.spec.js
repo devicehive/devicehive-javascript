@@ -11,7 +11,7 @@ const DeviceHive = require('../../../index');
 
 let authService, mainService, deviceHive;
 
-describe('DeviceCommandAPI', () => {
+describe('DeviceCommandAPI HTTP', () => {
 
     before(done => {
         // authService

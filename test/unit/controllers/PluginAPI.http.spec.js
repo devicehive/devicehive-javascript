@@ -9,9 +9,9 @@ const events = new EventEmitter();
 
 const DeviceHive = require('../../../index');
 
-let authService, mainService, deviceHive;
+let authService, mainService, pluginService, deviceHive;
 
-describe('PluginAPI', () => {
+describe('PluginAPI HTTP', () => {
 
     before(done => {
         // authService

@@ -11,7 +11,7 @@ const DeviceHive = require('../../../index');
 
 let authService, mainService, deviceHive;
 
-describe('NotificationAPI', () => {
+describe('NetworkAPI', () => {
 
     before(done => {
         // authService
@@ -62,44 +62,40 @@ describe('NotificationAPI', () => {
         mainService.close();
     });
 
-    it('NotificationAPI.get()', done => {
+    it('NetworkAPI.get()', done => {
 
-        const deviceId = 1;
-        const notificationId = 1;
-        deviceHive.notification.get(deviceId, notificationId);
+        const networkId = 1;
+        deviceHive.network.get(networkId);
 
         // sent data
         events.once('request', data => {
             assert.equal(data.method, 'GET', 'Not correct method');
-            assert.equal(data.url.pathname, `/device/${deviceId}/notification/${notificationId}`, 'Not correct URL');
+            assert.equal(data.url.pathname, `/network/${networkId}`, 'Not correct URL');
 
             done();
         });
     });
 
-    it('NotificationAPI.list()', done => {
+    it('NetworkAPI.list()', done => {
 
         const expectedQuery = {
-            deviceId: 'deviceId',
-            start: '2018-02-09T10:09:03.033Z',
-            end: '2018-02-09T10:09:03.033Z',
-            notification: 'notification',
-            status: 'status',
-            sortField: 'sortField',
-            sortOrder: 'sortOrder',
+            name: 'string',
+            namePattern: 'string',
+            sortField: 'string',
+            sortOrder: 'string',
             take: '1',
             skip: '1'
         };
 
-        // Configurating Notification List query
-        const notificationListQuery = new DeviceHive.models.query.NotificationListQuery(expectedQuery);
+        // Configurating User List query
+        const networkListQuery = new DeviceHive.models.query.NetworkListQuery(expectedQuery);
 
-        deviceHive.notification.list(notificationListQuery);
+        deviceHive.network.list(networkListQuery);
 
         // sent data
         events.once('request', data => {
             assert.equal(data.method, 'GET', 'Not correct method');
-            assert.equal(data.url.pathname, `/device/${expectedQuery.deviceId}/notification`, 'Not correct URL');
+            assert.equal(data.url.pathname, '/network', 'Not correct URL');
             assert.deepEqual(data.url.parameters, expectedQuery, 'Not correct query');
 
             done();
@@ -107,78 +103,83 @@ describe('NotificationAPI', () => {
     });
 
 
-    it('NotificationAPI.insert()', done => {
+    it('NetworkAPI.insert()', done => {
 
-        const deviceId = 1;
-
-        // Configurating Notification model
+        // Configurating Network model
         const expectedBody = {
-            id: '1',
-            notification: 'notification',
-            timestamp: '2018-02-09T10:09:03.032Z',
-            parameters: {
-                jsonString: 'jsonString'
-            }
+            name: 'name',
+            description: 'description'
         };
-        const notification = new DeviceHive.models.Notification(expectedBody);
+        const network = new DeviceHive.models.Network(expectedBody);
 
-        deviceHive.notification.insert(deviceId, notification);
+        deviceHive.network.insert(network);
+
 
         // sent data
         events.once('request', data => {
             assert.equal(data.method, 'POST', 'Not correct method');
-            assert.equal(data.url.pathname, `/device/${deviceId}/notification`, 'Not correct URL');
+            assert.equal(data.url.pathname, `/network`, 'Not correct URL');
             assert.deepEqual(data.body, expectedBody, 'Not correct body');
 
             done();
         });
     });
 
-    it('NotificationAPI.poll()', done => {
+
+    it('NetworkAPI.update()', done => {
+
+        // Configurating Network model
+        const expectedBody = {
+            id: 'id',
+            name: 'name',
+            description: 'description'
+        };
+        const network = new DeviceHive.models.Network(expectedBody);
+
+        deviceHive.network.update(network);
+
+        // sent data
+        events.once('request', data => {
+            assert.equal(data.method, 'PUT', 'Not correct method');
+            assert.equal(data.url.pathname, `/network/${expectedBody.id}`, 'Not correct URL');
+            assert.deepEqual(data.body, expectedBody, 'Not correct body');
+
+            done();
+        });
+    });
+
+    it('NetworkAPI.count()', done => {
 
         const expectedQuery = {
-            deviceId: 'deviceId',
-            names: 'names',
-            timestamp: '2018-02-09T10:09:03.033Z',
-            waitTimeout: '10'
+            name: 'name',
+            namePattern: 'namePattern'
         };
 
-        // Configurating Notification List query
-        const notificationPollQuery = new DeviceHive.models.query.NotificationPollQuery(expectedQuery);
+        // Configurating Network List query
+        const networkListQuery = new DeviceHive.models.query.NetworkCountQuery(expectedQuery);
 
-        deviceHive.notification.poll(notificationPollQuery);
+        deviceHive.network.count(networkListQuery);
 
         // sent data
         events.once('request', data => {
             assert.equal(data.method, 'GET', 'Not correct method');
-            assert.equal(data.url.pathname, `/device/${expectedQuery.deviceId}/notification/poll`, 'Not correct URL');
+            assert.equal(data.url.pathname, '/network/count', 'Not correct URL');
             assert.deepEqual(data.url.parameters, expectedQuery, 'Not correct query');
 
             done();
         });
     });
 
-    it('NotificationAPI.pollMany()', done => {
+    it('NetworkAPI.delete()', done => {
 
-        const expectedQuery = {
-            deviceIds: 'deviceIds',
-            networkIds: '2018-02-09T10:09:03.033Z',
-            deviceTypeIds: 'deviceTypeIds',
-            names: 'names',
-            timestamp: '2018-02-09T10:09:03.033Z',
-            waitTimeout: '1'
-        };
+        const id = '1';
 
-        // Configurating Notification List query
-        const notificationPollManyQuery = new DeviceHive.models.query.NotificationPollManyQuery(expectedQuery);
-
-        deviceHive.notification.pollMany(notificationPollManyQuery);
+        deviceHive.network.delete(id);
 
         // sent data
         events.once('request', data => {
-            assert.equal(data.method, 'GET', 'Not correct method');
-            assert.equal(data.url.pathname, `/device/notification/poll`, 'Not correct URL');
-            assert.deepEqual(data.url.parameters, expectedQuery, 'Not correct query');
+            assert.equal(data.method, 'DELETE', 'Not correct method');
+            assert.equal(data.url.pathname, `/network/${id}`, 'Not correct URL');
 
             done();
         });

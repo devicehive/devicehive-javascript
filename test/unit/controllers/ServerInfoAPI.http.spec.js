@@ -9,9 +9,9 @@ const events = new EventEmitter();
 
 const DeviceHive = require('../../../index');
 
-let authService, mainService;
+let authService, mainService, deviceHive;
 
-describe('ConfigurationAPI', () => {
+describe('InfoAPI HTTP', () => {
 
     before(done => {
         // authService
@@ -63,54 +63,37 @@ describe('ConfigurationAPI', () => {
     });
 
 
-    it('ConfigurationAPI.get()', done => {
-
-        const name = 'name';
-
-        deviceHive.configuration.get(name);
+    it('InfoAPI.getServerInfo()', done => {
+        deviceHive.info.getServerInfo();
 
         // sent data
         events.once('request', data => {
             assert.equal(data.method, 'GET', 'Not correct method');
-            assert.equal(data.url.pathname, `/configuration/${name}`, 'Not correct URL');
+            assert.equal(data.url.pathname, '/info', 'Not correct URL');
 
             done();
         });
     });
 
-
-    it('ConfigurationAPI.put()', done => {
-
-        // Configurating Configaration model
-        const expectedBody = {
-            name: 'myTestName',
-            value: 'string',
-            entityVersion: '1'
-        };
-        const configuration = new DeviceHive.models.Configuration(expectedBody);
-
-        deviceHive.configuration.put(configuration);
+    it('InfoAPI.getCacheInfo()', done => {
+        deviceHive.info.getCacheInfo();
 
         // sent data
         events.once('request', data => {
-            assert.equal(data.method, 'PUT', 'Not correct method');
-            assert.equal(data.url.pathname, `/configuration/${expectedBody.name}`, 'Not correct URL');
-            assert.deepEqual(data.body, expectedBody, 'Not correct body');
+            assert.equal(data.method, 'GET', 'Not correct method');
+            assert.equal(data.url.pathname, '/info/cache', 'Not correct URL');
 
             done();
         });
     });
 
-    it('ConfigurationAPI.delete()', done => {
-
-        const name = 'string';
-
-        deviceHive.configuration.delete(name);
+    it('InfoAPI.getClusterInfo()', done => {
+        deviceHive.info.getClusterInfo();
 
         // sent data
         events.once('request', data => {
-            assert.equal(data.method, 'DELETE', 'Not correct method');
-            assert.equal(data.url.pathname, `/configuration/${name}`, 'Not correct URL');
+            assert.equal(data.method, 'GET', 'Not correct method');
+            assert.equal(data.url.pathname, '/info/config/cluster', 'Not correct URL');
 
             done();
         });
