@@ -8,10 +8,10 @@ class Network extends BaseModel {
 
     /**
      * Creates new Network model
-     * @param {Object} options - model options object
-     * @param {} options.id
-     * @param {} options.name
-     * @param {} options.description
+     * @param {object} options - model options object
+     * @param {number} options.id - Network identifier
+     * @param {string} options.name - Network name
+     * @param {string} options.description - Network description
      */
     constructor({ id, name, description } = {}) {
         super();

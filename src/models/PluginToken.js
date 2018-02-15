@@ -8,11 +8,11 @@ class PluginToken extends BaseModel {
 
     /**
      * Creates new PluginToken model
-     * @param {Object} options - model options object
-     * @param {} options.actions
-     * @param {} options.expiration
-     * @param {} options.type
-     * @param {} options.topicName
+     * @param {object} options - model options object
+     * @param {Array} options.actions - Plugin Token actions
+     * @param {string} options.expiration - Plugin expiration
+     * @param {number} options.type - Plugin type
+     * @param {string} options.topicName - Plugin topic name
      */
     constructor({ actions, expiration, type, topicName } = {}) {
         super();

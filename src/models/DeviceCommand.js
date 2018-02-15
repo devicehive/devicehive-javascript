@@ -8,19 +8,19 @@ class DeviceCommand extends BaseModel {
 
     /**
      * Creates new DeviceCommand model
-     * @param {Object} options - model options object
-     * @param {} options.id
-     * @param {} options.command
-     * @param {} options.timestamp
-     * @param {} options.lastUpdated
-     * @param {} options.userId
-     * @param {} options.deviceId
-     * @param {} options.networkId
-     * @param {} options.deviceTypeId
-     * @param {} options.parameters
-     * @param {} options.lifetime
-     * @param {} options.status
-     * @param {} options.result
+     * @param {object} options - model options object
+     * @param {number} options.id - Command identifier
+     * @param {string} options.command - Command name
+     * @param {string} options.timestamp - Command UTC datetime (yyyy-MM-dd'T'HH:mm:ss.SSS ISO 8601)
+     * @param {string} options.lastUpdated - Last command update UTC datetime (yyyy-MM-dd'T'HH:mm:ss.SSS ISO 8601)
+     * @param {number} options.userId - Associated user identifier
+     * @param {string} options.deviceId - Device unique identifier
+     * @param {number} options.networkId - Network unique identifier
+     * @param {number} options.deviceTypeId - DeviceType unique identifier
+     * @param {object} options.parameters - Command parameters, a JSON object with an arbitrary structure
+     * @param {number} options.lifetime - Command lifetime, a number of seconds until this command expires
+     * @param {string} options.status - Command status, as reported by device or related infrastructure
+     * @param {object} options.result - Command execution result, an optional value that could be provided by device
      */
     constructor({ id, command, timestamp, lastUpdated, userId, deviceId, networkId,
                     deviceTypeId, parameters, lifetime, status, result } = {}) {

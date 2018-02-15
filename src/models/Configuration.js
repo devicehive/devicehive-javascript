@@ -9,9 +9,9 @@ class Configuration extends BaseModel {
     /**
      * Creates new Configuration model
      * @param {Object} options - model options object
-     * @param {} options.name
-     * @param {} options.value
-     * @param {} options.entityVersion
+     * @param {string} options.name - Configuration parameter name.
+     * @param {string} options.value - Configuration parameter value.
+     * @param {number} options.entityVersion - Specifies the version field or property of an entity class.
      */
     constructor({ name, value, entityVersion } = {}) {
         super();

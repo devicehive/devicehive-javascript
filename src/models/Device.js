@@ -8,13 +8,13 @@ class Device extends BaseModel {
 
     /**
      * Creates new Device model
-     * @param {Object} options - model options object
-     * @param {} options.id
-     * @param {} options.name
-     * @param {} options.data
-     * @param {} options.networkId
-     * @param {} options.deviceTypeId
-     * @param {} options.blocked
+     * @param {object} options - model options object
+     * @param {string} options.id - Device unique identifier
+     * @param {string} options.name - Device display name
+     * @param {object} options.data - Device data, a JSON object with an arbitrary structure
+     * @param {number} options.networkId - Associated network id
+     * @param {number} options.deviceTypeId - Associated deviceType id
+     * @param {boolean} options.blocked - Indicates whether device is blocked
      */
     constructor({ id, name, data, networkId, deviceTypeId, blocked } = {}) {
         super();
