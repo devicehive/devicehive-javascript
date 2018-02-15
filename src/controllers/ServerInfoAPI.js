@@ -12,7 +12,7 @@ class InfoAPI extends API {
      * @returns {Promise}
      */
     getServerInfo() {
-        return this.strategy.send(ApiMap.getServerInfo);
+        return this.send(ApiMap.getServerInfo);
     }
 
     /**
@@ -20,7 +20,7 @@ class InfoAPI extends API {
      * @returns {Promise}
      */
     getCacheInfo() {
-        return this.strategy.send(ApiMap.getCacheInfo);
+        return this.send(ApiMap.getCacheInfo);
     }
 
     /**
@@ -28,7 +28,7 @@ class InfoAPI extends API {
      * @returns {Promise}
      */
     getClusterInfo() {
-        return this.strategy.send(ApiMap.getClusterInfo);
+        return this.send(ApiMap.getClusterInfo);
     }
 }
 

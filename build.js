@@ -2,7 +2,6 @@ const fs = require('fs');
 const path = require('path');
 const browserify = require('browserify');
 const exorcist = require('exorcist');
-const uglify = require('uglify-es');
 
 const srcDir = __dirname;
 const outputDir = path.join(__dirname, 'dist');

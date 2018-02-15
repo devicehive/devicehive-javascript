@@ -98,7 +98,6 @@ class DeviceHive extends EventEmitter {
      * @param {string} [options.authServiceURL] - Auth Service URL (required only for http)
      * @param {string} [options.pluginServiceURL] - Alug inServi ceURL (required only for http)
      */
-
     constructor({ accessToken, refreshToken, login, password, mainServiceURL, authServiceURL, pluginServiceURL }) {
         super();
 

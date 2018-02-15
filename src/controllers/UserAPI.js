@@ -81,7 +81,7 @@ class UserAPI extends API {
     }
 
     /**
-     *
+     * Returns user's device types
      * @param userId
      * @returns {Promise}
      */
@@ -90,7 +90,7 @@ class UserAPI extends API {
     }
 
     /**
-     *
+     * Unassigns all user's device types
      * @param userId
      * @returns {Promise}
      */
@@ -99,7 +99,7 @@ class UserAPI extends API {
     }
 
     /**
-     *
+     * Assigns all device types to user
      * @param userId
      * @returns {Promise}
      */
@@ -108,7 +108,7 @@ class UserAPI extends API {
     }
 
     /**
-     *
+     * Unassigns mentioned device type
      * @param userId
      * @param deviceTypeId
      * @returns {Promise}
@@ -118,7 +118,7 @@ class UserAPI extends API {
     }
 
     /**
-     *
+     * Returns user's device type by id
      * @param userId
      * @param deviceTypeId
      * @returns {Promise}
@@ -128,7 +128,7 @@ class UserAPI extends API {
     }
 
     /**
-     *
+     * Assigns mentioned device type to user
      * @param userId
      * @param deviceTypeId
      * @returns {Promise}

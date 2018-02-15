@@ -40,7 +40,7 @@ class DeviceNotificationAPI extends API {
     }
 
     /**
-     *
+     * Poll notifications
      * @param {NotificationPollQuery} notificationPollQuery
      * @returns {*}
      */
@@ -49,7 +49,7 @@ class DeviceNotificationAPI extends API {
     }
 
     /**
-     *
+     * Poll many notifications
      * @param {NotificationPollManyQuery} notificationPollManyQuery
      * @returns {*}
      */
@@ -58,7 +58,7 @@ class DeviceNotificationAPI extends API {
     }
 
     /**
-     *
+     * Subscribe for new notifications
      * @param {NotificationPollQuery} notificationPollQuery
      * @returns {Promise}
      */
@@ -67,7 +67,7 @@ class DeviceNotificationAPI extends API {
     }
 
     /**
-     *
+     * Unsubscribe from notifications creation
      * @param {Number} subscriptionId
      * @returns {Promise}
      */

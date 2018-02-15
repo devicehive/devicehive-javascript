@@ -50,7 +50,7 @@ class DeviceCommandAPI extends API {
     }
 
     /**
-     *
+     * Poll commands
      * @param {CommandPollQuery} commandPollQuery
      * @returns {Promise}
      */
@@ -59,7 +59,7 @@ class DeviceCommandAPI extends API {
     }
 
     /**
-     *
+     * Poll many commands
      * @param {CommandPollManyQuery} commandPollManyQuery
      * @returns {Promise}
      */
@@ -68,7 +68,7 @@ class DeviceCommandAPI extends API {
     }
 
     /**
-     *
+     * Wait for command to be processed
      * @param deviceId
      * @param commandId
      * @returns {Promise}
@@ -76,12 +76,12 @@ class DeviceCommandAPI extends API {
     wait(deviceId, commandId, commandWaitQuery = new CommandWaitQuery()) {
         return this.send(ApiMap.waitCommand, Object.assign({}, {
             deviceId,
-            commandId,
+            commandId
         }, commandWaitQuery.toObject()));
     }
 
     /**
-     *
+     * Subscribe for command creation events
      * @param {CommandPollQuery} commandPollQuery
      * @returns {Promise}
      */
@@ -90,7 +90,7 @@ class DeviceCommandAPI extends API {
     }
 
     /**
-     *
+     * Unsubscribe for command creation events
      * @param {Number} subscriptionId
      * @returns {Promise}
      */

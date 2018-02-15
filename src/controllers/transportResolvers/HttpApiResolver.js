@@ -1,6 +1,7 @@
 const format = require("string-template");
 const queryString = require('query-string');
 
+
 /**
  * HttpApiResolver
  */
@@ -14,8 +15,9 @@ class HttpApiResolver {
      */
     static buildUrl(base, parameters) {
         const stringParameters = queryString.stringify(parameters);
-        const readyUrl = stringParameters ? `${format(base, parameters)}?${queryString.stringify(parameters)}` : format(base, parameters);
-        return readyUrl;
+        const url = format(base, parameters);
+
+        return stringParameters ? `${url}?${stringParameters}` : url;
     }
 
     /**
