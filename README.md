@@ -1,2113 +1,2632 @@
-# devicehive-node
 
-## Synopsis
+# DeviceHive-javascript
 
-DeviceHive Node Library
+DeviceHive-javascript is promise-based library for using DeviceHive.
 
-In case yu want to use it in the browser:
+## Installation Instructions
+
+For Node.js use case (Node v4.x on Mac, Linux, or Windows on a x86 or x64 processor), DeviceHive-javascript will install nice and easy with:
+
+`npm install devicehive`
+
+### Generation bundle for browser usage
+
+In case you want to use DeviceHive-javascript in the browser:
 1. Clone repo;
-2. Install `webpack`;
-3. Inside repo folder run `webpack`;
-4. Get `bundle.js` in `dist` folder. 
-
-## Installation
-Package is published in npm - https://www.npmjs.com/package/devicehive
-
-NPM >= 5.0.0
-
-`npm i devicehive`
-
-NPM < 5.0.0
-
-`npm i -S devicehive`
+2. Inside repo folder run `npm install`;
+3. Inside repo folder run `npm run build`;
+4. Get `devicehive.js`/`devicehive.min.js` in `dist` folder.
 
 ## Usage
 
-During development you could use this library with Promises, Generators and Async/Await functions.
+During development you can use this library with Promises, and Async/Await functions.
 
-### Example with Promises
+### Connecting to DeviceHive
+
+#### Using HTTP/HTTPS
+*Note: Using HTTP/HTTPS you need to pass 3 different service URL`s: **mainServiceURL**, **authServiceURL** and **pluginServiceURL**.*
 
 ``` js
-function authPromise(login, password){
-  return new DeviceHive({
-    serverURL : `http://<host>:<port>/<path>`,
-    login,
-    password
-  });
-}
-
-function getInfoPromise(login, password){
-  return authPromise(login, password)
-    .then(deviceHive => deviceHive.getInfo());
-}
-
-getInfoPromise(`login`, `password`)
-.then(...);
+const DeviceHive = require('devicehive');
+const httpDeviceHive = new DeviceHive({
+    login: 'login',
+    password: 'password',
+    mainServiceURL: 'http://<host>:<port>/<path>',
+    authServiceURL: 'http://<host>:<port>/<path>',
+    pluginServiceURL: 'http://<host>:<port>/<path>'
+});
+httpDeviceHive.connect();
 ```
 
-### Example with Generators
-For using Generators you could add additional library `co`
-
-```js
-const co = require(`co`);
-...
-function* authGenerator(login, password){
-  return yield new DeviceHive({
-    serverURL : `http://<url>:<port>/<path>`,
-    login,
-    password
-  });
-}
-
-function* getInfoGenerator(login, password){
-  const deviceHive = yield * authGenerator(login, password);
-  return yield deviceHive.getInfo()
-}
-
-co(getInfoGenerator(`login`, `password`))
-.then(...);
-
+#### Using WebSocket
+*Note: Using WebSocket you need to pass only one service URL: **mainServiceURL**.*
+``` js
+const DeviceHive = require('devicehive');
+const wsDeviceHive= new DeviceHive({
+    login: 'login',
+    password: 'password',
+    mainServiceURL: 'ws://<host>:<port>/<path>'
+});
+wsDeviceHive.connect();
 ```
 
-### Example with Async/Await
+### Using Models
+You can use models described in [DeviceHive.models](#DeviceHive.models)
 
-```js
-async function authAsyncAwait(login, password){
-  return await new DeviceHive({
-    serverURL : `http://<host>:<port>/<path>`,
-    login,
-    password
-  });
-}
+``` js
+// Getting Device model
+const Device = DeviceHive.models.Device;
 
-async function getInfoAsyncAwait(login, password){
-  const deviceHive = await authAsyncAwait(login, password);
-  return await deviceHive.getInfo();
-}
+// Getting Device list query model
+const DeviceListQuery = DeviceHive.models.query.DeviceListQuery;
+```
 
-getInfoAsyncAwait(`login`, `password`)
-.then(...);
+### Full Example and using API
+
+You can use API described in [DeviceHive.command](#DeviceHive.command), [DeviceHive.configuration](#DeviceHive.configuration), [DeviceHive.device](#DeviceHive.device), [DeviceHive.deviceType](#DeviceHive.deviceType), [DeviceHive.info](#DeviceHive.info), [DeviceHive.notification](#DeviceHive.notification), [DeviceHive.network](#DeviceHive.network), [DeviceHive.plugin](#DeviceHive.plugin), [DeviceHive.token](#DeviceHive.token), [DeviceHive.user](#DeviceHive.user).
+
+Here is example of how you can use DeviceHive-javascript:
+
+``` js
+const DeviceHive = require('devicehive');
+
+// Getting Device model
+const Device = DeviceHive.models.Device
+// Getting Device list query model
+const DeviceListQuery = DeviceHive.models.query.DeviceListQuery;
+
+// Configurating DeviceHive
+const myDeviceHive = new DeviceHive({
+    login: 'login',
+    password: 'password',
+    mainServiceURL: 'ws://<host>:<port>/<path>'
+});
+
+// Configurating Device model
+const device = new Device({
+    id: 'myTestId',
+    name: 'myTestName',
+    networkId: 1,
+    deviceTypeId: 1,
+    blocked: false
+});
+
+// Configurating Device List query
+const myDeviceListQuery = new DeviceListQuery({
+    networkId: 1
+});
+
+// Connecting and usin API
+myDeviceHive.connect()
+    .then(() => myDeviceHive.device.list(myDeviceListQuery))
+    .then(data => console.log(data))
+    .then(() => myDeviceHive.device.add(device))
+    .then(data => console.log(data))
+    .then(() => myDeviceHive.device.list(myDeviceListQuery))
+    .then(data => console.log(data))
+    .then(() => myDeviceHive.device.delete(device.id))
+    .then(data => console.log(data))
+    .then(() => myDeviceHive.device.list(myDeviceListQuery))
+    .then(data => console.log(data))
+    .catch(error => console.warn(error));
 ```
 
 ## API Reference
-
-  * [class DeviceHive](#DeviceHive)
-    * [new DeviceHive({ serverURL, login, password })](#new_DeviceHive_login_password) ⇒ `Promise`
-    * [new DeviceHive({ serverURL, accessToken, refreshToken })](#new_DeviceHive_access_refresh) ⇒ `Promise`
-    * [new DeviceHive({ serverURL, refreshToken })](#new_DeviceHive_refresh_only) ⇒ `Promise`
-    * _instance_
-      * [.getInfo()](#DeviceHive+getInfo) ⇒ `Http` ⇒ `Promise`
-      * [.getClusterInfo()](#DeviceHive+getClusterInfo) ⇒ `Http` ⇒ `Promise`
-      * [.createToken(userId, actions, networkIds, deviceIds, expiration)](#DeviceHive+createToken) ⇒ `Http` ⇒ `Promise`
-      * [.refreshToken()](#DeviceHive+refreshToken) ⇒ `Http` ⇒ `Promise`
-      * [.getConfigurationProperty(name)](#DeviceHive+getConfiguration) ⇒ `Http` ⇒ `Promise`
-      * [.setConfigurationProperty(name, value)](#DeviceHive+setConfigurationProperty) ⇒ `Http` ⇒ `Promise`
-      * [.removeConfigurationProperty(name)](#DeviceHive+removeConfigurationProperty) ⇒ `Http` ⇒ `Promise`
-      * [.listNetworks(filter)](#DeviceHive+listNetworks) ⇒ `Http` ⇒ `Promise`
-      * [.getNetwork(networkId)](#DeviceHive+getNetwork) ⇒ `Http` ⇒ `Promise`
-      * [.removeNetwork(networkId)](#DeviceHive+removeNetwork) ⇒ `Http` ⇒ `Promise`
-      * [.createNetwork(name, description)](#DeviceHive+createNetwork) ⇒ `Http` ⇒ `Promise`
-      * [.listDevices(filter)](#DeviceHive+getDevices) ⇒ `Http` ⇒ `Promise`
-      * [.removeDevice(id)](#DeviceHive+removeDevice) ⇒ `Http` ⇒ `Promise`
-      * [.getDevice(id)](#DeviceHive+getDevice) ⇒ `Http` ⇒ `Promise`
-      * [.putDevice(id, deviceParams)](#DeviceHive+putDevice) ⇒ `Http` ⇒ `Promise`
-      * [.getCurrentUser()](#DeviceHive+getCurrentUser) ⇒ `Http` ⇒ `Promise`
-      * [.getUsers(filter)](#DeviceHive+getUsers) ⇒ `Http` ⇒ `Promise`
-      * [.createUser(userParams)](#DeviceHive+createUser) ⇒ `Http` ⇒ `Promise`
-      * [.removeUser(userId)](#DeviceHive+removeUser) ⇒ `Http` ⇒ `Promise`
-      * [.subscribeCommands(deviceIds, subscriber, commandFilter)](#DeviceHive+subscribeCommands) ⇒ `Promise`
-      * [.unsubscribeCommands(deviceIds, commandFilter)](#DeviceHive+unsubscribeCommands) ⇒ `Promise`
-      * [.subscribeNotifications(deviceIds, subscriber, notificationFilter)](#DeviceHive+subscribeNotifications) ⇒ `Promise`
-      * [.unsubscribeNotifications(deviceIds, notificationFilter)](#DeviceHive+unsubscribeNotifications) ⇒ `Promise`
-    * _inner_
-      * [~NetworkFilter](#DeviceHive..NetworkFilter) : `Struct`
-      * [~DeviceFilter](#DeviceHive..DeviceFilter) : `Struct`
-      * [~DeviceParams](#DeviceHive..DeviceParams) : `Struct`
-      * [~UsersFilter](#DeviceHive..UsersFilter) : `Struct`
-      * [~DeviceCommandPollFilter](#DeviceHive~DeviceCommandPollFilter) : `Struct`
-      * [~DevicesNotificationPollFilter](#DeviceHive~DevicesNotificationPollFilter) : `Struct`
-  * [class Device](#Device)
-    * [new Device({ id, name = id, data = null, networkId = null, isBlocked = false })](#new_Device)
-    * _instance_
-      * [.getId()](#Device+getId) ⇒ `String`
-      * [.getName()](#Device+getName) ⇒ `String`
-      * [.getData()](#Device+getData) ⇒ `Object`
-      * [.getNetworkId()](#Device+getNetworkId) ⇒ `Number`
-      * [.getBlocked()](#Device+getBlocked) ⇒ `Boolean`
-      * [.setId(newId)](#Device+setId)
-      * [.setName(newName)](#Device+setName)
-      * [.setData(newData)](#Device+setData)
-      * [.setNetworkId(newNetworkId)](#Device+setNetworkId)
-      * [.setBlocked(newBlocked)](#Device+setBlocked)
-      * [.save()](#Device+save) ⇒ `Http` ⇒ `Promise`
-      * [.getCommands(filter)](#Device+getCommands) ⇒ `Http` ⇒ `Promise`
-      * [.getNotifications(filter)](#Device+getNotifications) ⇒ `Http` ⇒ `Promise`
-      * [.sendCommand(command, parameters, updateSubscriber)](#Device+sendCommand) ⇒ `Http` ⇒ `Promise`
-      * [.sendNotification(notification, parameters)](#Device+sendNotification) ⇒ `Http` ⇒ `Promise`
-      * [.subscribeCommands(subscriber, commandFilter)](#Device+subscribeCommands) ⇒ `Promise`
-      * [.unsubscribeCommands(commandFilter)](#Device+unsubscribeCommands) ⇒ `Promise`
-      * [.subscribeNotifications(subscriber, notificationFilter)](#Device+subscribeNotifications) ⇒ `Promise`
-      * [.unsubscribeNotifications(notificationFilter)](#Device+unsubscribeNotifications) ⇒ `Promise`
-    * _inner_
-      * [~DeviceCommandsFilter](#Device..DeviceCommandsFilter) : `Struct`
-      * [~DeviceNotificationsFilter](#Device..DeviceNotificationsFilter) : `Struct`
-      * [~CommandParams](#Device~CommandParams) : `Struct`
-      * [~NotificationParams](#Device~NotificationParams) : `Struct`
-      * [~CommandPollParams](#Device~CommandPollParams) : `Struct`
-      * [~NotificationPollParams](#Device~NotificationPollParams) : `Struct`
-  * [class DeviceCommand](#DeviceCommand)
-    * [new DeviceCommand({ id, command, timestamp, userId, deviceId, parameters = null, lifetime = 0, status = null, result = null })](#new_DeviceCommand)
-    * _instance_
-      * [.getId()](#DeviceCommand+getId) ⇒ `String`
-      * [.getCommand()](#DeviceCommand+getCommand) ⇒ `String`
-      * [.getTimestamp()](#DeviceCommand+getTimestamp) ⇒ `String`
-      * [.getUserId()](#DeviceCommand+getUserId) ⇒ `String`
-      * [.getDeviceId()](#DeviceCommand+getDeviceId) ⇒ `String`
-      * [.getParameters()](#DeviceCommand+getParameters) ⇒ `Object`
-      * [.getLifetime()](#DeviceCommand+getLifetime) ⇒ `Number`
-      * [.getStatus()](#DeviceCommand+getStatus) ⇒ `String`
-      * [.getResult()](#DeviceCommand+getResult) ⇒ `String`
-      * [.setId(newid)](#DeviceCommand+setId)
-      * [.setCommand(newCommand)](#DeviceCommand+setCommand)
-      * [.setTimestamp(newTimestamp)](#DeviceCommand+setTimestamp)
-      * [.setUserId(newUserId)](#DeviceCommand+setUserId)
-      * [.setDeviceId(newDeviceId)](#DeviceCommand+setDeviceId)
-      * [.setParameters(newParameters)](#DeviceCommand+setParameters)
-      * [.setLifetime(newLifetime)](#DeviceCommand+setLifetime)
-      * [.setStatus(newStatus)](#DeviceCommand+setStatus)
-      * [.setResult(newResult)](#DeviceCommand+setResult)
-      * [.fetchCommandStatus()](#DeviceCommand+fetchCommandStatus) ⇒ `Http` ⇒ `Promise`
-      * [.fetchCommandResult()](#DeviceCommand+fetchCommandResult) ⇒ `Http` ⇒ `Promise`
-      * [.updateCommand()](#DeviceCommand+updateCommand) ⇒ `Http` ⇒ `Promise`
-      * [.save()](#DeviceCommand+save) ⇒ `Http` ⇒ `Promise`
-      * [.subscribeUpdates(subscriber)](#DeviceCommand+subscribeUpdates) ⇒ `Http` ⇒ `Promise`
-  * [class DeviceNotification](#DeviceNotification)
-    * [new DeviceNotification({ id, notification, deviceId, timestamp, parameters = null })](#new_DeviceNotification)
-    * _instance_
-      * [.getId()](#DeviceNotification+getId) ⇒ `String`
-      * [.getNotification()](#DeviceNotification+getNotification) ⇒ `String`
-      * [.getTimestamp()](#DeviceNotification+getTimestamp) ⇒ `String`
-      * [.getDeviceId()](#DeviceNotification+getDeviceId) ⇒ `String`
-      * [.getParameters()](#DeviceNotification+getParameters) ⇒ `Object`
-  * [class Network](#Network)
-    * [new Network({ id, name, description })](#new_Network)
-    * _instance_
-      * [.getId()](#Network+getId) ⇒ `Number`
-      * [.getName()](#Network+getName) ⇒ `String`
-      * [.getDescription()](#Network+getDescription) ⇒ `String`
-      * [.setId(newId)](#Network+setId)
-      * [.setName(newName)](#Network+setName)
-      * [.setDescription(newDescription)](#Network+setDescription)
-      * [.save()](#Network+save) ⇒ `Http` ⇒ `Promise`
-      * [.listDevices()](#Network+listDevices) ⇒ `Http` ⇒ `Promise`
-  * [class User](#User)
-    * [new User({ id, login, role = 1, status = 0, lastLogin = null, data = null, password = null, oldPassword = null, introReviewed = false })](#new_User)
-    * _instance_
-      * [.getId()](#User+getId) ⇒ `String`
-      * [.getLogin()](#User+getLogin) ⇒ `String`
-      * [.getRole()](#User+getRole) ⇒ `Number`
-      * [.getStatus()](#User+getStatus) ⇒ `Number`
-      * [.getLastLogin()](#User+getLastLogin) ⇒ `String`
-      * [.getData()](#User+getData) ⇒ `Object`
-      * [.getPassword()](#User+getPassword) ⇒ `String`
-      * [.getOldPassword()](#User+getOldPassword) ⇒ `String`
-      * [.getIntroReviewed()](#User+getIntroReviewed) ⇒ `Boolean`
-      * [.setId(newId)](#User+setId)
-      * [.setLogin(newLogin)](#User+setLogin)
-      * [.setRole(newRole)](#User+setRole)
-      * [.setStatus(newStatus)](#User+setStatus)
-      * [.setLastLogin(newLastLogin)](#User+setLastLogin)
-      * [.setData(newData)](#User+setData)
-      * [.setPassword(newPassword)](#User+setPassword)
-      * [.setOldPassword(newOldPassword)](#User+setOldPassword)
-      * [.setIntroReviewed(newIntroReviewed)](#User+setIntroReviewed)
-      * [.save()](#User+save)
-      * [.getNetworks()](#User+getNetworks) ⇒ `Http` ⇒ `Promise`
-      * [.assignNetwork(networkId)](#User+assignNetwork) ⇒ `Http` ⇒ `Promise`
-      * [.unassignNetwork(networkId)](#User+unassignNetwork) ⇒ `Http` ⇒ `Promise`
-
+  
 <a name="DeviceHive"></a>
 
-## class DeviceHive
+## DeviceHive
+DeviceHive module
 
-Public class accessable by default.
+* [DeviceHive](#DeviceHive)
+    * [new DeviceHive(options)](#new_DeviceHive_new)
+    * _instance_
+        * [.connect()](#DeviceHive+connect)
+    * _static_
+        * [.models](#DeviceHive.models) : <code>Object</code>
 
-<a name="new_DeviceHive_login_password"></a>
-### new DeviceHive({ serverURL, login, password}) ⇒ `Promise`
-DeviceHive object constructor.
-Here you need to specify server url, user login and password.
-You could use either HTTP or WebSocket protocols.
+<a name="new_DeviceHive_new"></a>
 
-| Param | Type | Description |
-| --- | --- | --- |
-| serverURL | `String` | DeviceHive cloud API url |
-| login | `String` | User's login |
-| password | `String` | User's password |
+### new DeviceHive(options)
+DeviceHive module
 
-Example:
-
-```js
-new DeviceHive({
-   serverURL : `<protocol>://<host>:<port>/<path>`,
-   login : `login`,
-   password : `password`
-})
-```
-
-<a name="new_DeviceHive_access_refresh"></a>
-### new DeviceHive({ serverURL, accessToken, refreshToken}) ⇒ `Promise`
-DeviceHive object constructor.
-Here you need to specify server url, user access and refresh tokens.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| serverURL | `String` | DeviceHive cloud API url |
-| accessToken | `String` | User's access token |
-| refreshToken | `String` | User's refresh token |
+| options | <code>object</code> | Initial settings |
+| [options.accessToken] | <code>string</code> | Access token |
+| [options.refreshToken] | <code>string</code> | Refresh token |
+| [options.login] | <code>string</code> | Login |
+| [options.password] | <code>string</code> | Paaword |
+| options.mainServiceURL | <code>string</code> | Main Service URL |
+| [options.authServiceURL] | <code>string</code> | Auth Service URL (required only for http) |
+| [options.pluginServiceURL] | <code>string</code> | Alug inServi ceURL (required only for http) |
 
-Example:
+<a name="DeviceHive+connect"></a>
 
-```js
-new DeviceHive({
-   serverURL : `<protocol>://<host>:<port>/<path>`,
-   accessToken : `accessToken`,
-   refreshToken : `refreshToken`
-})
-```
+### deviceHive.connect()
+Connect and authorize
 
-<a name="new_DeviceHive_refresh_only"></a>
-### new DeviceHive({ serverURL, refreshToken}) ⇒ `Promise`
-DeviceHive object constructor.
-Here you need to specify server url, user refresh token.
-User access token will be requested by default.
+<a name="DeviceHive.models"></a>
 
-| Param | Type | Description |
-| --- | --- | --- |
-| serverURL | `String` | DeviceHive cloud API url |
-| refreshToken | `String` | User's refresh token |
+### DeviceHive.models : <code>Object</code>
+Returns DeviceHive models
 
-Example:
+* [Command](#Command)
+* [Configuration](#Configuration)
+* [DeviceType](#DeviceType)
+* [Network](#Network)
+* [Notification](#Notification)
+* [UserToken](#UserToken)
+* [PluginToken](#PluginToken)
+* [User](#User)
+* query
+    * [CommandListQuery](#CommandListQuery)
+    * [CommandPollManyQuery](#CommandPollManyQuery)
+    * [CommandPollQuery](#CommandPollQuery)
+    * [CommandWaitQuery](#CommandWaitQuery)
+    * [DeviceCountQuery](#DeviceCountQuery)
+    * [DeviceListQuery](#DeviceListQuery)
+    * [DeviceTypeCountQuery](#DeviceTypeCountQuery)
+    * [DeviceTypeListQuery](#DeviceTypeListQuery)
+    * [PluginUpdateQuery](#PluginUpdateQuery)
+    * [NetworkCountQuery](#NetworkCountQuery)
+    * [NetworkListQuery](#NetworkListQuery)
+    * [NotificationListQuery](#NotificationListQuery)
+    * [NotificationPollManyQuery](#NotificationPollManyQuery)
+    * [NotificationPollQuery](#NotificationPollQuery)
+    * [UserCountQuery](#UserCountQuery)
+    * [UserListQuery](#UserListQuery)
+    * [PluginCountQuery](#PluginCountQuery)
+    * [PluginListQuery](#PluginListQuery)
+    * [PluginRegisterQuery](#PluginRegisterQuery)
 
-```js
-new DeviceHive({
-   serverURL : `<protocol>://<host>:<port>/<path>`,
-   accessToken : `accessToken`,
-   refreshToken : `refreshToken`
-})
-```
+<a name="DeviceHive.command"></a>
+### DeviceHive.command: <code>Object</code>
+Look at [DeviceCommandAPI](#DeviceCommandAPI).
 
-<a name="DeviceHive+getInfo"></a>
-### deviceHive.getInfo() ⇒ `Http` ⇒ `Promise`
-Returns version of API, server timestamp and WebSocket base uri.
+<a name="DeviceHive.configuration"></a>
+### DeviceHive.configuration : <code>Object</code>
+Look at [ConfigurationAPI](#ConfigurationAPI).
 
-Example:
+<a name="DeviceHive.device"></a>
+### DeviceHive.device: <code>Object</code>
+Look at [DeviceAPI](#DeviceAPI).
 
-```js
-new DeviceHive({
-   serverURL : `<protocol>://<host>:<port>/<path>`,
-   accessToken : `accessToken`,
-   refreshToken : `refreshToken`
-})
- .then(deviceHive => deviceHive.getInfo())
- .then(info => ...);
-```
+<a name="DeviceHive.deviceType"></a>
+### DeviceHive.deviceType: <code>Object</code>
+Look at [deviceTypeAPI](#DeviceTypeAPI).
 
-<a name="DeviceHive+getClusterInfo"></a>
-### deviceHive.getClusterInfo() ⇒ `Http` ⇒ `Promise`
-Returns information about cluster (Kafka, Zookeeper etc.)
 
-Example:
+<a name="DeviceHive.info"></a>
+### DeviceHive.info: <code>Object</code>
+Look at [InfoAPI](#InfoAPI).
 
-```js
-new DeviceHive({
-   serverURL : `<protocol>://<host>:<port>/<path>`,
-   accessToken : `accessToken`,
-   refreshToken : `refreshToken`
-})
-.then(deviceHive => deviceHive.getClusterInfo())
-.then(clusterInfo => ...)
-```
+<a name="DeviceHive.notification"></a>
+### DeviceHive.notification: <code>Object</code>
+Look at [DeviceNotificationAPI](#DeviceNotificationAPI).
 
-<a name="DeviceHive+createToken"></a>
-### deviceHive.createToken(userId, actions, networkIds, deviceIds, expiration) ⇒ `Http` ⇒ `Promise`
-Authenticates by system params and returns a session-level JWT token.
+<a name="DeviceHive.network"></a>
+### DeviceHive.network: <code>Object</code>
+Look at [NetworkAPI](#NetworkAPI).
 
-| Param | Type | Description |
-| --- | --- | --- |
-| userId | `Number` | User id |
-| actions | `[Strings]` | allowed actions |
-| networkIds | `[Strings]` | accessable networks |
-| deviceIds | `[Strings]` | accessable devices |
-| expiration | `String` | expiration date |
+<a name="DeviceHive.plugin"></a>
+### DeviceHive.plugin: <code>Object</code>
+Look at [PluginAPI](#PluginAPI).
 
-Example:
+<a name="DeviceHive.token"></a>
+### DeviceHive.token: <code>Object</code>
+Look at [TokenAPI](#TokenAPI).
 
-```js
-new DeviceHive({
-   serverURL : `<protocol>://<host>:<port>/<path>`,
-   accessToken : `accessToken`,
-   refreshToken : `refreshToken`
-})
-.then(deviceHive => deviceHive.createToken(`userId`, [`actions`], [`networkIds`], [`deviceIds`], `expiration`))
-.then(({ accessToken, refreshToken }) => ...)
-```
+<a name="DeviceHive.user"></a>
+### DeviceHive.user: <code>Object</code>
+Look at [UserAPI](#UserAPI).
 
-<a name="DeviceHive+refreshToken"></a>
-### deviceHive.refreshToken() ⇒ `Http` ⇒ `Promise`
-Refresh JWT access token.
 
-Example:
+---
 
-```js
-new DeviceHive({
-   serverURL : `<protocol>://<host>:<port>/<path>`,
-   accessToken : `accessToken`,
-   refreshToken : `refreshToken`
-})
-.then(deviceHive => deviceHive.refreshToken())
-.then(({ accessToken }) => ...)
-```
+## Nested DeviceHive API
 
-<a name="DeviceHive+getConfigurationProperty"></a>
-### deviceHive.getConfigurationProperty(name) ⇒ `Http` ⇒ `Promise`
-Returns requested property value
 
-| Param | Type | Description |
-| --- | --- | --- |
-| name | `String` | Property name |
+<a name="ConfigurationAPI"></a>
 
-Example:
+## ConfigurationAPI
+Returns information about the current configuration
 
-```js
-new DeviceHive({
-   serverURL : `<protocol>://<host>:<port>/<path>`,
-   accessToken : `accessToken`,
-   refreshToken : `refreshToken`
-})
-.then(deviceHive => deviceHive.getConfigurationProperty(`testName`))
-.then(property => ...)
-```
 
-<a name="DeviceHive+setConfigurationProperty"></a>
-### deviceHive.setConfigurationProperty(name, value) ⇒ `Http` ⇒ `Promise`
-Creates new or updates existing property
+* [ConfigurationAPI](#ConfigurationAPI)
+    * [.get(name)](#ConfigurationAPI+get) ⇒ <code>Promise</code>
+    * [.put(configuration)](#ConfigurationAPI+put) ⇒ <code>Promise</code>
+    * [.delete(name)](#ConfigurationAPI+delete) ⇒ <code>Promise</code>
 
-| Param | Type | Description |
-| --- | --- | --- |
-| name | `String` | Property name |
-| value | `String` | Property value |
+<a name="ConfigurationAPI+get"></a>
 
-Example:
+### configurationAPI.get(name) ⇒ <code>Promise</code>
+Creates ConfigurationAPI
 
-```js
-new DeviceHive({
-   serverURL : `<protocol>://<host>:<port>/<path>`,
-   accessToken : `accessToken`,
-   refreshToken : `refreshToken`
-})
-.then(deviceHive => deviceHive.setConfigurationProperty(`testName`, `testValue`))
-.then(() => ...)
-```
+| Param | Type |
+| --- | --- |
+| name | <code>number</code> | 
 
-<a name="DeviceHive+removeConfigurationProperty"></a>
-### deviceHive.removeConfigurationProperty(name) ⇒ `Http` ⇒ `Promise`
-Deletes property
+<a name="ConfigurationAPI+put"></a>
 
-| Param | Type | Description |
-| --- | --- | --- |
-| name | `String` | Property name |
+### configurationAPI.put(configuration) ⇒ <code>Promise</code>
+Updates a configuration
 
-Example:
+| Param | Type |
+| --- | --- |
+| configuration | <code>Configuration</code> | 
 
-```js
-new DeviceHive({
-   serverURL : `<protocol>://<host>:<port>/<path>`,
-   accessToken : `accessToken`,
-   refreshToken : `refreshToken`
-})
-.then(deviceHive => deviceHive.removeConfigurationProperty(`testName`))
-.then(() => ...)
-```
-<a name="DeviceHive+listNetworks"></a>
-### deviceHive.listNetworks(filter) ⇒ `Http` ⇒ `Promise`
-Gets list of device networks the client has access to.
+<a name="ConfigurationAPI+delete"></a>
 
-| Param | Type | Description |
-| --- | --- | --- |
-| filter | <code>[NetworkFilter](#DeviceHive..NetworkFilter)</code> | network filter |
+### configurationAPI.delete(name) ⇒ <code>Promise</code>
+Deletes an existing configuration
 
-Example:
 
-```js
-new DeviceHive({
-   serverURL : `<protocol>://<host>:<port>/<path>`,
-   accessToken : `accessToken`,
-   refreshToken : `refreshToken`
-})
-.then(deviceHive => deviceHive.listNetworks({/*NetworkFilter*/}))
-.then(networks => ...)
-```
+| Param | Type |
+| --- | --- |
+| name | <code>number</code> | 
 
-<a name="DeviceHive+getNetwork"></a>
-### deviceHive.getNetwork(networkId) ⇒ `Http` ⇒ `Promise`
-Gets information about device network.
+<a name="DeviceAPI"></a>
+
+## DeviceAPI
+Returns information about the current device
+
+
+* [DeviceAPI](#DeviceAPI)
+    * [.get(deviceId)](#DeviceAPI+get) ⇒ <code>Promise</code>
+    * [.list(deviceListQuery)](#DeviceAPI+list) ⇒ <code>Promise</code>
+    * [.count(deviceCountQuery)](#DeviceAPI+count) ⇒ <code>Promise</code>
+    * [.add(device)](#DeviceAPI+add) ⇒ <code>Promise</code>
+    * [.delete(deviceId)](#DeviceAPI+delete) ⇒ <code>Promise</code>
+
+<a name="DeviceAPI+get"></a>
+
+### deviceAPI.get(deviceId) ⇒ <code>Promise</code>
+Creates DeviceAPI
+
+| Param | Type |
+| --- | --- |
+| deviceId | <code>string</code> | 
+
+<a name="DeviceAPI+list"></a>
+
+### deviceAPI.list(deviceListQuery) ⇒ <code>Promise</code>
+Return a list of devices
+
+| Param | Type |
+| --- | --- |
+| deviceListQuery | <code>DeviceListQuery</code> | 
+
+<a name="DeviceAPI+count"></a>
+
+### deviceAPI.count(deviceCountQuery) ⇒ <code>Promise</code>
+Returns count of devices
+
+| Param | Type |
+| --- | --- |
+| deviceCountQuery | <code>DeviceCountQuery</code> | 
+
+<a name="DeviceAPI+add"></a>
+
+### deviceAPI.add(device) ⇒ <code>Promise</code>
+Registers or updates a device
 
 | Param | Type | Description |
 | --- | --- | --- |
-| networkId | `String` | network id |
+| device | <code>object</code> | data |
 
-Example:
+<a name="DeviceAPI+delete"></a>
 
-```js
-new DeviceHive({
-   serverURL : `<protocol>://<host>:<port>/<path>`,
-   accessToken : `accessToken`,
-   refreshToken : `refreshToken`
-})
-.then(deviceHive => deviceHive.getNetwork(`testId`))
-.then(network => ...)
-```
+### deviceAPI.delete(deviceId) ⇒ <code>Promise</code>
+Deletes an existing device
 
-<a name="DeviceHive+removeNetwork"></a>
-### deviceHive.removeNetwork(networkId) ⇒ `Http` ⇒ `Promise`
-Deletes an existing device network.
 
-| Param | Type | Description |
-| --- | --- | --- |
-| networkId | `String` | network id |
+| Param | Type |
+| --- | --- |
+| deviceId | <code>string</code> | 
 
-Example:
+<a name="DeviceCommandAPI"></a>
 
-```js
-new DeviceHive({
-   serverURL : `<protocol>://<host>:<port>/<path>`,
-   accessToken : `accessToken`,
-   refreshToken : `refreshToken`
-})
-.then(deviceHive => deviceHive.removeNetwork(`testId`))
-.then(() => ...)
-```
+## DeviceCommandAPI
+Returns information about the current command
 
-<a name="DeviceHive+createNetwork"></a>
-### deviceHive.createNetwork(name, description) ⇒ `Http` ⇒ `Promise`
-Creates new device network.
+
+* [DeviceCommandAPI](#DeviceCommandAPI)
+    * [.get(deviceId, commandId)](#DeviceCommandAPI+get) ⇒ <code>Promise</code>
+    * [.list(commandListQuery)](#DeviceCommandAPI+list) ⇒ <code>Promise</code>
+    * [.insert(deviceId, command)](#DeviceCommandAPI+insert) ⇒ <code>Promise</code>
+    * [.update(command)](#DeviceCommandAPI+update) ⇒ <code>Promise</code>
+    * [.poll(commandPollQuery)](#DeviceCommandAPI+poll) ⇒ <code>Promise</code>
+    * [.pollMany(commandPollManyQuery)](#DeviceCommandAPI+pollMany) ⇒ <code>Promise</code>
+    * [.wait(deviceId, commandId)](#DeviceCommandAPI+wait) ⇒ <code>Promise</code>
+    * [.subscribe(commandPollQuery)](#DeviceCommandAPI+subscribe) ⇒ <code>Promise</code>
+    * [.unsubscribe(subscriptionId)](#DeviceCommandAPI+unsubscribe) ⇒ <code>Promise</code>
+
+<a name="DeviceCommandAPI+get"></a>
+
+### deviceCommandAPI.get(deviceId, commandId) ⇒ <code>Promise</code>
+Creates DeviceCommandAPI
 
 | Param | Type | Description |
 | --- | --- | --- |
-| name | `String` | network name |
-| description | `Strings` | network description |
+| deviceId | <code>number</code> | Device ID |
+| commandId | <code>number</code> | Command ID |
 
-Example:
+<a name="DeviceCommandAPI+list"></a>
 
-```js
-new DeviceHive({
-   serverURL : `<protocol>://<host>:<port>/<path>`,
-   accessToken : `accessToken`,
-   refreshToken : `refreshToken`
-})
-.then(deviceHive => deviceHive.createNetwork(`testName`, `testDescription`))
-.then(createdNetwork => ...)
-```
+### deviceCommandAPI.list(commandListQuery) ⇒ <code>Promise</code>
+Return a list of commands
 
-<a name="DeviceHive+listDevices"></a>
-### deviceHive.listDevices(filter) ⇒ `Http` ⇒ `Promise`
-Gets list of devices.
+| Param | Type |
+| --- | --- |
+| commandListQuery | <code>CommandListQuery</code> | 
+
+<a name="DeviceCommandAPI+insert"></a>
+
+### deviceCommandAPI.insert(deviceId, command) ⇒ <code>Promise</code>
+Registers a command
 
 | Param | Type | Description |
 | --- | --- | --- |
-| filter | <code>[DeviceFilter](#DeviceHive..DeviceFilter)</code> | search filter |
+| deviceId | <code>number</code> | Device ID |
+| command | <code>Command</code> |  |
 
-Example:
+<a name="DeviceCommandAPI+update"></a>
 
-```js
-new DeviceHive({
-   serverURL : `<protocol>://<host>:<port>/<path>`,
-   accessToken : `accessToken`,
-   refreshToken : `refreshToken`
-})
-.then(deviceHive => deviceHive.listDevices())
-.then(devices => ...)
-```
+### deviceCommandAPI.update(command) ⇒ <code>Promise</code>
+Updates a command
 
-<a name="DeviceHive+removeDevice"></a>
-### deviceHive.removeDevice(id) ⇒ `Http` ⇒ `Promise`
-Deletes an existing device.
+| Param | Type |
+| --- | --- |
+| command | <code>Command</code> | 
 
-| Param | Type | Description |
-| --- | --- | --- |
-| id | `String` | device unique identifier |
+<a name="DeviceCommandAPI+poll"></a>
 
-Example:
+### deviceCommandAPI.poll(commandPollQuery) ⇒ <code>Promise</code>
 
-```js
-new DeviceHive({
-   serverURL : `<protocol>://<host>:<port>/<path>`,
-   accessToken : `accessToken`,
-   refreshToken : `refreshToken`
-})
-.then(deviceHive => deviceHive.removeDevice(`testId`))
-.then(() => ...)
-```
+| Param | Type |
+| --- | --- |
+| commandPollQuery | <code>CommandPollQuery</code> | 
 
-<a name="DeviceHive+getDevice"></a>
-### deviceHive.getDevice(id) ⇒ `Http` ⇒ `Promise`
-Gets information about device.
+<a name="DeviceCommandAPI+pollMany"></a>
 
-| Param | Type | Description |
-| --- | --- | --- |
-| id | `String` | device unique identifier |
+### deviceCommandAPI.pollMany(commandPollManyQuery) ⇒ <code>Promise</code>
 
-Example:
+| Param | Type |
+| --- | --- |
+| commandPollManyQuery | <code>CommandPollManyQuery</code> | 
 
-```js
-new DeviceHive({
-   serverURL : `<protocol>://<host>:<port>/<path>`,
-   accessToken : `accessToken`,
-   refreshToken : `refreshToken`
-})
-.then(deviceHive => deviceHive.getDevice(`testId`))
-.then(device => ...)
-```
+<a name="DeviceCommandAPI+wait"></a>
 
-<a name="DeviceHive+putDevice"></a>
-### deviceHive.putDevice(id, deviceParams) ⇒ `Http` ⇒ `Promise`
-Registers or updates a device. For initial device registration, only 'name' property is required.
+### deviceCommandAPI.wait(deviceId, commandId) ⇒ <code>Promise</code>
 
-| Param | Type | Description |
-| --- | --- | --- |
-| id | `String` | device unique identifier |
-| deviceParams | <code>[DeviceParams](#DeviceHive..DeviceParams)</code> | device params |
+| Param |
+| --- |
+| deviceId | 
+| commandId | 
 
-Example:
+<a name="DeviceCommandAPI+subscribe"></a>
 
-```js
-new DeviceHive({
-   serverURL : `<protocol>://<host>:<port>/<path>`,
-   accessToken : `accessToken`,
-   refreshToken : `refreshToken`
-})
-.then(deviceHive => deviceHive.putDevice(`testId`, {/*DeviceParams*/}))
-.then(() => ...)
-```
+### deviceCommandAPI.subscribe(commandPollQuery) ⇒ <code>Promise</code>
 
-<a name="DeviceHive+getCurrentUser"></a>
-### deviceHive.getCurrentUser() ⇒ `Http` ⇒ `Promise`
-Get information about the current user.
+| Param | Type |
+| --- | --- |
+| commandPollQuery | <code>CommandPollQuery</code> | 
 
-Example:
+<a name="DeviceCommandAPI+unsubscribe"></a>
 
-```js
-new DeviceHive({
-   serverURL : `<protocol>://<host>:<port>/<path>`,
-   accessToken : `accessToken`,
-   refreshToken : `refreshToken`
-})
-.then(deviceHive => deviceHive.getCurrentUser())
-.then(user => ...)
-```
+### deviceCommandAPI.unsubscribe(subscriptionId) ⇒ <code>Promise</code>
 
-<a name="DeviceHive+getUsers"></a>
-### deviceHive.getUsers(filter) ⇒ `Http` ⇒ `Promise`
-Gets list of users.
+| Param | Type |
+| --- | --- |
+| subscriptionId | <code>Number</code> | 
+
+<a name="DeviceNotificationAPI"></a>
+
+## DeviceNotificationAPI
+Returns information about the current notification
+
+
+* [DeviceNotificationAPI](#DeviceNotificationAPI)
+    * [.get(deviceId, notificationId)](#DeviceNotificationAPI+get) ⇒ <code>Promise</code>
+    * [.list(notificationListQuery)](#DeviceNotificationAPI+list) ⇒ <code>Promise</code>
+    * [.insert(notification)](#DeviceNotificationAPI+insert) ⇒ <code>Promise</code>
+    * [.poll(notificationPollQuery)](#DeviceNotificationAPI+poll) ⇒ <code>\*</code>
+    * [.pollMany(notificationPollManyQuery)](#DeviceNotificationAPI+pollMany) ⇒ <code>\*</code>
+    * [.subscribe(notificationPollQuery)](#DeviceNotificationAPI+subscribe) ⇒ <code>Promise</code>
+    * [.unsubscribe(subscriptionId)](#DeviceNotificationAPI+unsubscribe) ⇒ <code>Promise</code>
+
+<a name="DeviceNotificationAPI+get"></a>
+
+### deviceNotificationAPI.get(deviceId, notificationId) ⇒ <code>Promise</code>
+Creates DeviceNotificationAPI
 
 | Param | Type | Description |
 | --- | --- | --- |
-| filter | <code>[UsersFilter](#DeviceHive..UsersFilter)</code> | users filter |
+| deviceId | <code>number</code> | Device ID |
+| notificationId | <code>number</code> | Notification ID |
 
-Example:
+<a name="DeviceNotificationAPI+list"></a>
 
-```js
-new DeviceHive({
-   serverURL : `<protocol>://<host>:<port>/<path>`,
-   accessToken : `accessToken`,
-   refreshToken : `refreshToken`
-})
-.then(deviceHive => deviceHive.getUsers({/*UsersFilter*/}))
-.then(users => ...)
-```
+### deviceNotificationAPI.list(notificationListQuery) ⇒ <code>Promise</code>
+Return a list of notifications
 
-<a name="DeviceHive+createUser"></a>
-### deviceHive.createUser(userParams) ⇒ `Http` ⇒ `Promise`
-Creates new user.
+| Param | Type |
+| --- | --- |
+| notificationListQuery | <code>NotificationListQuery</code> | 
 
-| Param | Type | Description |
-| --- | --- | --- |
-| userParams | <code>[UserParams](#DeviceHive..UserParams)</code> | user params |
+<a name="DeviceNotificationAPI+insert"></a>
 
-Example:
+### deviceNotificationAPI.insert(notification) ⇒ <code>Promise</code>
+Registers a notification
 
-```js
-new DeviceHive({
-   serverURL : `<protocol>://<host>:<port>/<path>`,
-   accessToken : `accessToken`,
-   refreshToken : `refreshToken`
-})
-.then(deviceHive => deviceHive.createUser({/*UserParams*/}))
-.then(createdUser => ...)
-```
+| Param | Type |
+| --- | --- |
+| notification | <code>Notification</code> | 
 
-<a name="DeviceHive+removeUser"></a>
-### deviceHive.removeUser(userId) ⇒ `Http` ⇒ `Promise`
-Delete user.
+<a name="DeviceNotificationAPI+poll"></a>
 
-| Param | Type | Description |
-| --- | --- | --- |
-| userId | `String` | user id |
+### deviceNotificationAPI.poll(notificationPollQuery) ⇒ <code>\*</code>
 
-Example:
+| Param | Type |
+| --- | --- |
+| notificationPollQuery | <code>NotificationPollQuery</code> | 
 
-```js
-new DeviceHive({
-   serverURL : `<protocol>://<host>:<port>/<path>`,
-   accessToken : `accessToken`,
-   refreshToken : `refreshToken`
-})
-.then(deviceHive => deviceHive.removeUser(`testId`))
-.then(() => ...)
-```
+<a name="DeviceNotificationAPI+pollMany"></a>
 
-<a name="DeviceHive+subscribeCommands"></a>
-### deviceHive.subscribeCommands(deviceIds, subscriber, commandFilter) ⇒ `Promise`
-Allows subscribe for Commands to particular Devices with filter
+### deviceNotificationAPI.pollMany(notificationPollManyQuery) ⇒ <code>\*</code>
 
-| Param | Type | Description |
-| --- | --- | --- |
-| deviceIds | `[String]` | device ids |
-| subscriber | `Function` | subscriber function |
-| commandFilter | <code>[DeviceCommandPollFilter](#DeviceHive..DeviceCommandPollFilter)</code> | command filter |
+| Param | Type |
+| --- | --- |
+| notificationPollManyQuery | <code>NotificationPollManyQuery</code> | 
 
-Example:
+<a name="DeviceNotificationAPI+subscribe"></a>
 
-```js
-new DeviceHive({
-   serverURL : `<protocol>://<host>:<port>/<path>`,
-   accessToken : `accessToken`,
-   refreshToken : `refreshToken`
-})
-.then(deviceHive => deviceHive.subscribeCommands([`testId1`, `testId2`], /*function (){}*/, /*DeviceCommandPollFilter*/))
-```
+### deviceNotificationAPI.subscribe(notificationPollQuery) ⇒ <code>Promise</code>
 
-<a name="DeviceHive+unsubscribeCommands"></a>
-### deviceHive.unsubscribeCommands(deviceIds, commandFilter) ⇒ `Promise`
-Allows unsubscribe from Commands to particular Devices with filter
+| Param | Type |
+| --- | --- |
+| notificationPollQuery | <code>NotificationPollQuery</code> | 
 
-| Param | Type | Description |
-| --- | --- | --- |
-| deviceIds | `[String]` | device ids |
-| commandFilter | <code>[DeviceCommandPollFilter](#DeviceHive..DeviceCommandPollFilter)</code> | command filter |
+<a name="DeviceNotificationAPI+unsubscribe"></a>
 
-Example:
+### deviceNotificationAPI.unsubscribe(subscriptionId) ⇒ <code>Promise</code>
 
-```js
-new DeviceHive({
-   serverURL : `<protocol>://<host>:<port>/<path>`,
-   accessToken : `accessToken`,
-   refreshToken : `refreshToken`
-})
-.then(deviceHive => deviceHive.unsubscribeCommands([`testId1`, `testId2`], /*DeviceCommandPollFilter*/))
-```
+| Param | Type |
+| --- | --- |
+| subscriptionId | <code>Number</code> | 
 
-<a name="DeviceHive+subscribeNotifications"></a>
-### deviceHive.subscribeNotifications(deviceIds, subscriber, notificationFilter) ⇒ `Promise`
-Allows subscribe for Notifications to particular Devices with filter
+<a name="DeviceTypeAPI"></a>
 
-| Param | Type | Description |
-| --- | --- | --- |
-| deviceIds | `[String]` | device ids |
-| subscriber | `Function` | subscriber function |
-| notificationFilter | <code>[DevicesNotificationPollFilter](#DeviceHive..DevicesNotificationPollFilter)</code> | command filter |
+## DeviceTypeAPI
+Returns information about the current deviceType
 
-Example:
 
-```js
-new DeviceHive({
-   serverURL : `<protocol>://<host>:<port>/<path>`,
-   accessToken : `accessToken`,
-   refreshToken : `refreshToken`
-})
-.then(deviceHive => deviceHive.subscribeNotifications([`testId1`, `testId2`], /*function (){}*/, /*DeviceNotificationPollFilter*/))
-```
+* [DeviceTypeAPI](#DeviceTypeAPI)
+    * [.get(deviceTypeId)](#DeviceTypeAPI+get) ⇒ <code>Promise</code>
+    * [.list(deviceTypeListQuery)](#DeviceTypeAPI+list) ⇒ <code>Promise</code>
+    * [.count(deviceTypeCountQuery)](#DeviceTypeAPI+count) ⇒ <code>Promise</code>
+    * [.insert(deviceType)](#DeviceTypeAPI+insert) ⇒ <code>Promise</code>
+    * [.update(deviceType)](#DeviceTypeAPI+update) ⇒ <code>Promise</code>
+    * [.delete(deviceTypeId)](#DeviceTypeAPI+delete) ⇒ <code>Promise</code>
 
-<a name="DeviceHive+unsubscribeNotifications"></a>
-### deviceHive.unsubscribeNotifications(deviceIds, notificationFilter) ⇒ `Promise`
-Allows unsubscribe from Notifications to particular Devices with filter
+<a name="DeviceTypeAPI+get"></a>
+
+### deviceTypeAPI.get(deviceTypeId) ⇒ <code>Promise</code>
+Creates DeviceTypeAPI
+
+| Param | Type |
+| --- | --- |
+| deviceTypeId | <code>number</code> | 
+
+<a name="DeviceTypeAPI+list"></a>
+
+### deviceTypeAPI.list(deviceTypeListQuery) ⇒ <code>Promise</code>
+Return a list of deviceTypes
+
+| Param | Type |
+| --- | --- |
+| deviceTypeListQuery | <code>DeviceTypeListQuery</code> | 
+
+<a name="DeviceTypeAPI+count"></a>
+
+### deviceTypeAPI.count(deviceTypeCountQuery) ⇒ <code>Promise</code>
+Returns count of deviceTypes
+
+| Param | Type |
+| --- | --- |
+| deviceTypeCountQuery | <code>DeviceTypeCountQuery</code> | 
+
+<a name="DeviceTypeAPI+insert"></a>
+
+### deviceTypeAPI.insert(deviceType) ⇒ <code>Promise</code>
+Registers a deviceType
 
 | Param | Type | Description |
 | --- | --- | --- |
-| deviceIds | `[String]` | device ids |
-| notificationFilter | <code>[DevicesNotificationPollFilter](#DeviceHive..DevicesNotificationPollFilter)</code> | command filter |
+| deviceType | <code>DeviceType</code> | data |
 
-Example:
+<a name="DeviceTypeAPI+update"></a>
 
-```js
-new DeviceHive({
-   serverURL : `<protocol>://<host>:<port>/<path>`,
-   accessToken : `accessToken`,
-   refreshToken : `refreshToken`
-})
-.then(deviceHive => deviceHive.unsubscribeNotifications([`testId1`, `testId2`], /*DeviceNotificationPollFilter*/))
-```
+### deviceTypeAPI.update(deviceType) ⇒ <code>Promise</code>
+Updates a deviceType
 
-<a name="DeviceHive..NetworkFilter"></a>
-### DeviceHive~NetworkFilter : `Struct`
-
-**Properties**
-
-| Name | Type | Description |
+| Param | Type | Description |
 | --- | --- | --- |
-| name | `String` | Filter by network name. |
-| namePattern | `Strings` | Filter by network name pattern. |
-| sortField | `Strings` | Result list sort field. |
-| sortOrder | `Strings` | Result list sort order. |
-| take | `Number` | Number of records to take from the result list. |
-| skip | `Number` | Number of records to skip from the result list. |
+| deviceType | <code>DeviceType</code> | data |
 
-<a name="DeviceHive..DeviceFilter"></a>
-### DeviceHive~DeviceFilter : `Struct`
+<a name="DeviceTypeAPI+delete"></a>
 
-**Properties**
+### deviceTypeAPI.delete(deviceTypeId) ⇒ <code>Promise</code>
+Deletes an existing deviceType
 
-| Name | Type | Description |
+
+| Param | Type |
+| --- | --- |
+| deviceTypeId | <code>number</code> | 
+
+<a name="NetworkAPI"></a>
+
+## NetworkAPI
+Returns information about the current network
+
+
+* [NetworkAPI](#NetworkAPI)
+    * [.get(networkId)](#NetworkAPI+get) ⇒ <code>Promise</code>
+    * [.list(networkListQuery)](#NetworkAPI+list) ⇒ <code>Promise</code>
+    * [.count(networkCountQuery)](#NetworkAPI+count) ⇒ <code>Promise</code>
+    * [.insert(network)](#NetworkAPI+insert) ⇒ <code>Promise</code>
+    * [.update(networkId, network)](#NetworkAPI+update) ⇒ <code>Promise</code>
+    * [.delete(networkId)](#NetworkAPI+delete) ⇒ <code>Promise</code>
+
+<a name="NetworkAPI+get"></a>
+
+### networkAPI.get(networkId) ⇒ <code>Promise</code>
+Returns a network
+
+| Param | Type |
+| --- | --- |
+| networkId | <code>number</code> | 
+
+<a name="NetworkAPI+list"></a>
+
+### networkAPI.list(networkListQuery) ⇒ <code>Promise</code>
+Return a list of networks
+
+| Param | Type |
+| --- | --- |
+| networkListQuery | <code>NetworkListQuery</code> | 
+
+<a name="NetworkAPI+count"></a>
+
+### networkAPI.count(networkCountQuery) ⇒ <code>Promise</code>
+Returns count of networks
+
+| Param | Type |
+| --- | --- |
+| networkCountQuery | <code>NetworkCountQuery</code> | 
+
+<a name="NetworkAPI+insert"></a>
+
+### networkAPI.insert(network) ⇒ <code>Promise</code>
+Registers a network
+
+| Param | Type | Description |
 | --- | --- | --- |
-| name | `String` | filter by network name |
-| namePattern | `String` | filter by network name pattern |
-| networkId | `Number` | filter by associated network identifier |
-| networkName | `String` | filter by associated network name
-| sortField | `String` | result list sort field |
-| sortOrder | `String` | result list sort order | 
-| take | `Number` | number of records to take from the result list |
-| skip | `Number` | number of records to skip from the result list |
+| network | <code>Network</code> | data |
 
-<a name="DeviceHive..DeviceParams"></a>
-### DeviceHive~DeviceParams : `Struct`
+<a name="NetworkAPI+update"></a>
 
-**Properties**
+### networkAPI.update(networkId, network) ⇒ <code>Promise</code>
+Updates a network
 
-| Name | Type | Description |
+| Param | Type | Description |
 | --- | --- | --- |
-| name | `String` | device name |
-| data | `Object` | device data |
-| networkId | `Number` | device network id |
-| blocked | `Boolean` | device blocked state |
+| networkId | <code>number</code> |  |
+| network | <code>Network</code> | data |
 
-<a name="DeviceHive..UsersFilter"></a>
-### DeviceHive~UsersFilter : `Struct`
+<a name="NetworkAPI+delete"></a>
 
-**Properties**
+### networkAPI.delete(networkId) ⇒ <code>Promise</code>
+Deletes an existing network
 
-| Name | Type | Description |
+| Param | Type |
+| --- | --- |
+| networkId | <code>number</code> | 
+
+<a name="PluginAPI"></a>
+
+## PluginAPI
+Returns information about the current plugin
+
+
+* [PluginAPI](#PluginAPI)
+    * [.list(pluginListQuery)](#PluginAPI+list) ⇒ <code>Promise</code>
+    * [.count(pluginCountQuery)](#PluginAPI+count) ⇒ <code>Promise</code>
+    * [.insert(plugin, pluginRegisterQuery)](#PluginAPI+insert) ⇒ <code>Promise</code>
+    * [.update(plugin)](#PluginAPI+update) ⇒ <code>Promise</code>
+    * [.delete(Plugin)](#PluginAPI+delete) ⇒ <code>Promise</code>
+
+<a name="PluginAPI+list"></a>
+
+### pluginAPI.list(pluginListQuery) ⇒ <code>Promise</code>
+Return a list of plugins
+
+| Param | Type |
+| --- | --- |
+| pluginListQuery | <code>PluginListQuery</code> | 
+
+<a name="PluginAPI+count"></a>
+
+### pluginAPI.count(pluginCountQuery) ⇒ <code>Promise</code>
+Returns count of plugins
+
+| Param | Type |
+| --- | --- |
+| pluginCountQuery | <code>PluginCountQuery</code> | 
+
+<a name="PluginAPI+insert"></a>
+
+### pluginAPI.insert(plugin, pluginRegisterQuery) ⇒ <code>Promise</code>
+Registers a plugin
+
+| Param | Type |
+| --- | --- |
+| plugin | <code>Plugin</code> | 
+| pluginRegisterQuery | <code>PluginRegisterQuery</code> | 
+
+<a name="PluginAPI+update"></a>
+
+### pluginAPI.update(plugin) ⇒ <code>Promise</code>
+Updates a plugin
+
+| Param | Type |
+| --- | --- |
+| plugin | <code>Promise</code> | 
+
+<a name="PluginAPI+delete"></a>
+
+### pluginAPI.delete(Plugin) ⇒ <code>Promise</code>
+Deletes an existing plugin
+
+| Param | Type |
+| --- | --- |
+| Plugin | <code>object</code> | 
+
+<a name="InfoAPI"></a>
+
+## InfoAPI
+Get server info
+
+
+* [InfoAPI](#InfoAPI)
+    * [.getServerInfo()](#InfoAPI+getServerInfo)
+    * [.getCacheInfo()](#InfoAPI+getCacheInfo)
+    * [.getClusterInfo()](#InfoAPI+getClusterInfo)
+
+<a name="InfoAPI+getServerInfo"></a>
+
+### infoAPI.getServerInfo()
+Creates InfoAPI
+
+<a name="InfoAPI+getCacheInfo"></a>
+
+### infoAPI.getCacheInfo()
+Get cache info
+
+<a name="InfoAPI+getClusterInfo"></a>
+
+### infoAPI.getClusterInfo()
+Get cluster info
+
+<a name="TokenAPI"></a>
+
+## TokenAPI
+Authentificate using login and password
+
+
+* [TokenAPI](#TokenAPI)
+    * [.login(login, password)](#TokenAPI+login)
+    * [.authPlugin(token)](#TokenAPI+authPlugin)
+    * [.createUserToken(userToken)](#TokenAPI+createUserToken)
+    * [.createPluginToken(pluginToken)](#TokenAPI+createPluginToken)
+    * [.refresh(refreshToken)](#TokenAPI+refresh)
+
+<a name="TokenAPI+login"></a>
+
+### tokenAPI.login(login, password)
+Creates TokenAPI
+
+
+| Param | Type |
+| --- | --- |
+| login | <code>string</code> |
+| password | <code>string</code> |
+
+<a name="TokenAPI+authPlugin"></a>
+
+### tokenAPI.authPlugin(token)
+Create user token
+
+
+| Param | Type | Description |
 | --- | --- | --- |
-| login | `String` | Filter by user login. |
-| loginPattern | `String` | Filter by user login pattern. |
-| role | `Number` | Filter by user role. 0 is Administrator, 1 is Client. |
-| status | `Number` | Filter by user status. 0 is Active, 1 is Locked Out, 2 is Disabled. |
-| sortField | `String` | Result list sort field. |
-| sortOrder | `String` | Result list sort order. Available values are ASC and DESC. |
-| take | `Number` | Number of records to take from the result list. |
-| skip | `Number` | Number of records to skip from the result list. |
+| token | <code>string</code> | Plugin token |
 
-<a name="#DeviceHive..UserParams"></a>
-### DeviceHive~UserParams : `Struct`
+<a name="TokenAPI+createUserToken"></a>
 
-**Properties**
+### tokenAPI.createUserToken(userToken)
+Create user token
 
-| Name | Type | Description |
+
+| Param | Type |
+| --- | --- |
+| userToken | <code>UserToken</code> |
+
+<a name="TokenAPI+createPluginToken"></a>
+
+### tokenAPI.createPluginToken(pluginToken)
+Create plugin token
+
+
+| Param | Type |
+| --- | --- |
+| pluginToken | <code>PluginToken</code> |
+
+<a name="TokenAPI+refresh"></a>
+
+### tokenAPI.refresh(refreshToken)
+Refresg token
+
+
+| Param | Type |
+| --- | --- |
+| refreshToken | <code>string</code> |
+
+<a name="UserAPI"></a>
+
+## UserAPI
+
+<dl>
+<dt><a href="#ConfigurationAPI">ConfigurationAPI</a></dt>
+<dd><p>Returns information about the current configuration</p>
+</dd>
+<dt><a href="#DeviceAPI">DeviceAPI</a></dt>
+<dd><p>Returns information about the current device</p>
+</dd>
+<dt><a href="#DeviceCommandAPI">DeviceCommandAPI</a></dt>
+<dd><p>Returns information about the current command</p>
+</dd>
+<dt><a href="#DeviceNotificationAPI">DeviceNotificationAPI</a></dt>
+<dd><p>Returns information about the current notification</p>
+</dd>
+<dt><a href="#DeviceTypeAPI">DeviceTypeAPI</a></dt>
+<dd><p>Returns information about the current deviceType</p>
+</dd>
+<dt><a href="#NetworkAPI">NetworkAPI</a></dt>
+<dd><p>Returns information about the current network</p>
+</dd>
+<dt><a href="#PluginAPI">PluginAPI</a></dt>
+<dd><p>Returns information about the current plugin</p>
+</dd>
+<dt><a href="#InfoAPI">InfoAPI</a></dt>
+<dd><p>Get server info</p>
+</dd>
+<dt><a href="#TokenAPI">TokenAPI</a></dt>
+<dd><p>Authenticate using login and password</p>
+</dd>
+<dt><a href="#UserAPI">UserAPI</a></dt>
+<dd><p>Return a list of users</p>
+</dd>
+</dl>
+
+
+<a name="ConfigurationAPI"></a>
+
+## ConfigurationAPI
+Returns information about the current configuration
+
+
+* [ConfigurationAPI](#ConfigurationAPI)
+    * [.get(name)](#ConfigurationAPI+get) ⇒ <code>Promise</code>
+    * [.put(configuration)](#ConfigurationAPI+put) ⇒ <code>Promise</code>
+    * [.delete(name)](#ConfigurationAPI+delete) ⇒ <code>Promise</code>
+
+<a name="ConfigurationAPI+get"></a>
+
+### configurationAPI.get(name) ⇒ <code>Promise</code>
+Creates ConfigurationAPI
+
+**Returns**: <code>Promise</code> - selected configuration  
+
+| Param | Type |
+| --- | --- |
+| name | <code>number</code> | 
+
+<a name="ConfigurationAPI+put"></a>
+
+### configurationAPI.put(configuration) ⇒ <code>Promise</code>
+Updates a configuration
+
+**Returns**: <code>Promise</code> - count of configuration  
+
+| Param | Type |
+| --- | --- |
+| configuration | <code>Configuration</code> | 
+
+<a name="ConfigurationAPI+delete"></a>
+
+### configurationAPI.delete(name) ⇒ <code>Promise</code>
+Deletes an existing configuration
+
+
+| Param | Type |
+| --- | --- |
+| name | <code>number</code> | 
+
+<a name="DeviceAPI"></a>
+
+## DeviceAPI
+Returns information about the current device
+
+
+* [DeviceAPI](#DeviceAPI)
+    * [.get(deviceId)](#DeviceAPI+get) ⇒ <code>Promise</code>
+    * [.list(deviceListQuery)](#DeviceAPI+list) ⇒ <code>Promise</code>
+    * [.count(deviceCountQuery)](#DeviceAPI+count) ⇒ <code>Promise</code>
+    * [.add(device)](#DeviceAPI+add) ⇒ <code>Promise</code>
+    * [.delete(deviceId)](#DeviceAPI+delete) ⇒ <code>Promise</code>
+
+<a name="DeviceAPI+get"></a>
+
+### deviceAPI.get(deviceId) ⇒ <code>Promise</code>
+Creates DeviceAPI
+
+**Returns**: <code>Promise</code> - selected device  
+
+| Param | Type |
+| --- | --- |
+| deviceId | <code>string</code> | 
+
+<a name="DeviceAPI+list"></a>
+
+### deviceAPI.list(deviceListQuery) ⇒ <code>Promise</code>
+Return a list of devices
+
+**Returns**: <code>Promise</code> - list of devices  
+
+| Param | Type |
+| --- | --- |
+| deviceListQuery | <code>DeviceListQuery</code> | 
+
+<a name="DeviceAPI+count"></a>
+
+### deviceAPI.count(deviceCountQuery) ⇒ <code>Promise</code>
+Returns count of devices
+
+**Returns**: <code>Promise</code> - count of devices  
+
+| Param | Type |
+| --- | --- |
+| deviceCountQuery | <code>DeviceCountQuery</code> | 
+
+<a name="DeviceAPI+add"></a>
+
+### deviceAPI.add(device) ⇒ <code>Promise</code>
+Registers or updates a device
+
+**Returns**: <code>Promise</code> - count of devices  
+
+| Param | Type | Description |
 | --- | --- | --- |
-| login | `String` | User login using during authentication. |
-| role | `Number` | User role. 0 is Administrator, 1 is Client. |
-| status | `Number` | User status. 0 is Active, 1 is Locked Out, 2 is Disabled. |
-| password | `String` | User password. |
-| oldPassword | `String` | User old password. Required for non-admin users |
-| data | `Object` | User data, a JSON object with an arbitrary structure. |
+| device | <code>object</code> | data |
 
-<a name="DeviceHive..DeviceCommandPollFilter"></a>
-### DeviceHive~DeviceCommandPollFilter : `Struct`
+<a name="DeviceAPI+delete"></a>
 
-**Properties**
+### deviceAPI.delete(deviceId) ⇒ <code>Promise</code>
+Deletes an existing device
 
-| Name | Type | Description |
+
+| Param | Type |
+| --- | --- |
+| deviceId | <code>string</code> | 
+
+<a name="DeviceCommandAPI"></a>
+
+## DeviceCommandAPI
+Returns information about the current command
+
+
+* [DeviceCommandAPI](#DeviceCommandAPI)
+    * [.get(deviceId, commandId)](#DeviceCommandAPI+get) ⇒ <code>Promise</code>
+    * [.list(commandListQuery)](#DeviceCommandAPI+list) ⇒ <code>Promise</code>
+    * [.insert(deviceId, command)](#DeviceCommandAPI+insert) ⇒ <code>Promise</code>
+    * [.update(command)](#DeviceCommandAPI+update) ⇒ <code>Promise</code>
+    * [.poll(commandPollQuery)](#DeviceCommandAPI+poll) ⇒ <code>Promise</code>
+    * [.pollMany(commandPollManyQuery)](#DeviceCommandAPI+pollMany) ⇒ <code>Promise</code>
+    * [.wait(deviceId, commandId)](#DeviceCommandAPI+wait) ⇒ <code>Promise</code>
+    * [.subscribe(commandPollQuery)](#DeviceCommandAPI+subscribe) ⇒ <code>Promise</code>
+    * [.unsubscribe(subscriptionId)](#DeviceCommandAPI+unsubscribe) ⇒ <code>Promise</code>
+
+<a name="DeviceCommandAPI+get"></a>
+
+### deviceCommandAPI.get(deviceId, commandId) ⇒ <code>Promise</code>
+Creates DeviceCommandAPI
+
+**Returns**: <code>Promise</code> - selected command  
+
+| Param | Type | Description |
 | --- | --- | --- |
-| names | `String` | Command names |
-| timestamp | `String` | Timestamp to start from |
-| waitTimeout | `Number` | Wait timeout in seconds |
-| limit | `Number` | Limit number of commands |
+| deviceId | <code>number</code> | Device ID |
+| commandId | <code>number</code> | Command ID |
 
-<a name="DeviceHive..DevicesNotificationPollFilter"></a>
-### DeviceHive~DevicesNotificationPollFilter : `Struct`
+<a name="DeviceCommandAPI+list"></a>
 
-**Properties**
+### deviceCommandAPI.list(commandListQuery) ⇒ <code>Promise</code>
+Return a list of commands
 
-| Name | Type | Description |
+**Returns**: <code>Promise</code> - list of commands  
+
+| Param | Type |
+| --- | --- |
+| commandListQuery | <code>CommandListQuery</code> | 
+
+<a name="DeviceCommandAPI+insert"></a>
+
+### deviceCommandAPI.insert(deviceId, command) ⇒ <code>Promise</code>
+Registers a command
+
+**Returns**: <code>Promise</code> - count of commands  
+
+| Param | Type | Description |
 | --- | --- | --- |
-| waitTimeout | `Number` | Wait timeout in seconds |
-| names | `String` | Notification names |
-| timestamp | `String` | Timestamp to start from |
+| deviceId | <code>number</code> | Device ID |
+| command | <code>Command</code> |  |
+
+<a name="DeviceCommandAPI+update"></a>
+
+### deviceCommandAPI.update(command) ⇒ <code>Promise</code>
+Updates a command
+
+**Returns**: <code>Promise</code> - count of commands  
+
+| Param | Type |
+| --- | --- |
+| command | <code>Command</code> | 
+
+<a name="DeviceCommandAPI+poll"></a>
+
+### deviceCommandAPI.poll(commandPollQuery) ⇒ <code>Promise</code>
+
+| Param | Type |
+| --- | --- |
+| commandPollQuery | <code>CommandPollQuery</code> | 
+
+<a name="DeviceCommandAPI+pollMany"></a>
+
+### deviceCommandAPI.pollMany(commandPollManyQuery) ⇒ <code>Promise</code>
+
+| Param | Type |
+| --- | --- |
+| commandPollManyQuery | <code>CommandPollManyQuery</code> | 
+
+<a name="DeviceCommandAPI+wait"></a>
+
+### deviceCommandAPI.wait(deviceId, commandId) ⇒ <code>Promise</code>
+
+| Param |
+| --- |
+| deviceId | 
+| commandId | 
+
+<a name="DeviceCommandAPI+subscribe"></a>
+
+### deviceCommandAPI.subscribe(commandPollQuery) ⇒ <code>Promise</code>
+
+| Param | Type |
+| --- | --- |
+| commandPollQuery | <code>CommandPollQuery</code> | 
+
+<a name="DeviceCommandAPI+unsubscribe"></a>
+
+### deviceCommandAPI.unsubscribe(subscriptionId) ⇒ <code>Promise</code>
+
+| Param | Type |
+| --- | --- |
+| subscriptionId | <code>Number</code> | 
+
+<a name="DeviceNotificationAPI"></a>
+
+## DeviceNotificationAPI
+Returns information about the current notification
+
+
+* [DeviceNotificationAPI](#DeviceNotificationAPI)
+    * [.get(deviceId, notificationId)](#DeviceNotificationAPI+get) ⇒ <code>Promise</code>
+    * [.list(notificationListQuery)](#DeviceNotificationAPI+list) ⇒ <code>Promise</code>
+    * [.insert(deviceId, notification)](#DeviceNotificationAPI+insert) ⇒ <code>Promise</code>
+    * [.poll(notificationPollQuery)](#DeviceNotificationAPI+poll) ⇒ <code>\*</code>
+    * [.pollMany(notificationPollManyQuery)](#DeviceNotificationAPI+pollMany) ⇒ <code>\*</code>
+    * [.subscribe(notificationPollQuery)](#DeviceNotificationAPI+subscribe) ⇒ <code>Promise</code>
+    * [.unsubscribe(subscriptionId)](#DeviceNotificationAPI+unsubscribe) ⇒ <code>Promise</code>
+
+<a name="DeviceNotificationAPI+get"></a>
+
+### deviceNotificationAPI.get(deviceId, notificationId) ⇒ <code>Promise</code>
+Creates DeviceNotificationAPI
+
+**Returns**: <code>Promise</code> - selected notification  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| deviceId | <code>number</code> | Device ID |
+| notificationId | <code>number</code> | Notification ID |
+
+<a name="DeviceNotificationAPI+list"></a>
+
+### deviceNotificationAPI.list(notificationListQuery) ⇒ <code>Promise</code>
+Return a list of notifications
+
+**Returns**: <code>Promise</code> - list of notifications  
+
+| Param | Type |
+| --- | --- |
+| notificationListQuery | <code>NotificationListQuery</code> | 
+
+<a name="DeviceNotificationAPI+insert"></a>
+
+### deviceNotificationAPI.insert(deviceId, notification) ⇒ <code>Promise</code>
+Registers a notification
+
+**Returns**: <code>Promise</code> - count of notifications  
+
+| Param | Type |
+| --- | --- |
+| deviceId | <code>Number</code> | 
+| notification | <code>Notification</code> | 
+
+<a name="DeviceNotificationAPI+poll"></a>
+
+### deviceNotificationAPI.poll(notificationPollQuery) ⇒ <code>\*</code>
+
+| Param | Type |
+| --- | --- |
+| notificationPollQuery | <code>NotificationPollQuery</code> | 
+
+<a name="DeviceNotificationAPI+pollMany"></a>
+
+### deviceNotificationAPI.pollMany(notificationPollManyQuery) ⇒ <code>\*</code>
+
+| Param | Type |
+| --- | --- |
+| notificationPollManyQuery | <code>NotificationPollManyQuery</code> | 
+
+<a name="DeviceNotificationAPI+subscribe"></a>
+
+### deviceNotificationAPI.subscribe(notificationPollQuery) ⇒ <code>Promise</code>
+
+| Param | Type |
+| --- | --- |
+| notificationPollQuery | <code>NotificationPollQuery</code> | 
+
+<a name="DeviceNotificationAPI+unsubscribe"></a>
+
+### deviceNotificationAPI.unsubscribe(subscriptionId) ⇒ <code>Promise</code>
+
+| Param | Type |
+| --- | --- |
+| subscriptionId | <code>Number</code> | 
+
+<a name="DeviceTypeAPI"></a>
+
+## DeviceTypeAPI
+Returns information about the current deviceType
+
+
+* [DeviceTypeAPI](#DeviceTypeAPI)
+    * [.get(deviceTypeId)](#DeviceTypeAPI+get) ⇒ <code>Promise</code>
+    * [.list(deviceTypeListQuery)](#DeviceTypeAPI+list) ⇒ <code>Promise</code>
+    * [.count(deviceTypeCountQuery)](#DeviceTypeAPI+count) ⇒ <code>Promise</code>
+    * [.insert(deviceType)](#DeviceTypeAPI+insert) ⇒ <code>Promise</code>
+    * [.update(deviceType)](#DeviceTypeAPI+update) ⇒ <code>Promise</code>
+    * [.delete(deviceTypeId)](#DeviceTypeAPI+delete) ⇒ <code>Promise</code>
+
+<a name="DeviceTypeAPI+get"></a>
+
+### deviceTypeAPI.get(deviceTypeId) ⇒ <code>Promise</code>
+Creates DeviceTypeAPI
+
+**Returns**: <code>Promise</code> - selected deviceType  
+
+| Param | Type |
+| --- | --- |
+| deviceTypeId | <code>number</code> | 
+
+<a name="DeviceTypeAPI+list"></a>
+
+### deviceTypeAPI.list(deviceTypeListQuery) ⇒ <code>Promise</code>
+Return a list of deviceTypes
+
+**Returns**: <code>Promise</code> - list of deviceTypes  
+
+| Param | Type |
+| --- | --- |
+| deviceTypeListQuery | <code>DeviceTypeListQuery</code> | 
+
+<a name="DeviceTypeAPI+count"></a>
+
+### deviceTypeAPI.count(deviceTypeCountQuery) ⇒ <code>Promise</code>
+Returns count of deviceTypes
+
+**Returns**: <code>Promise</code> - count of deviceTypes  
+
+| Param | Type |
+| --- | --- |
+| deviceTypeCountQuery | <code>DeviceTypeCountQuery</code> | 
+
+<a name="DeviceTypeAPI+insert"></a>
+
+### deviceTypeAPI.insert(deviceType) ⇒ <code>Promise</code>
+Registers a deviceType
+
+**Returns**: <code>Promise</code> - count of deviceTypes  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| deviceType | <code>DeviceType</code> | data |
+
+<a name="DeviceTypeAPI+update"></a>
+
+### deviceTypeAPI.update(deviceType) ⇒ <code>Promise</code>
+Updates a deviceType
+
+**Returns**: <code>Promise</code> - count of deviceTypes  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| deviceType | <code>DeviceType</code> | data |
+
+<a name="DeviceTypeAPI+delete"></a>
+
+### deviceTypeAPI.delete(deviceTypeId) ⇒ <code>Promise</code>
+Deletes an existing deviceType
+
+
+| Param | Type |
+| --- | --- |
+| deviceTypeId | <code>number</code> | 
+
+<a name="NetworkAPI"></a>
+
+## NetworkAPI
+Returns information about the current network
+
+
+* [NetworkAPI](#NetworkAPI)
+    * [.get(networkId)](#NetworkAPI+get) ⇒ <code>Promise</code>
+    * [.list(networkListQuery)](#NetworkAPI+list) ⇒ <code>Promise</code>
+    * [.count(networkCountQuery)](#NetworkAPI+count) ⇒ <code>Promise</code>
+    * [.insert(network)](#NetworkAPI+insert) ⇒ <code>Promise</code>
+    * [.update(network)](#NetworkAPI+update) ⇒ <code>Promise</code>
+    * [.delete(networkId)](#NetworkAPI+delete) ⇒ <code>Promise</code>
+
+<a name="NetworkAPI+get"></a>
+
+### networkAPI.get(networkId) ⇒ <code>Promise</code>
+Returns a network
+
+**Returns**: <code>Promise</code> - selected network  
+
+| Param | Type |
+| --- | --- |
+| networkId | <code>number</code> | 
+
+<a name="NetworkAPI+list"></a>
+
+### networkAPI.list(networkListQuery) ⇒ <code>Promise</code>
+Return a list of networks
+
+**Returns**: <code>Promise</code> - list of networks  
+
+| Param | Type |
+| --- | --- |
+| networkListQuery | <code>NetworkListQuery</code> | 
+
+<a name="NetworkAPI+count"></a>
+
+### networkAPI.count(networkCountQuery) ⇒ <code>Promise</code>
+Returns count of networks
+
+**Returns**: <code>Promise</code> - count of networks  
+
+| Param | Type |
+| --- | --- |
+| networkCountQuery | <code>NetworkCountQuery</code> | 
+
+<a name="NetworkAPI+insert"></a>
+
+### networkAPI.insert(network) ⇒ <code>Promise</code>
+Registers a network
+
+**Returns**: <code>Promise</code> - Network  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| network | <code>Network</code> | data |
+
+<a name="NetworkAPI+update"></a>
+
+### networkAPI.update(network) ⇒ <code>Promise</code>
+Updates a network
+
+**Returns**: <code>Promise</code> - Network  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| network | <code>Network</code> | data |
+
+<a name="NetworkAPI+delete"></a>
+
+### networkAPI.delete(networkId) ⇒ <code>Promise</code>
+Deletes an existing network
+
+**Returns**: <code>Promise</code> - Network  
+
+| Param | Type |
+| --- | --- |
+| networkId | <code>number</code> | 
+
+<a name="PluginAPI"></a>
+
+## PluginAPI
+Returns information about the current plugin
+
+
+* [PluginAPI](#PluginAPI)
+    * [.list(pluginListQuery)](#PluginAPI+list) ⇒ <code>Promise</code>
+    * [.count(pluginCountQuery)](#PluginAPI+count) ⇒ <code>Promise</code>
+    * [.register(plugin, pluginRegisterQuery)](#PluginAPI+register) ⇒ <code>Promise</code>
+    * [.update(pluginUpdateQuery)](#PluginAPI+update) ⇒ <code>Promise</code>
+    * [.delete(topicName)](#PluginAPI+delete) ⇒ <code>Promise</code>
+
+<a name="PluginAPI+list"></a>
+
+### pluginAPI.list(pluginListQuery) ⇒ <code>Promise</code>
+Return a list of plugins
+
+**Returns**: <code>Promise</code> - list of plugins  
+
+| Param | Type |
+| --- | --- |
+| pluginListQuery | <code>PluginListQuery</code> | 
+
+<a name="PluginAPI+count"></a>
+
+### pluginAPI.count(pluginCountQuery) ⇒ <code>Promise</code>
+Returns count of plugins
+
+**Returns**: <code>Promise</code> - count of plugins  
+
+| Param | Type |
+| --- | --- |
+| pluginCountQuery | <code>PluginCountQuery</code> | 
+
+<a name="PluginAPI+register"></a>
+
+### pluginAPI.register(plugin, pluginRegisterQuery) ⇒ <code>Promise</code>
+Registers a plugin
+
+**Returns**: <code>Promise</code> - Plugin  
+
+| Param | Type |
+| --- | --- |
+| plugin | <code>Plugin</code> | 
+| pluginRegisterQuery | <code>PluginRegisterQuery</code> | 
+
+<a name="PluginAPI+update"></a>
+
+### pluginAPI.update(pluginUpdateQuery) ⇒ <code>Promise</code>
+Updates a plugin
+
+**Returns**: <code>Promise</code> - Plugin  
+
+| Param | Type |
+| --- | --- |
+| pluginUpdateQuery | <code>PluginUpdateQuery</code> | 
+
+<a name="PluginAPI+delete"></a>
+
+### pluginAPI.delete(topicName) ⇒ <code>Promise</code>
+Deletes an existing plugin
+
+**Returns**: <code>Promise</code> - Plugin  
+
+| Param | Type |
+| --- | --- |
+| topicName | <code>string</code> | 
+
+<a name="InfoAPI"></a>
+
+## InfoAPI
+Get server info
+
+
+* [InfoAPI](#InfoAPI)
+    * [.getServerInfo()](#InfoAPI+getServerInfo) ⇒ <code>Promise</code>
+    * [.getCacheInfo()](#InfoAPI+getCacheInfo) ⇒ <code>Promise</code>
+    * [.getClusterInfo()](#InfoAPI+getClusterInfo) ⇒ <code>Promise</code>
+
+<a name="InfoAPI+getServerInfo"></a>
+
+### infoAPI.getServerInfo() ⇒ <code>Promise</code>
+Get server info
+
+<a name="InfoAPI+getCacheInfo"></a>
+
+### infoAPI.getCacheInfo() ⇒ <code>Promise</code>
+Get cache info
+
+<a name="InfoAPI+getClusterInfo"></a>
+
+### infoAPI.getClusterInfo() ⇒ <code>Promise</code>
+Get cluster info
+
+<a name="TokenAPI"></a>
+
+## TokenAPI
+Authenticate using login and password
+
+
+* [TokenAPI](#TokenAPI)
+    * [.login(login, password)](#TokenAPI+login)
+    * [.authPlugin(token)](#TokenAPI+authPlugin)
+    * [.createUserToken(userToken)](#TokenAPI+createUserToken)
+    * [.createPluginToken(pluginToken)](#TokenAPI+createPluginToken)
+    * [.refresh(refreshToken)](#TokenAPI+refresh)
+
+<a name="TokenAPI+login"></a>
+
+### tokenAPI.login(login, password)
+Creates TokenAPI
+
+
+| Param | Type |
+| --- | --- |
+| login | <code>string</code> | 
+| password | <code>string</code> | 
+
+<a name="TokenAPI+authPlugin"></a>
+
+### tokenAPI.authPlugin(token)
+Create user token
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| token | <code>string</code> | Plugin token |
+
+<a name="TokenAPI+createUserToken"></a>
+
+### tokenAPI.createUserToken(userToken)
+Create user token
+
+
+| Param | Type |
+| --- | --- |
+| userToken | <code>UserToken</code> | 
+
+<a name="TokenAPI+createPluginToken"></a>
+
+### tokenAPI.createPluginToken(pluginToken)
+Create plugin token
+
+
+| Param | Type |
+| --- | --- |
+| pluginToken | <code>PluginToken</code> | 
+
+<a name="TokenAPI+refresh"></a>
+
+### tokenAPI.refresh(refreshToken)
+Refresh token
+
+
+| Param | Type |
+| --- | --- |
+| refreshToken | <code>string</code> | 
+
+<a name="UserAPI"></a>
+
+## UserAPI
+Return a list of users
+
+
+* [UserAPI](#UserAPI)
+    * [.list(userListQuery)](#UserAPI+list) ⇒ <code>Promise</code>
+    * [.count(userCountQuery)](#UserAPI+count) ⇒ <code>Promise</code>
+    * [.get(userId)](#UserAPI+get) ⇒ <code>Promise</code>
+    * [.insert(user)](#UserAPI+insert) ⇒ <code>Promise</code>
+    * [.update(user)](#UserAPI+update) ⇒ <code>Promise</code>
+    * [.delete(userId)](#UserAPI+delete) ⇒ <code>Promise</code>
+    * [.getCurrent()](#UserAPI+getCurrent) ⇒ <code>Promise</code>
+    * [.updateCurrent(user)](#UserAPI+updateCurrent) ⇒ <code>Promise</code>
+    * [.getDeviceTypes(userId)](#UserAPI+getDeviceTypes) ⇒ <code>Promise</code>
+    * [.unassignAllDeviceTypes(userId)](#UserAPI+unassignAllDeviceTypes) ⇒ <code>Promise</code>
+    * [.assignAllDeviceTypes(userId)](#UserAPI+assignAllDeviceTypes) ⇒ <code>Promise</code>
+    * [.unassignDeviceType(userId, deviceTypeId)](#UserAPI+unassignDeviceType) ⇒ <code>Promise</code>
+    * [.getDeviceType(userId, deviceTypeId)](#UserAPI+getDeviceType) ⇒ <code>Promise</code>
+    * [.assignDeviceType(userId, deviceTypeId)](#UserAPI+assignDeviceType) ⇒ <code>Promise</code>
+    * [.getNetwork(userId, networkId)](#UserAPI+getNetwork) ⇒ <code>Promise</code>
+    * [.assignNetwork(userId, networkId)](#UserAPI+assignNetwork) ⇒ <code>Promise</code>
+    * [.unassignNetwork(userId, networkId)](#UserAPI+unassignNetwork) ⇒ <code>Promise</code>
+
+<a name="UserAPI+list"></a>
+
+### userAPI.list(userListQuery) ⇒ <code>Promise</code>
+Creates UserAPI
+
+**Returns**: <code>Promise</code> - list of users  
+
+| Param | Type |
+| --- | --- |
+| userListQuery | <code>UserListQuery</code> | 
+
+<a name="UserAPI+count"></a>
+
+### userAPI.count(userCountQuery) ⇒ <code>Promise</code>
+Returns count of users
+
+**Returns**: <code>Promise</code> - count of users  
+
+| Param | Type |
+| --- | --- |
+| userCountQuery | <code>UserCountQuery</code> | 
+
+<a name="UserAPI+get"></a>
+
+### userAPI.get(userId) ⇒ <code>Promise</code>
+Returns information about the current user
+
+**Returns**: <code>Promise</code> - selected user  
+
+| Param | Type |
+| --- | --- |
+| userId | <code>number</code> | 
+
+<a name="UserAPI+insert"></a>
+
+### userAPI.insert(user) ⇒ <code>Promise</code>
+Registers a user
+
+**Returns**: <code>Promise</code> - count of users  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| user | <code>User</code> | data |
+
+<a name="UserAPI+update"></a>
+
+### userAPI.update(user) ⇒ <code>Promise</code>
+Updates a user (only for administrators)
+
+**Returns**: <code>Promise</code> - count of users  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| user | <code>User</code> | data |
+
+<a name="UserAPI+delete"></a>
+
+### userAPI.delete(userId) ⇒ <code>Promise</code>
+Deletes an existing user
+
+
+| Param | Type |
+| --- | --- |
+| userId | <code>number</code> | 
+
+<a name="UserAPI+getCurrent"></a>
+
+### userAPI.getCurrent() ⇒ <code>Promise</code>
+Returns information about the current user
+
+**Returns**: <code>Promise</code> - selected user  
+<a name="UserAPI+updateCurrent"></a>
+
+### userAPI.updateCurrent(user) ⇒ <code>Promise</code>
+Updates a user (only for administrators)
+
+**Returns**: <code>Promise</code> - count of users  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| user | <code>User</code> | data |
+
+<a name="UserAPI+getDeviceTypes"></a>
+
+### userAPI.getDeviceTypes(userId) ⇒ <code>Promise</code>
+
+| Param |
+| --- |
+| userId | 
+
+<a name="UserAPI+unassignAllDeviceTypes"></a>
+
+### userAPI.unassignAllDeviceTypes(userId) ⇒ <code>Promise</code>
+
+| Param |
+| --- |
+| userId | 
+
+<a name="UserAPI+assignAllDeviceTypes"></a>
+
+### userAPI.assignAllDeviceTypes(userId) ⇒ <code>Promise</code>
+
+| Param |
+| --- |
+| userId | 
+
+<a name="UserAPI+unassignDeviceType"></a>
+
+### userAPI.unassignDeviceType(userId, deviceTypeId) ⇒ <code>Promise</code>
+
+| Param |
+| --- |
+| userId | 
+| deviceTypeId | 
+
+<a name="UserAPI+getDeviceType"></a>
+
+### userAPI.getDeviceType(userId, deviceTypeId) ⇒ <code>Promise</code>
+
+| Param |
+| --- |
+| userId | 
+| deviceTypeId | 
+
+<a name="UserAPI+assignDeviceType"></a>
+
+### userAPI.assignDeviceType(userId, deviceTypeId) ⇒ <code>Promise</code>
+
+| Param |
+| --- |
+| userId | 
+| deviceTypeId | 
+
+<a name="UserAPI+getNetwork"></a>
+
+### userAPI.getNetwork(userId, networkId) ⇒ <code>Promise</code>
+Gets information about user/network association
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| userId | <code>number</code> | User ID |
+| networkId | <code>number</code> | Network ID |
+
+<a name="UserAPI+assignNetwork"></a>
+
+### userAPI.assignNetwork(userId, networkId) ⇒ <code>Promise</code>
+Associates network with the user
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| userId | <code>number</code> | User ID |
+| networkId | <code>number</code> | Network ID |
+
+<a name="UserAPI+unassignNetwork"></a>
+
+### userAPI.unassignNetwork(userId, networkId) ⇒ <code>Promise</code>
+Removes association between network and user
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| userId | <code>number</code> | User ID |
+| networkId | <code>number</code> | Network ID |
+
+
+## Models
+
+<dl>
+<dt><a href="#Configuration">Configuration</a></dt>
+<dd><p>Configuration model</p>
+</dd>
+<dt><a href="#Device">Device</a></dt>
+<dd><p>Device model</p>
+</dd>
+<dt><a href="#DeviceCommand">DeviceCommand</a></dt>
+<dd><p>DeviceCommand model</p>
+</dd>
+<dt><a href="#DeviceNotification">DeviceNotification</a></dt>
+<dd><p>DeviceNotification model</p>
+</dd>
+<dt><a href="#DeviceType">DeviceType</a></dt>
+<dd><p>DeviceType model</p>
+</dd>
+<dt><a href="#Network">Network</a></dt>
+<dd><p>Network model</p>
+</dd>
+<dt><a href="#Plugin">Plugin</a></dt>
+<dd><p>Plugin model</p>
+</dd>
+<dt><a href="#PluginToken">PluginToken</a></dt>
+<dd><p>PluginToken model</p>
+</dd>
+<dt><a href="#User">User</a></dt>
+<dd><p>User model</p>
+</dd>
+<dt><a href="#UserToken">UserToken</a></dt>
+<dd><p>UserToken model</p>
+</dd>
+</dl>
+
+
+## Configuration
+Configuration model
+
+
+* [Configuration](#Configuration)
+    * [new Configuration(options)](#new_Configuration_new)
+    * [.toObject()](#Configuration+toObject) ⇒ <code>Object</code>
+
+<a name="new_Configuration_new"></a>
+
+### new Configuration(options)
+Creates new Configuration model
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>Object</code> | model options object |
+| options.name | <code>string</code> | Configuration parameter name. |
+| options.value | <code>string</code> | Configuration parameter value. |
+| options.entityVersion | <code>number</code> | Specifies the version field or property of an entity class. |
+
+<a name="Configuration+toObject"></a>
+
+### configuration.toObject() ⇒ <code>Object</code>
+Returns instance as a plain JS object
 
 <a name="Device"></a>
 
-## class Device
+## Device
+Device model
 
-Private class, only DeviceHive instance have access to it.
 
-<a name="new_Device"></a>
-### new Device({ id, name = id, data = null, networkId = null, isBlocked = false })
-ONLY FOR DEVELOPMENT.
+* [Device](#Device)
+    * [new Device(options)](#new_Device_new)
+    * [.toObject()](#Device+toObject) ⇒ <code>Object</code>
 
-Device object constructor.
-Here you need to specify Device specific data.
+<a name="new_Device_new"></a>
 
-| Param | Type | Description |
-| --- | --- | --- |
-| id | `String` | Device's id |
-| name | `String` | Device's name. Equals to `id` by default |
-| data | `String | Object` | Device's data. Equals to `null` by default |
-| networkId | `Number` | Device's Network id. Equals to `null` by default |
-| isBlocked | `Boolean` | Device's blocked status. Equals to `false` by default |
+### new Device(options)
+Creates new Device model
 
-Example:
-
-```js
-new Device({
-   id : `testId`,
-   name : `testName`,
-   data : {/*some data*/},
-   networkId : 12345,
-   isBlocked : false
-})
-```
-
-<a name="Device+getId"></a>
-### Device.getId() ⇒ `String`
-Returns Device's id.
-
-Example:
-
-```js
-deviceInstance.getId()
-.then(/*testId*/ => ...)
-```
-
-<a name="Device+getName"></a>
-### Device.getName() ⇒ `String`
-Returns Device's name.
-
-Example:
-
-```js
-deviceInstance.getName()
-.then(/*testName*/ => ...)
-```
-
-<a name="Device+getData"></a>
-### Device.getData() ⇒ `Object`
-Returns Device's data.
-
-Example:
-
-```js
-deviceInstance.getData()
-.then(/*{some data}*/ => ...)
-```
-
-<a name="Device+getNetworkId"></a>
-### Device.getNetworkId() ⇒ `Number`
-Returns Device's Network id.
-
-Example:
-
-```js
-deviceInstance.getNetworkId()
-.then(/*12345*/ => ...)
-```
-
-<a name="Device+getBlocked"></a>
-### Device.getBlocked() ⇒ `String`
-Returns Device's blocked state.
-
-Example:
-
-```js
-deviceInstance.getBlocked()
-.then(/*false*/ => ...)
-```
-
-<a name="Device+setId"></a>
-### Device.setId(newId)
-Sets Device's id.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| newId | `String` | Device's new id |
-
-Example:
-
-```js
-deviceInstance.setId(`newId`);
-deviceInstance...
-```
-
-<a name="Device+setName"></a>
-### Device.setName(newName)
-Sets Device's name.
-
-| Param | Type | Description |
-| --- | --- | --- |
-| newName | `String` | Device's new name |
-
-Example:
-
-```js
-deviceInstance.setName(`newName`);
-deviceInstance...
-```
-
-<a name="Device+setData"></a>
-### Device.setData(newData)
-Sets Device's data.
-
-| Param | Type | Description |
-| --- | --- | --- |
-| newData | `Object` | Device's new data |
-
-Example:
-
-```js
-deviceInstance.setData({/*newData*/});
-deviceInstance...
-```
-
-<a name="Device+setNetworkId"></a>
-### Device.setNetworkId(newNetworkId)
-Sets Device's Network id.
-
-| Param | Type | Description |
-| --- | --- | --- |
-| newNetworkId | `Number` | Device's new Network id |
-
-Example:
-
-```js
-deviceInstance.setNetworkId(67890);
-deviceInstance...
-```
-
-<a name="Device+setBlocked"></a>
-### Device.setBlocked(newBlocked)
-Sets Device's blocked status.
-
-| Param | Type | Description |
-| --- | --- | --- |
-| newBlocked | `Boolean` | Device's new blocked status |
-
-Example:
-
-```js
-deviceInstance.seBlocked(true);
-deviceInstance...
-```
-
-<a name="Device+save"></a>
-### Device.save()
-Saves Device's state
-
-Example:
-
-```js
-deviceInstance.save()
-.then(() => ...)
-```
-
-<a name="Device+getCommands"></a>
-### Device.getCommands(filter)
-Gets list of Commands that has been received in specified time range.
-
-| Param | Type | Description |
-| --- | --- | --- |
-| filter | <code>[DeviceCommandsFilter](#Device..DeviceCommandsFilter)</code> | Device's Command filter |
-
-Example:
-
-```js
-deviceInstance.getCommands({/*DeviceCommandsFilter*/})
-.then(commands => ...)
-```
-
-<a name="Device+getNotifications"></a>
-### Device.getNotifications(filter)
-Returns Notifications by provided parameters
-
-| Param | Type | Description |
-| --- | --- | --- |
-| filter | <code>[DeviceNotificationsFilter](#Device..DeviceNotificationsFilter)</code> | Device's Notification filter |
-
-Example:
-
-```js
-deviceInstance.getNotifications({/*DeviceNotificationsFilter*/})
-.then(notifications => ...)
-```
-
-<a name="Device+sendCommand"></a>
-### Device.sendCommand(command, parameters, updateSubscriber)
-Creates new Device's Command, stores and returns Command with generated id.
-
-Also allows to pass callback for subscription on Command's updates.
-
-| Param | Type | Description |
-| --- | --- | --- |
-| command | `String` | Command's name |
-| parameters | <code>[CommandParams](#Device..CommandParams)</code> | Device's Command parameters |
-| updateSubscriber | `Function` | Command's on update subscriber |
-
-Example:
-
-```js
-deviceInstance.sendCommand(`testName`, {/*CommandParams*/}, /*function(){}*/)
-```
-
-<a name="Device+sendNotification"></a>
-### Device.sendNotification(notification, parameters)
-Creates Notification.
-
-| Param | Type | Description |
-| --- | --- | --- |
-| notification | `String` | Notification's name |
-| parameters | <code>[NotificationParams](#Device..NotificationParams)</code> | Device's Notification parameters |
-
-Example:
-
-```js
-deviceInstance.sendNotification(`testName`, {/*NotificationParams*/})
-```
-
-<a name="Device+subscribeCommands"></a>
-### Device.subscribeCommands(subscriber, commandFilter)
-Subscribes to all Commands for this Device by particular filter.
-
-| Param | Type | Description |
-| --- | --- | --- |
-| subscriber | `Function` | Command's subscriber |
-| commandFilter | <code>[CommandPollParams](#Device..CommandPollParams)</code> | Device's Command filter |
-
-Example:
-
-```js
-deviceInstance.subscribeCommands(/*function(){}*/, {/*CommandPollParams*/})
-.then(() => ...)
-```
-
-<a name="Device+unsubscribeCommands"></a>
-### Device.unsubscribeCommands(commandFilter)
-Unsubscribe from this Device's Commands by particular filter
-
-| Param | Type | Description |
-| --- | --- | --- |
-| commandFilter | <code>[CommandPollParams](#Device..CommandPollParams)</code> | Device's Command filter |
-
-Example:
-
-```js
-deviceInstance.unsubscribeCommands({/*CommandPollParams*/})
-.then(() => ...)
-```
-
-<a name="Device+subscribeNotifications"></a>
-### Device.subscribeCommands(subscriber, notificationFilter)
-Subscribes to all Notifications for this Device by particular filter.
-
-| Param | Type | Description |
-| --- | --- | --- |
-| subscriber | `Function` | Command's subscriber |
-| notificationFilter | <code>[NotificationPollParams](#Device..NotificationPollParams)</code> | Device's Notification filter |
-
-Example:
-
-```js
-deviceInstance.subscribeNotifications(/*function(){}*/, {/*NotificationPollParams*/})
-.then(() => ...)
-```
-
-<a name="Device+unsubscribeNotifications"></a>
-### Device.unsubscribeNotifications(notificationFilter)
-Unsubscribe from this Device's Notifications by particular filter
-
-| Param | Type | Description |
-| --- | --- | --- |
-| notificationFilter | <code>[NotificationPollParams](#Device..NotificationPollParams)</code> | Device's Notification filter |
-
-Example:
-
-```js
-deviceInstance.unsubscribeNotifications({/*NotificationPollParams*/})
-.then(() => ...)
-```
-
-<a name="Device..DeviceCommandsFilter"></a>
-### Device~DeviceCommandsFilter : `Struct`
-
-**Properties**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| start | `String` | Start timestamp |
-| end | `String` | End timestamp |
-| command | `String` | Command name |
-| status | `String` | Command status |
-| sortField | `String` | Sort field |
-| sortOrder | `String` | Sort order |
-| take | `Number` | Limit param |
-| skip | `Number` | Skip param |
-
-<a name="Device..DeviceNotificationsFilter"></a>
-### Device~DeviceNotificationsFilter : `Struct`
-
-**Properties**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| start | `String` | Start timestamp |
-| end | `String` | End timestamp |
-| notification | `String` | Notification name |
-| sortField | `String` | Sort field |
-| sortOrder | `String` | Sort order |
-| take | `Number` | Limit param |
-| skip | `Number` | Skip param |
-
-<a name="Device..CommandParams"></a>
-### Device~CommandParams : `Struct`
-
-**Properties**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| command | `String` | command name |
-| timestamp | `String` | command timestamp |
-| parameters | `Object` | command parameters |
-| lifetime | `Number` | command lifetime |
-| status | `String` | command status |
-| result | `String` | command result |
-
-<a name="Device..NotificationParams"></a>
-### Device~NotificationParams : `Struct`
-
-**Properties**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| timestamp | `String` | notification timestamp |
-| parameters | `Object` | notification parameters |
-
-<a name="Device..CommandPollParams"></a>
-### Device~CommandPollParams : `Struct`
-
-**Properties**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| names | `String` | Command names |
-| timestamp | `String` | Timestamp to start from |
-| waitTimeout | `Number` | Wait timeout in seconds |
-| limit | `Number` | Limit number of commands |
-
-<a name="Device..NotificationPollParams"></a>
-### Device~NotificationPollParams : `Struct`
-
-**Properties**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| waitTimeout | `Number` | Wait timeout |
-| timestamp | `String` | Timestamp to start from |
-| names | `String` | Notification names |
+| options | <code>object</code> | model options object |
+| options.id | <code>string</code> | Device unique identifier |
+| options.name | <code>string</code> | Device display name |
+| options.data | <code>object</code> | Device data, a JSON object with an arbitrary structure |
+| options.networkId | <code>number</code> | Associated network id |
+| options.deviceTypeId | <code>number</code> | Associated deviceType id |
+| options.blocked | <code>boolean</code> | Indicates whether device is blocked |
+
+<a name="Device+toObject"></a>
+
+### device.toObject() ⇒ <code>Object</code>
+Returns instance as a plain JS object
 
 <a name="DeviceCommand"></a>
-## class DeviceCommand
 
-Private class, only DeviceHive instance have access to it.
+## DeviceCommand
+DeviceCommand model
 
-<a name="new_DeviceCommand"></a>
-### new DeviceCommand({ id, command, timestamp, userId, deviceId, parameters = null, lifetime = 0, status = null, result = null })
-ONLY FOR DEVELOPMENT.
 
-Device Command object constructor.
-Here you need to specify Command specific data.
+* [DeviceCommand](#DeviceCommand)
+    * [new DeviceCommand(options)](#new_DeviceCommand_new)
+    * [.toObject()](#DeviceCommand+toObject) ⇒ <code>Object</code>
 
-| Param | Type | Description |
-| --- | --- | --- |
-| id | `String` | Command's id |
-| command | `String` | Command's name |
-| timestamp | `String` | Command's timestamp |
-| userId | `String` | Command's User id |
-| deviceId | `String` | Command's Device id |
-| parameters | `String | Object` | Command's parameters. Equals `null` by default |
-| lifetime | `Number` | Command's lifetime. Equals `0` by default |
-| status | `String` | Command's status. Equals `null` by default |
-| result | `String` | Command's result. Equals `null` by default |
+<a name="new_DeviceCommand_new"></a>
 
-Example:
+### new DeviceCommand(options)
+Creates new DeviceCommand model
 
-```js
-new DeviceCommand({
-   id : `testId`,
-   command : `testName`,
-   timestamp : `123456789`,
-   userId : `qwerty`,
-   deviceId : `deadbeef`,
-   parameters : {/*test parameters*/},
-   lifetime : 12345,
-   status : `testStatus`,
-   result : `testResult`
-})
-```
-
-<a name="DeviceCommand+getId"></a>
-### DeviceCommand.getId() ⇒ `String`
-Returns Command's id.
-
-Example:
-
-```js
-deviceCommandInstance.getId()
-.then(/*testId*/ => ...)
-```
-
-<a name="DeviceCommand+getCommand"></a>
-### DeviceCommand.getCommand() ⇒ `String`
-Returns Command's name.
-
-Example:
-
-```js
-deviceCommandInstance.getCommand()
-.then(/*testName*/ => ...)
-```
-
-<a name="DeviceCommand+getTimestamp"></a>
-### DeviceCommand.getTimestamp() ⇒ `String`
-Returns Command's timestamp.
-
-Example:
-
-```js
-deviceCommandInstance.getTimestamp()
-.then(/*123456789*/ => ...)
-```
-
-<a name="DeviceCommand+getUserId"></a>
-### DeviceCommand.getUserId() ⇒ `String`
-Returns Command's User id.
-
-Example:
-
-```js
-deviceCommandInstance.getUserId()
-.then(/*qwerty*/ => ...)
-```
-
-<a name="DeviceCommand+getDeviceId"></a>
-### DeviceCommand.getDeviceId() ⇒ `String`
-Returns Command's Device id.
-
-Example:
-
-```js
-deviceCommandInstance.getDeviceId()
-.then(/*deadbeef*/ => ...)
-```
-
-<a name="DeviceCommand+getParameters"></a>
-### DeviceCommand.getParameters() ⇒ `Object`
-Returns Command's parameters.
-
-Example:
-
-```js
-deviceCommandInstance.getParameters()
-.then(/*{test parameters}*/ => ...)
-```
-
-<a name="DeviceCommand+getLifetime"></a>
-### DeviceCommand.getLifetime() ⇒ `Number`
-Returns Command's lifetime.
-
-Example:
-
-```js
-deviceCommandInstance.getLifetime()
-.then(/*12345*/ => ...)
-```
-
-<a name="DeviceCommand+getStatus"></a>
-### DeviceCommand.getStatus() ⇒ `String`
-Returns Command's status.
-
-Example:
-
-```js
-deviceCommandInstance.getStatus()
-.then(/*testStatus*/ => ...)
-```
-
-<a name="DeviceCommand+getResult"></a>
-### DeviceCommand.getResult() ⇒ `String`
-Returns Command's result.
-
-Example:
-
-```js
-deviceCommandInstance.getResult()
-.then(/*testResult*/ => ...)
-```
-
-<a name="DeviceCommand+setId"></a>
-### DeviceCommand.setId(newId)
-Sets Command's id.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| newId | `String` | Command's new id |
+| options | <code>object</code> | model options object |
+| options.id | <code>number</code> | Command identifier |
+| options.command | <code>string</code> | Command name |
+| options.timestamp | <code>string</code> | Command UTC datetime (yyyy-MM-dd'T'HH:mm:ss.SSS ISO 8601) |
+| options.lastUpdated | <code>string</code> | Last command update UTC datetime (yyyy-MM-dd'T'HH:mm:ss.SSS ISO 8601) |
+| options.userId | <code>number</code> | Associated user identifier |
+| options.deviceId | <code>string</code> | Device unique identifier |
+| options.networkId | <code>number</code> | Network unique identifier |
+| options.deviceTypeId | <code>number</code> | DeviceType unique identifier |
+| options.parameters | <code>object</code> | Command parameters, a JSON object with an arbitrary structure |
+| options.lifetime | <code>number</code> | Command lifetime, a number of seconds until this command expires |
+| options.status | <code>string</code> | Command status, as reported by device or related infrastructure |
+| options.result | <code>object</code> | Command execution result, an optional value that could be provided by device |
 
-Example:
+<a name="DeviceCommand+toObject"></a>
 
-```js
-deviceCommandInstance.setId(`newId`);
-deviceCommandInstance...
-```
-
-<a name="DeviceCommand+setCommand"></a>
-### DeviceCommand.setCommand(newCommand)
-Sets Command's name.
-
-| Param | Type | Description |
-| --- | --- | --- |
-| newCommand | `String` | Command's new name |
-
-Example:
-
-```js
-deviceCommandInstance.setCommand(`newCommand`);
-deviceCommandInstance...
-```
-
-<a name="DeviceCommand+setTimestamp"></a>
-### DeviceCommand.setTimestamp(newTimestamp)
-Sets Command's timestamp.
-
-| Param | Type | Description |
-| --- | --- | --- |
-| newTimestamp | `String` | Command's new timestamp |
-
-Example:
-
-```js
-deviceCommandInstance.setTimestamp(`newTimestamp`);
-deviceCommandInstance...
-```
-
-<a name="DeviceCommand+setUserId"></a>
-### DeviceCommand.setUserId(newUserId)
-Sets Command's User id.
-
-| Param | Type | Description |
-| --- | --- | --- |
-| newUserId | `String` | Command's new User id |
-
-Example:
-
-```js
-deviceCommandInstance.setUserId(`newUserId`);
-deviceCommandInstance...
-```
-
-<a name="DeviceCommand+setDeviceId"></a>
-### DeviceCommand.setDeviceId(newDeviceId)
-Sets Command's Device id.
-
-| Param | Type | Description |
-| --- | --- | --- |
-| newDeviceId | `String` | Command's new Device id |
-
-Example:
-
-```js
-deviceCommandInstance.setDeviceId(`newDeviceId`);
-deviceCommandInstance...
-```
-
-<a name="DeviceCommand+setParameters"></a>
-### DeviceCommand.setParameters(newParameters)
-Sets Command's parameters.
-
-| Param | Type | Description |
-| --- | --- | --- |
-| newParameters | `Object` | Command's new parameters |
-
-Example:
-
-```js
-deviceCommandInstance.setParameters({/*new parameters*/});
-deviceCommandInstance...
-```
-
-<a name="DeviceCommand+setLifetime"></a>
-### DeviceCommand.setLifetime(newLifetime)
-Sets Command's lifetime.
-
-| Param | Type | Description |
-| --- | --- | --- |
-| newLifetime | `Number` | Command's new lifetime |
-
-Example:
-
-```js
-deviceCommandInstance.setLifetime(67890);
-deviceCommandInstance...
-```
-
-<a name="DeviceCommand+setStatus"></a>
-### DeviceCommand.setStatus(newStatus)
-Sets Command's status.
-
-| Param | Type | Description |
-| --- | --- | --- |
-| newStatus | `String` | Command's new status |
-
-Example:
-
-```js
-deviceCommandInstance.setStatus(`newStatus`);
-deviceCommandInstance...
-```
-
-<a name="DeviceCommand+setResult"></a>
-### DeviceCommand.setResult(newResult)
-Sets Command's result.
-
-| Param | Type | Description |
-| --- | --- | --- |
-| newResult | `String` | Command's new result |
-
-Example:
-
-```js
-deviceCommandInstance.setResult(`newResult`);
-deviceCommandInstance...
-```
-
-<a name="DeviceCommand+fetchCommandStatus"></a>
-### DeviceCommand.fetchCommandStatus()
-Returns Command's status. 
-
-If status was updated updates current command on the fly.
-
-Example:
-
-```js
-deviceCommandInstance.fetchCommandStatus()
-.then(newStatus => ...)
-```
-
-<a name="DeviceCommand+fetchCommandResult"></a>
-### DeviceCommand.fetchCommandResult()
-Returns Command's result. 
-
-If status was updated updates current command on the fly.
-
-Example:
-
-```js
-deviceCommandInstance.fetchCommandResult()
-.then(newResult => ...)
-```
-
-<a name="DeviceCommand+updateCommand"></a>
-### DeviceCommand.updateCommand()
-Requests current Command update
-
-Example:
-
-```js
-deviceCommandInstance.updateCommand()
-.then(updatedCommand => ...)
-```
-
-<a name="DeviceCommand+save"></a>
-### DeviceCommand.save()
-Save current Command's state.
-
-Example:
-
-```js
-deviceCommandInstance.save()
-.then(() => ...)
-```
-
-<a name="DeviceCommand+subscribeUpdates"></a>
-### DeviceCommand.subscribeUpdates(subscriber)
-Allow subscription for result updates from server
-
-| Param | Type | Description |
-| --- | --- | --- |
-| subscriber | `Function` | Command's updates subscriber |
-
-Example:
-
-```js
-deviceCommandInstance.subscribeUpdates(/*function(){}*/)
-```
+### deviceCommand.toObject() ⇒ <code>Object</code>
+Returns instance as a plain JS object
 
 <a name="DeviceNotification"></a>
-## class DeviceNotification
 
-Private class, only DeviceHive instance have access to it.
+## DeviceNotification
+DeviceNotification model
 
-<a name="new_DeviceNotification"></a>
-### new DeviceNotification({ id, notification, deviceId, timestamp, parameters = null })
-ONLY FOR DEVELOPMENT.
 
-Device Notification object constructor.
-Here you need to specify Notification specific data.
+* [DeviceNotification](#DeviceNotification)
+    * [new DeviceNotification(options)](#new_DeviceNotification_new)
+    * [.toObject()](#DeviceNotification+toObject) ⇒ <code>Object</code>
+
+<a name="new_DeviceNotification_new"></a>
+
+### new DeviceNotification(options)
+Creates new DeviceNotification model
+
 
 | Param | Type | Description |
 | --- | --- | --- |
-| id | `String` | Notification's id |
-| notification | `String` | Notification's name |
-| timestamp | `String` | Notification's timestamp |
-| deviceId | `String` | Notification's Device id |
-| parameters | `String | Object` | Command's parameters. Equals `null` by default |
+| options | <code>object</code> | model options object |
+| options.id | <code>number</code> | Notification identifier |
+| options.deviceId | <code>string</code> | Device unique identifier |
+| options.networkId | <code>number</code> | Network unique identifier |
+| options.deviceTypeId | <code>number</code> | Device type unique identifier |
+| options.notification | <code>string</code> | Notification name |
+| options.timestamp | <code>string</code> | Notification UTC datetime (yyyy-MM-dd'T'HH:mm:ss.SSS ISO 8601) |
+| options.parameters | <code>object</code> | Notification parameters, a JSON object with an arbitrary structure |
 
-Example:
+<a name="DeviceNotification+toObject"></a>
 
-```js
-new DeviceNotification({
-   id : `testId`,
-   notification : `testName`,
-   timestamp : `123456789`,
-   deviceId : `deadbeef`,
-   parameters : {/*test parameters*/}
-})
-```
+### deviceNotification.toObject() ⇒ <code>Object</code>
+Returns instance as a plain JS object
 
-<a name="DeviceNotification+getId"></a>
-### DeviceNotification.getId() ⇒ `String`
-Returns Notification's id.
+<a name="DeviceType"></a>
 
-Example:
+## DeviceType
+DeviceType model
 
-```js
-deviceNotificationInstance.getId()
-.then(/*testId*/ => ...)
-```
 
-<a name="DeviceNotification+getNotification"></a>
-### DeviceNotification.getNotification() ⇒ `String`
-Returns Notification's name.
+* [DeviceType](#DeviceType)
+    * [new DeviceType(options)](#new_DeviceType_new)
+    * [.toObject()](#DeviceType+toObject) ⇒ <code>Object</code>
 
-Example:
+<a name="new_DeviceType_new"></a>
 
-```js
-deviceNotificationInstance.getNotification()
-.then(/*testName*/ => ...)
-```
+### new DeviceType(options)
+Creates new DeviceType model
 
-<a name="DeviceNotification+getTimestamp"></a>
-### DevieNotification.getTimestamp() ⇒ `String`
-Returns Notification's timestamp.
 
-Example:
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | model options object |
+| options.id | <code>number</code> | Device type identifier |
+| options.name | <code>string</code> | Device type name |
+| options.description | <code>string</code> | Device type description |
 
-```js
-deviceNotificationInstance.getTimestamp()
-.then(/*123456789*/ => ...)
-```
+<a name="DeviceType+toObject"></a>
 
-<a name="DeviceNotification+getDeviceId"></a>
-### DeviceNotification.getDeviceId() ⇒ `String`
-Returns Notification's Device id.
-
-Example:
-
-```js
-deviceNotificationInstance.getDeviceId()
-.then(/*deadbeef*/ => ...)
-```
-
-<a name="DeviceNotification+getParameters"></a>
-### DeviceNotification.getParameters() ⇒ `Object`
-Returns Notification's parameters.
-
-Example:
-
-```js
-deviceNotificationInstance.getParameters()
-.then(/*{test parameters}*/ => ...)
-```
+### deviceType.toObject() ⇒ <code>Object</code>
+Returns instance as a plain JS object
 
 <a name="Network"></a>
-## class Network
 
-Private class, only DeviceHive instance have access to it.
+## Network
+Network model
 
-<a name="new_Network"></a>
-### new Network({ id, name, description })
-ONLY FOR DEVELOPMENT.
 
-Network object constructor.
-Here you need to specify Network specific data.
+* [Network](#Network)
+    * [new Network(options)](#new_Network_new)
+    * [.toObject()](#Network+toObject) ⇒ <code>Object</code>
 
-| Param | Type | Description |
-| --- | --- | --- |
-| id | `Number` | Network's id |
-| name | `String` | Network's name |
-| description | `String` | Network's description |
+<a name="new_Network_new"></a>
 
-Example:
+### new Network(options)
+Creates new Network model
 
-```js
-new Network({
-   id : 12345,
-   name : `testName`,
-   description : `testDescription`
-})
-```
-
-<a name="Network+getId"></a>
-### Network.getId() ⇒ `Number`
-Returns Network's id.
-
-Example:
-
-```js
-networkInstance.getId()
-.then(/*12345*/ => ...)
-```
-
-<a name="Network+getName"></a>
-### Network.getName() ⇒ `String`
-Returns Network's name.
-
-Example:
-
-```js
-networkInstance.getName()
-.then(/*testName*/ => ...)
-```
-
-<a name="Network+getDescription"></a>
-### Network.getDescription() ⇒ `String`
-Returns Network's description.
-
-Example:
-
-```js
-networkInstance.getDescription()
-.then(/*testDescription*/ => ...)
-```
-
-<a name="Network+setId"></a>
-### Network.setId(newId)
-Sets Network's id.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| newId | `Number` | Network's new id |
+| options | <code>object</code> | model options object |
+| options.id | <code>number</code> | Network identifier |
+| options.name | <code>string</code> | Network name |
+| options.description | <code>string</code> | Network description |
 
-Example:
+<a name="Network+toObject"></a>
 
-```js
-networkInstance.setId(67890);
-networkInstance...
-```
+### network.toObject() ⇒ <code>Object</code>
+Returns instance as a plain JS object
 
-<a name="Network+setName"></a>
-### Network.setId(newName)
-Sets Network's name.
+<a name="Plugin"></a>
 
-| Param | Type | Description |
-| --- | --- | --- |
-| newName | `String` | Network's new name |
+## Plugin
+Plugin model
 
-Example:
 
-```js
-networkInstance.setName(`newName`);
-networkInstance...
-```
+* [Plugin](#Plugin)
+    * [new Plugin(options)](#new_Plugin_new)
+    * [.toObject()](#Plugin+toObject) ⇒ <code>Object</code>
 
-<a name="Network+setDescription"></a>
-### Network.setDescription(newDescription)
-Sets Network's description.
+<a name="new_Plugin_new"></a>
+
+### new Plugin(options)
+Creates new Plugin model
+
 
 | Param | Type | Description |
 | --- | --- | --- |
-| newDescription | `String` | Network's new description |
+| options | <code>object</code> | model options object |
+| options.id | <code>id</code> | Plgin unique idnetifier |
+| options.name | <code>string</code> | Plugin name |
+| options.description | <code>string</code> | Plugin description |
+| options.topicName | <code>string</code> | Plugin topic name |
+| options.filter | <code>string</code> | Plugin filter |
+| options.status | <code>string</code> | Plugin status |
+| options.subscriptionId | <code>string</code> | Plugin subscribtion id |
+| options.userId | <code>number</code> | Plugin user id |
+| options.parameters | <code>object</code> | Json object with parameters |
 
-Example:
+<a name="Plugin+toObject"></a>
 
-```js
-networkInstance.setDescription(`newDescription`);
-networkInstance...
-```
+### plugin.toObject() ⇒ <code>Object</code>
+Returns instance as a plain JS object
 
-<a name="Network+save"></a>
-### Network.save()
-Save current Network state.
+<a name="PluginToken"></a>
 
-Example:
+## PluginToken
+PluginToken model
 
-```js
-networkInstance.save()
-.then(() => ...)
-```
 
-<a name="Network+listDevices"></a>
-### Network.listDevices()
-Get current Network Device list
+* [PluginToken](#PluginToken)
+    * [new PluginToken(options)](#new_PluginToken_new)
+    * [.toObject()](#PluginToken+toObject) ⇒ <code>Object</code>
 
-Example:
+<a name="new_PluginToken_new"></a>
 
-```js
-networkInstance.listDevices()
-.then(devices => ...)
-```
+### new PluginToken(options)
+Creates new PluginToken model
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | model options object |
+| options.actions | <code>Array</code> | Plugin Token actions |
+| options.expiration | <code>string</code> | Plugin expiration |
+| options.type | <code>number</code> | Plugin type |
+| options.topicName | <code>string</code> | Plugin topic name |
+
+<a name="PluginToken+toObject"></a>
+
+### pluginToken.toObject() ⇒ <code>Object</code>
+Returns instance as a plain JS object
 
 <a name="User"></a>
-## class User
 
-Private class, only DeviceHive instance have access to it.
+## User
+User model
 
-<a name="new_User"></a>
-### new User({ id, login, role = 1, status = 0, lastLogin = null, data = null, password = null, oldPassword = null, introReviewed = false })
-ONLY FOR DEVELOPMENT.
 
-User object constructor.
-Here you need to specify User specific data.
+* [User](#User)
+    * [new User(options)](#new_User_new)
+    * [.toObject()](#User+toObject) ⇒ <code>Object</code>
 
-| Param | Type | Description |
-| --- | --- | --- |
-| id | `String` | User's id |
-| login | `String` | User's login |
-| role | `Number` | User's role. Equals `1` by default. |
-| status | `Number` | User's status. Equals `0` by default. |
-| lastLogin | `String` | User's last login. Equals `null` by default |
-| data | `Object` | User's data. Equals `null` by default |
-| password | `String` | User's password. Equals `null` by default |
-| oldPassword | `String` | User's old password. Equals `null` by default |
-| introReviewed | `Boolean` | User's intro reviewed state. Equals `false` by default 
+<a name="new_User_new"></a>
 
-Example:
+### new User(options)
+Creates new User model
 
-```js
-new User({
-   id : `testId`,
-   login : `testLogin`,
-   role : 12345,
-   status : 6789,
-   lastLogin : `testLastLogin`,
-   data : {/*test data*/},
-   password : `testPassword`,
-   oldPassword : `testOldPassword`,
-   introReviewed : false
-})
-```
-
-<a name="User+getId"></a>
-### User.getId() ⇒ `String`
-Returns User's id.
-
-Example:
-
-```js
-userInstance.getId()
-.then(/*testId*/ => ...)
-```
-
-<a name="User+getLogin"></a>
-### User.getLogin() ⇒ `String`
-Returns User's login.
-
-Example:
-
-```js
-userInstance.getLogin()
-.then(/*testLogin*/ => ...)
-```
-
-<a name="User+getRole"></a>
-### User.getRole() ⇒ `Number`
-Returns User's role.
-
-Example:
-
-```js
-userInstance.getRole()
-.then(/*12345*/ => ...)
-```
-
-<a name="User+getStatus"></a>
-### User.getStatus() ⇒ `Number`
-Returns User's status.
-
-Example:
-
-```js
-userInstance.getStatus()
-.then(/*6789*/ => ...)
-```
-
-<a name="User+getLastLogin"></a>
-### User.getLastLogin() ⇒ `String`
-Returns User's last login.
-
-Example:
-
-```js
-userInstance.getLastLogin()
-.then(/*testLastLogin*/ => ...)
-```
-
-<a name="User+getData"></a>
-### User.getData() ⇒ `Object`
-Returns User's data.
-
-Example:
-
-```js
-userInstance.getData()
-.then(({/*test data*/}) => ...)
-```
-
-<a name="User+getPassword"></a>
-### User.getPassword() ⇒ `String`
-Returns User's password.
-
-Example:
-
-```js
-userInstance.getPassword()
-.then(/*testPassword*/ => ...)
-```
-
-<a name="User+getOldPassword"></a>
-### User.getOldPassword() ⇒ `String`
-Returns User's old password.
-
-Example:
-
-```js
-userInstance.getOldPassword()
-.then(/*testPassword*/ => ...)
-```
-
-<a name="User+getIntroReviewed"></a>
-### User.getIntroReviewed() ⇒ `Boolean`
-Returns User's intro reviewed.
-
-Example:
-
-```js
-userInstance.getIntroReviewed()
-.then(/*false*/ => ...)
-```
-
-<a name="User+setId"></a>
-### User.setId(newId)
-Sets User's id.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| newId | `String` | User's new id |
+| options | <code>object</code> | model options object |
+| options.id | <code>numebr</code> | User identifier |
+| options.login | <code>string</code> | User login using during authentication |
+| options.role | <code>number</code> | User role. Available values: 0: Administrator role, 1: Client role. |
+| options.status | <code>number</code> | User status. Available values: 0: The user is active, 1: The user has been locked out due to invalid login attempts, 2: The user has been disabled |
+| options.lastLogin | <code>string</code> | User last login timestamp (UTC) |
+| options.data | <code>object</code> | User data, a JSON object with an arbitrary structure |
+| options.password | <code>string</code> | User Password |
+| options.introReviewed | <code>boolean</code> | Indicates if user reviewed an intro |
+| options.allDeviceTypesAvailable | <code>boolean</code> | Is all device types awailable |
 
-Example:
+<a name="User+toObject"></a>
 
-```js
-userInstance.setId(`newId`)
-userInstance...
-```
+### user.toObject() ⇒ <code>Object</code>
+Returns instance as a plain JS object
 
-<a name="User+setLogin"></a>
-### User.setLogin(newLogin)
-Sets User's login.
+<a name="UserToken"></a>
 
-| Param | Type | Description |
-| --- | --- | --- |
-| newLogin | `String` | User's new login |
+## UserToken
+UserToken model
 
-Example:
 
-```js
-userInstance.setLogin(`newLogin`)
-userInstance...
-```
+* [UserToken](#UserToken)
+    * [new UserToken(options)](#new_UserToken_new)
+    * [.toObject()](#UserToken+toObject) ⇒ <code>Object</code>
 
-<a name="User+setRole"></a>
-### User.setRole(newRole)
-Sets User's role.
+<a name="new_UserToken_new"></a>
 
-| Param | Type | Description |
-| --- | --- | --- |
-| newRole | `Number` | User's new role |
+### new UserToken(options)
+Creates new UserToken model
 
-Example:
-
-```js
-userInstance.setRole(6789)
-```
-
-<a name="User+setStatus"></a>
-### User.setStatus(newStatus)
-Sets User's status.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| newStatus | `Number` | User's new status |
+| options | <code>object</code> | model options object |
+| options.userId | <code>number</code> | User id |
+| options.actions | <code>Array</code> | User Actions |
+| options.networkIds | <code>Array</code> | Network id's |
+| options.deviceTypeIds | <code>Array</code> | Devicetype id's |
+| options.expiration | <code>string</code> | Token expiration datetme |
 
-Example:
+<a name="UserToken+toObject"></a>
 
-```js
-userInstance.setStatus(12345)
-userInstance...
-```
+### userToken.toObject() ⇒ <code>Object</code>
+Returns instance as a plain JS object
 
-<a name="User+setLastLogin"></a>
-### User.setLastLogin(newLastLogin)
-Sets User's last login.
 
-| Param | Type | Description |
-| --- | --- | --- |
-| newLastLogin | `String` | User's new last login |
+## Query models
 
-Example:
+<dl>
+<dt><a href="#CommandListQuery">CommandListQuery</a></dt>
+<dd><p>CommandListQuery class</p>
+</dd>
+<dt><a href="#CommandPollManyQuery">CommandPollManyQuery</a></dt>
+<dd><p>CommandPollManyQuery class</p>
+</dd>
+<dt><a href="#CommandPollQuery">CommandPollQuery</a></dt>
+<dd><p>CommandPollQuery class</p>
+</dd>
+<dt><a href="#CommandWaitQuery">CommandWaitQuery</a></dt>
+<dd><p>CommandWaitQuery class</p>
+</dd>
+<dt><a href="#DeviceCountQuery">DeviceCountQuery</a></dt>
+<dd><p>DeviceCountQuery class</p>
+</dd>
+<dt><a href="#DeviceListQuery">DeviceListQuery</a></dt>
+<dd><p>DeviceListQuery class</p>
+</dd>
+<dt><a href="#DeviceTypeCountQuery">DeviceTypeCountQuery</a></dt>
+<dd><p>DeviceTypeCountQuery class</p>
+</dd>
+<dt><a href="#DeviceTypeListQuery">DeviceTypeListQuery</a></dt>
+<dd><p>DeviceTypeListQuery class</p>
+</dd>
+<dt><a href="#NetworkCountQuery">NetworkCountQuery</a></dt>
+<dd><p>NetworkCountQuery class</p>
+</dd>
+<dt><a href="#NetworkListQuery">NetworkListQuery</a></dt>
+<dd><p>NetworkListQuery class</p>
+</dd>
+<dt><a href="#NotificationListQuery">NotificationListQuery</a></dt>
+<dd><p>NotificationListQuery class</p>
+</dd>
+<dt><a href="#NotificationPollManyQuery">NotificationPollManyQuery</a></dt>
+<dd><p>NotificationPollManyQuery class</p>
+</dd>
+<dt><a href="#NotificationPollQuery">NotificationPollQuery</a></dt>
+<dd><p>NotificationPollQuery class</p>
+</dd>
+<dt><a href="#PluginCountQuery">PluginCountQuery</a></dt>
+<dd><p>PluginCountQuery class</p>
+</dd>
+<dt><a href="#PluginListQuery">PluginListQuery</a></dt>
+<dd><p>PluginListQuery class</p>
+</dd>
+<dt><a href="#PluginRegisterQuery">PluginRegisterQuery</a></dt>
+<dd><p>PluginRegisterQuery class</p>
+</dd>
+<dt><a href="#PluginUpdateQuery">PluginUpdateQuery</a></dt>
+<dd><p>PluginUpdateQuery class</p>
+</dd>
+<dt><a href="#UserCountQuery">UserCountQuery</a></dt>
+<dd><p>UserCountQuery class</p>
+</dd>
+<dt><a href="#UserListQuery">UserListQuery</a></dt>
+<dd><p>UserListQuery class</p>
+</dd>
+</dl>
 
-```js
-userInstance.setLastLogin(`newLastLogin`)
-userInstance...
-```
+<a name="CommandListQuery"></a>
 
-<a name="User+setData"></a>
-### User.setData(newData)
-Sets User's data.
+## CommandListQuery
+CommandListQuery class
 
-| Param | Type | Description |
-| --- | --- | --- |
-| newData | `Object` | User's new data |
 
-Example:
+* [CommandListQuery](#CommandListQuery)
+    * [new CommandListQuery(options)](#new_CommandListQuery_new)
+    * [.toObject()](#CommandListQuery+toObject) ⇒ <code>Object</code>
 
-```js
-userInstance.setData({/*new data*/})
-userInstance...
-```
+<a name="new_CommandListQuery_new"></a>
 
-<a name="User+setPassword"></a>
-### User.setPassword(newPassword)
-Sets User's password.
+### new CommandListQuery(options)
+Creates new CommandListQuery model
 
-| Param | Type | Description |
-| --- | --- | --- |
-| newPassword | `String` | User's new password |
-
-Example:
-
-```js
-userInstance.setPassword(`newPassword`)
-userInstance...
-```
-
-<a name="User+setOldPassword"></a>
-### User.setOldPassword(newOldPassword)
-Sets User's old password.
-
-| Param | Type | Description |
-| --- | --- | --- |
-| newOldPassword | `String` | User's new old password |
-
-Example:
-
-```js
-userInstance.setOldPassword(`newOldPassword`)
-userInstance...
-```
-
-<a name="User+setIntroReviewed"></a>
-### User.setIntroReviewed(newIntroReviewed)
-Sets User's intro reviewed.
-
-| Param | Type | Description |
-| --- | --- | --- |
-| newIntroReviewed | `Boolean` | User's new intro reviewed |
-
-Example:
-
-```js
-userInstance.setIntroReviewed(true)
-userInstance...
-```
-
-<a name="User+save"></a>
-### User.save()
-Saves current User's state
-
-Example:
-
-```js
-userInstance.save()
-.then(() => ...)
-```
-
-<a name="User+getNetworks"></a>
-### User.getNetworks()
-Returns User's networks
-
-Example:
-
-```js
-userInstance.getNetworks()
-.then(networks => ...)
-```
-
-<a name="User+assignNetwork"></a>
-### User.assignNetwork(networkId)
-Assign Network to User
 
 | Param | Type | Description |
 | --- | --- | --- |
-| networkId | `Number` | Network's id to assign |
+| options | <code>object</code> | model options object |
+| options.deviceId | <code>string</code> | Device ID |
+| options.start | <code>string</code> | Start timestamp |
+| options.end | <code>string</code> | End timestamp |
+| options.command | <code>string</code> | Command name |
+| options.status | <code>string</code> | Command status |
+| options.sortField | <code>string</code> | Sort field |
+| options.sortOrder | <code>string</code> | Sort order |
+| options.take | <code>number</code> | Limit param |
+| options.skip | <code>number</code> | Skip param |
 
-Example:
+<a name="CommandListQuery+toObject"></a>
 
-```js
-userInstance.assignNetwork(12345)
-.then(() => ...)
-```
+### commandListQuery.toObject() ⇒ <code>Object</code>
+Returns instance as a plain JS object
 
-<a name="User+unassignNetwork"></a>
-### User.unassignNetwork(networkId)
-Unassing Network from User
+<a name="CommandPollManyQuery"></a>
+
+## CommandPollManyQuery
+CommandPollManyQuery class
+
+
+* [CommandPollManyQuery](#CommandPollManyQuery)
+    * [new CommandPollManyQuery(options)](#new_CommandPollManyQuery_new)
+    * [.toObject()](#CommandPollManyQuery+toObject) ⇒ <code>Object</code>
+
+<a name="new_CommandPollManyQuery_new"></a>
+
+### new CommandPollManyQuery(options)
+Creates new CommandPollManyQuery model
+
 
 | Param | Type | Description |
 | --- | --- | --- |
-| networkId | `Number` | Network's id to unassign |
+| options | <code>object</code> | model options object |
+| options.deviceIds | <code>string</code> | List of device IDs |
+| options.networkIds | <code>string</code> | List of network IDs |
+| options.deviceTypeIds | <code>string</code> | List of devicetype IDs |
+| options.names | <code>string</code> | Command names |
+| options.timestamp | <code>string</code> | Timestamp to start from |
+| options.waitTimeout | <code>number</code> | Wait timeout in seconds |
+| options.limit | <code>number</code> | Limit number of commands |
 
-Example:
+<a name="CommandPollManyQuery+toObject"></a>
 
-```js
-userInstance.unassignNetwork(12345)
-.then(() => ...)
-```
+### commandPollManyQuery.toObject() ⇒ <code>Object</code>
+Returns instance as a plain JS object
 
-## Development
+<a name="CommandPollQuery"></a>
 
-It's quite easy to add more functionality to Rest library. Check `utils.js` file for info about sending request to API with proper params.
+## CommandPollQuery
+CommandPollQuery class
+
+
+* [CommandPollQuery](#CommandPollQuery)
+    * [new CommandPollQuery(options)](#new_CommandPollQuery_new)
+    * [.toObject()](#CommandPollQuery+toObject) ⇒ <code>Object</code>
+
+<a name="new_CommandPollQuery_new"></a>
+
+### new CommandPollQuery(options)
+Creates new CommandPollQuery model
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | model options object |
+| options.deviceId | <code>string</code> | Device ID |
+| options.names | <code>string</code> | Command names |
+| options.timestamp | <code>number</code> | Timestamp to start from |
+| options.returnUpdatedCommands | <code>boolean</code> | Checks if updated commands should be returned |
+| options.waitTimeout | <code>number</code> | Wait timeout in seconds |
+| options.limit | <code>number</code> | Limit number of commands |
+
+<a name="CommandPollQuery+toObject"></a>
+
+### commandPollQuery.toObject() ⇒ <code>Object</code>
+Returns instance as a plain JS object
+
+<a name="CommandWaitQuery"></a>
+
+## CommandWaitQuery
+CommandWaitQuery class
+
+
+* [CommandWaitQuery](#CommandWaitQuery)
+    * [new CommandWaitQuery(options)](#new_CommandWaitQuery_new)
+    * [.toObject()](#CommandWaitQuery+toObject) ⇒ <code>Object</code>
+
+<a name="new_CommandWaitQuery_new"></a>
+
+### new CommandWaitQuery(options)
+Creates new CommandWaitQuery model
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>Object</code> | model options object |
+| options.waitTimeout | <code>Number</code> | wait timeout (sec) |
+
+<a name="CommandWaitQuery+toObject"></a>
+
+### commandWaitQuery.toObject() ⇒ <code>Object</code>
+Returns instance as a plain JS object
+
+<a name="DeviceCountQuery"></a>
+
+## DeviceCountQuery
+DeviceCountQuery class
+
+
+* [DeviceCountQuery](#DeviceCountQuery)
+    * [new DeviceCountQuery(options)](#new_DeviceCountQuery_new)
+    * [.toObject()](#DeviceCountQuery+toObject) ⇒ <code>Object</code>
+
+<a name="new_DeviceCountQuery_new"></a>
+
+### new DeviceCountQuery(options)
+Creates new DeviceCountQuery model
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | model options object |
+| options.name | <code>string</code> | Filter by device name |
+| options.namePattern | <code>string</code> | Filter by device name pattern. In pattern wildcards '%' and '_' can be used |
+| options.networkId | <code>number</code> | Filter by associated network identifier |
+| options.networkName | <code>string</code> | Filter by associated network name |
+
+<a name="DeviceCountQuery+toObject"></a>
+
+### deviceCountQuery.toObject() ⇒ <code>Object</code>
+Returns instance as a plain JS object
+
+<a name="DeviceListQuery"></a>
+
+## DeviceListQuery
+DeviceListQuery class
+
+
+* [DeviceListQuery](#DeviceListQuery)
+    * [new DeviceListQuery(options)](#new_DeviceListQuery_new)
+    * [.toObject()](#DeviceListQuery+toObject) ⇒ <code>Object</code>
+
+<a name="new_DeviceListQuery_new"></a>
+
+### new DeviceListQuery(options)
+Creates new DeviceListQuery model
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | model options object |
+| options.name | <code>string</code> | Filter by device name |
+| options.namePattern | <code>string</code> | Filter by device name pattern. In pattern wildcards '%' and '_' can be used |
+| options.networkId | <code>number</code> | Filter by associated network identifier |
+| options.networkName | <code>string</code> | Filter by associated network name |
+| options.sortField | <code>string</code> | Result list sort field |
+| options.sortOrder | <code>string</code> | Result list sort order. The sortField should be specified |
+| options.take | <code>number</code> | Number of records to take from the result list |
+| options.skip | <code>number</code> | Number of records to skip from the result list |
+
+<a name="DeviceListQuery+toObject"></a>
+
+### deviceListQuery.toObject() ⇒ <code>Object</code>
+Returns instance as a plain JS object
+
+<a name="DeviceTypeCountQuery"></a>
+
+## DeviceTypeCountQuery
+DeviceTypeCountQuery class
+
+
+* [DeviceTypeCountQuery](#DeviceTypeCountQuery)
+    * [new DeviceTypeCountQuery(options)](#new_DeviceTypeCountQuery_new)
+    * [.toObject()](#DeviceTypeCountQuery+toObject) ⇒ <code>Object</code>
+
+<a name="new_DeviceTypeCountQuery_new"></a>
+
+### new DeviceTypeCountQuery(options)
+Creates new DeviceTypeCountQuery model
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | model options object |
+| options.name | <code>string</code> | Filter by device type name |
+| options.namePattern | <code>string</code> | Filter by device type name pattern. In pattern wildcards '%' and '_' can be used |
+
+<a name="DeviceTypeCountQuery+toObject"></a>
+
+### deviceTypeCountQuery.toObject() ⇒ <code>Object</code>
+Returns instance as a plain JS object
+
+<a name="DeviceTypeListQuery"></a>
+
+## DeviceTypeListQuery
+DeviceTypeListQuery class
+
+
+* [DeviceTypeListQuery](#DeviceTypeListQuery)
+    * [new DeviceTypeListQuery(options)](#new_DeviceTypeListQuery_new)
+    * [.toObject()](#DeviceTypeListQuery+toObject) ⇒ <code>Object</code>
+
+<a name="new_DeviceTypeListQuery_new"></a>
+
+### new DeviceTypeListQuery(options)
+Creates new DeviceTypeListQuery model
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | model options object |
+| options.name | <code>string</code> | Filter by device type name |
+| options.namePattern | <code>string</code> | Filter by device type name pattern. In pattern wildcards '%' and '_' can be used |
+| options.sortField | <code>string</code> | Result list sort field |
+| options.sortOrder | <code>string</code> | Result list sort order. The sortField should be specified |
+| options.take | <code>number</code> | Number of records to take from the result list |
+| options.skip | <code>number</code> | Number of records to skip from the result list |
+
+<a name="DeviceTypeListQuery+toObject"></a>
+
+### deviceTypeListQuery.toObject() ⇒ <code>Object</code>
+Returns instance as a plain JS object
+
+<a name="NetworkCountQuery"></a>
+
+## NetworkCountQuery
+NetworkCountQuery class
+
+
+* [NetworkCountQuery](#NetworkCountQuery)
+    * [new NetworkCountQuery(options)](#new_NetworkCountQuery_new)
+    * [.toObject()](#NetworkCountQuery+toObject) ⇒ <code>Object</code>
+
+<a name="new_NetworkCountQuery_new"></a>
+
+### new NetworkCountQuery(options)
+Creates new NetworkCountQuery model
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | model options object |
+| options.name | <code>string</code> | Filter by device type name |
+| options.namePattern | <code>string</code> | Filter by device type name pattern. In pattern wildcards '%' and '_' can be used |
+
+<a name="NetworkCountQuery+toObject"></a>
+
+### networkCountQuery.toObject() ⇒ <code>Object</code>
+Returns instance as a plain JS object
+
+<a name="NetworkListQuery"></a>
+
+## NetworkListQuery
+NetworkListQuery class
+
+
+* [NetworkListQuery](#NetworkListQuery)
+    * [new NetworkListQuery(options)](#new_NetworkListQuery_new)
+    * [.toObject()](#NetworkListQuery+toObject) ⇒ <code>Object</code>
+
+<a name="new_NetworkListQuery_new"></a>
+
+### new NetworkListQuery(options)
+Creates new NetworkListQuery model
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | model options object |
+| options.name | <code>string</code> | Filter by device type name |
+| options.namePattern | <code>string</code> | Filter by device type name pattern. In pattern wildcards '%' and '_' can be used |
+| options.sortField | <code>string</code> | Result list sort field |
+| options.sortOrder | <code>string</code> | Result list sort order. The sortField should be specified |
+| options.take | <code>number</code> | Number of records to take from the result list |
+| options.skip | <code>number</code> | Number of records to skip from the result list |
+
+<a name="NetworkListQuery+toObject"></a>
+
+### networkListQuery.toObject() ⇒ <code>Object</code>
+Returns instance as a plain JS object
+
+<a name="NotificationListQuery"></a>
+
+## NotificationListQuery
+NotificationListQuery class
+
+
+* [NotificationListQuery](#NotificationListQuery)
+    * [new NotificationListQuery(options)](#new_NotificationListQuery_new)
+    * [.toObject()](#NotificationListQuery+toObject) ⇒ <code>Object</code>
+
+<a name="new_NotificationListQuery_new"></a>
+
+### new NotificationListQuery(options)
+Creates new NotificationListQuery model
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | model options object |
+| options.deviceId | <code>string</code> | Device ID |
+| options.start | <code>string</code> | Start timestamp |
+| options.end | <code>string</code> | End timestamp |
+| options.notification | <code>string</code> | Notification name |
+| options.status | <code>string</code> | Command status |
+| options.sortField | <code>string</code> | Sort field |
+| options.sortOrder | <code>string</code> | Sort order |
+| options.take | <code>number</code> | Limit param |
+| options.skip | <code>number</code> | Skip param |
+
+<a name="NotificationListQuery+toObject"></a>
+
+### notificationListQuery.toObject() ⇒ <code>Object</code>
+Returns instance as a plain JS object
+
+<a name="NotificationPollManyQuery"></a>
+
+## NotificationPollManyQuery
+NotificationPollManyQuery class
+
+
+* [NotificationPollManyQuery](#NotificationPollManyQuery)
+    * [new NotificationPollManyQuery(options)](#new_NotificationPollManyQuery_new)
+    * [.toObject()](#NotificationPollManyQuery+toObject) ⇒ <code>Object</code>
+
+<a name="new_NotificationPollManyQuery_new"></a>
+
+### new NotificationPollManyQuery(options)
+Creates new NotificationPollManyQuery model
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | model options object |
+| options.deviceIds | <code>string</code> | List of device IDs |
+| options.networkIds | <code>string</code> | List of network IDs |
+| options.deviceTypeIds | <code>string</code> | List of devicetype IDs |
+| options.names | <code>string</code> | Notification names |
+| options.timestamp | <code>string</code> | Timestamp to start from |
+| options.waitTimeout | <code>number</code> | Wait timeout in seconds |
+
+<a name="NotificationPollManyQuery+toObject"></a>
+
+### notificationPollManyQuery.toObject() ⇒ <code>Object</code>
+<a name="NotificationPollQuery"></a>
+
+## NotificationPollQuery
+NotificationPollQuery class
+
+
+* [NotificationPollQuery](#NotificationPollQuery)
+    * [new NotificationPollQuery(options)](#new_NotificationPollQuery_new)
+    * [.toObject()](#NotificationPollQuery+toObject) ⇒ <code>Object</code>
+
+<a name="new_NotificationPollQuery_new"></a>
+
+### new NotificationPollQuery(options)
+Creates new NotificationPollQuery model
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | model options object |
+| options.deviceId | <code>string</code> | Device ID |
+| options.names | <code>string</code> | Notification names |
+| options.timestamp | <code>number</code> | Timestamp to start from |
+| options.waitTimeout | <code>number</code> | Wait timeout in seconds |
+
+<a name="NotificationPollQuery+toObject"></a>
+
+### notificationPollQuery.toObject() ⇒ <code>Object</code>
+Returns instance as a plain JS object
+
+<a name="PluginCountQuery"></a>
+
+## PluginCountQuery
+PluginCountQuery class
+
+
+* [PluginCountQuery](#PluginCountQuery)
+    * [new PluginCountQuery(options)](#new_PluginCountQuery_new)
+    * [.toObject()](#PluginCountQuery+toObject) ⇒ <code>Object</code>
+
+<a name="new_PluginCountQuery_new"></a>
+
+### new PluginCountQuery(options)
+Creates new PluginCountQuery model
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | model options object |
+| options.name | <code>string</code> | Filter by plugin name |
+| options.namePattern | <code>string</code> | Filter by plugin name pattern. In pattern wildcards '%' and '_' can be used |
+| options.topicName | <code>string</code> | Filter by plugin topic name |
+| options.status | <code>number</code> | Filter by plugin status |
+| options.userId | <code>number</code> | Filter by associated user identifier. Only admin can see other users' plugins |
+
+<a name="PluginCountQuery+toObject"></a>
+
+### pluginCountQuery.toObject() ⇒ <code>Object</code>
+Returns instance as a plain JS object
+
+<a name="PluginListQuery"></a>
+
+## PluginListQuery
+PluginListQuery class
+
+
+* [PluginListQuery](#PluginListQuery)
+    * [new PluginListQuery(options)](#new_PluginListQuery_new)
+    * [.toObject()](#PluginListQuery+toObject) ⇒ <code>Object</code>
+
+<a name="new_PluginListQuery_new"></a>
+
+### new PluginListQuery(options)
+Creates new PluginListQuery model
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | model options object |
+| options.name | <code>string</code> | Filter by plugin name |
+| options.namePattern | <code>string</code> | Filter by plugin name pattern. In pattern wildcards '%' and '_' can be used |
+| options.topicName | <code>string</code> | Filter by plugin topic nathis. |
+| options.status | <code>string</code> | Filter by plugin status. |
+| options.userId | <code>number</code> | Filter by associated user identifier. Only admin can see other users' plugins |
+| options.sortField | <code>string</code> | Result list sort field |
+| options.sortOrder | <code>string</code> | Result list sort order. The sortField should be specified |
+| options.take | <code>number</code> | Number of records to take from the result list |
+| options.skip | <code>number</code> | Number of records to skip from the result list |
+
+<a name="PluginListQuery+toObject"></a>
+
+### pluginListQuery.toObject() ⇒ <code>Object</code>
+Returns instance as a plain JS object
+
+<a name="PluginRegisterQuery"></a>
+
+## PluginRegisterQuery
+PluginRegisterQuery class
+
+
+* [PluginRegisterQuery](#PluginRegisterQuery)
+    * [new PluginRegisterQuery(options)](#new_PluginRegisterQuery_new)
+    * [.toObject()](#PluginRegisterQuery+toObject) ⇒ <code>Object</code>
+
+<a name="new_PluginRegisterQuery_new"></a>
+
+### new PluginRegisterQuery(options)
+Creates new PluginRegisterQuery model
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | model options object |
+| [options.deviceId] | <code>string</code> | Device device_id |
+| [options.networkIds] | <code>string</code> | Network ids |
+| [options.deviceTypeIds] | <code>string</code> | Device type ids |
+| [options.names] | <code>string</code> | Command/Notification names |
+| [options.returnCommands] | <code>boolean</code> | Checks if commands should be returned |
+| [options.returnUpdatedCommands] | <code>boolean</code> | Checks if updated commands should be returned |
+| [options.returnNotifications] | <code>boolean</code> | Checks if commands should be returned |
+
+<a name="PluginRegisterQuery+toObject"></a>
+
+### pluginRegisterQuery.toObject() ⇒ <code>Object</code>
+Returns instance as a plain JS object
+
+<a name="PluginUpdateQuery"></a>
+
+## PluginUpdateQuery
+PluginUpdateQuery class
+
+
+* [PluginUpdateQuery](#PluginUpdateQuery)
+    * [new PluginUpdateQuery(options)](#new_PluginUpdateQuery_new)
+    * [.toObject()](#PluginUpdateQuery+toObject) ⇒ <code>Object</code>
+
+<a name="new_PluginUpdateQuery_new"></a>
+
+### new PluginUpdateQuery(options)
+Creates Plugin Update Query model
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | Options for instance |
+| options.topicName | <code>string</code> | Name of topic that was created for the plugin |
+| [options.deviceId] | <code>string</code> | Device device_id |
+| [options.networkIds] | <code>string</code> | Network ids |
+| [options.deviceTypeIds] | <code>string</code> | Device type ids |
+| [options.names] | <code>string</code> | Command/Notification names |
+| [options.returnCommands] | <code>boolean</code> | Checks if commands should be returned |
+| [options.returnUpdatedCommands] | <code>boolean</code> | Checks if updated commands should be returned |
+| [options.returnNotifications] | <code>boolean</code> | Checks if commands should be returned |
+| [options.status] | <code>string</code> | Plugin status - active or disabled (ACTIVE | DISABLED | CREATED) |
+| [options.name] | <code>string</code> | Plugin name |
+| [options.description] | <code>string</code> | Plugin description |
+| [options.parameters] | <code>string</code> | Plugin parameters |
+
+<a name="PluginUpdateQuery+toObject"></a>
+
+### pluginUpdateQuery.toObject() ⇒ <code>Object</code>
+<a name="UserCountQuery"></a>
+
+## UserCountQuery
+UserCountQuery class
+
+
+* [UserCountQuery](#UserCountQuery)
+    * [new UserCountQuery(options)](#new_UserCountQuery_new)
+    * [.toObject()](#UserCountQuery+toObject) ⇒ <code>Object</code>
+
+<a name="new_UserCountQuery_new"></a>
+
+### new UserCountQuery(options)
+Creates User Count Query
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | Options for instance |
+| options.login | <code>string</code> | Filter by user login |
+| options.loginPattern | <code>string</code> | Filter by user login pattern |
+| options.role | <code>number</code> | Filter by user login patter |
+| options.status | <code>number</code> | Filter by user status. 0 is Active, 1 is Locked Out, 2 is Disabled |
+
+<a name="UserCountQuery+toObject"></a>
+
+### userCountQuery.toObject() ⇒ <code>Object</code>
+Returns instance as a plain JS object
+
+<a name="UserListQuery"></a>
+
+## UserListQuery
+UserListQuery class
+
+
+* [UserListQuery](#UserListQuery)
+    * [new UserListQuery(options)](#new_UserListQuery_new)
+    * [.toObject()](#UserListQuery+toObject) ⇒ <code>Object</code>
+
+<a name="new_UserListQuery_new"></a>
+
+### new UserListQuery(options)
+Creates User List Query
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | Options for instance |
+| options.login | <code>string</code> | Filter by user login |
+| options.loginPattern | <code>string</code> | Filter by user login pattern |
+| options.role | <code>number</code> | Filter by user login patter |
+| options.status | <code>number</code> | Filter by user status. 0 is Active, 1 is Locked Out, 2 is Disabled |
+| options.sortField | <code>string</code> | Result list sort field |
+| options.sortOrder | <code>string</code> | Result list sort order. The sortField should be specified |
+| options.take | <code>number</code> | Number of records to take from the result list |
+| options.skip | <code>number</code> | Number of records to skip from the result list |
+
+<a name="UserListQuery+toObject"></a>
+
+### userListQuery.toObject() ⇒ <code>Object</code>
+Returns instance as a plain JS object
+
+
 
 ## License
 
 [DeviceHive] is developed by [DataArt] Apps and distributed under Open Source
 [Apache 2.0 license](https://en.wikipedia.org/wiki/Apache_License). 
 
-## Creators
-
-* [Nikita Liashenko](https://github.com/NikitaLiashenko)
-* [Nikolay Khabarov](https://github.com/Nikolay-Kha)
-
-© Copyright 2017 [DataArt] Apps © All Rights Reserved
+© Copyright 2018 [DataArt] Apps © All Rights Reservedstrong text
