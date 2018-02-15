@@ -11,7 +11,7 @@ class NetworkAPI extends API {
 
     /**
      * Returns a network
-     * @param {number} networkId
+     * @param {number} networkId Network id
      * @returns {Promise} selected network
      */
     get(networkId) {

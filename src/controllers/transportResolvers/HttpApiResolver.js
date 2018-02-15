@@ -7,9 +7,9 @@ const queryString = require('query-string');
 class HttpApiResolver {
 
     /**
-     *
-     * @param base
-     * @param parameters
+     * Builds URL
+     * @param {string} base - base URI
+     * @param {object} parameters - URI parameters
      * @returns {string}
      */
     static buildUrl(base, parameters) {
@@ -19,9 +19,9 @@ class HttpApiResolver {
     }
 
     /**
-     *
-     * @param response
-     * @returns {{}}
+     * Normalaizes response
+     * @param {object} response
+     * @returns {{*}} - Normalized response
      */
     static normalizeResponse(response) {
         if (response.error) {
@@ -31,15 +31,13 @@ class HttpApiResolver {
         return response;
     }
 
-
     /**
-     *
-     * @param options
-     * @param options.method
-     * @param options.uri
-     * @param options.base
-     * @param options.subscription
-     * @param options.unsubscription
+     * @param {object} options
+     * @param {string} options.method
+     * @param {string} options.uri
+     * @param {string} options.base
+     * @param {boolean} options.subscription
+     * @param {boolean} options.unsubscription
      */
     constructor({ method, uri, base, subscription, unsubscription }) {
         const me = this;
@@ -52,9 +50,9 @@ class HttpApiResolver {
     }
 
     /**
-     *
-     * @param parameters
-     * @param body
+     * Builds request
+     * @param {object} parameters
+     * @param {object} body
      * @returns {{method: *, endpoint: string}}
      */
     build(parameters, body) {

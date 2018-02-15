@@ -7,10 +7,10 @@ const Utils = require(`../../utils/Utils`);
 class WebSocketApiResolver {
 
     /**
-     *
-     * @param response
-     * @param normalizationObject
-     * @returns {{}}
+     * Normalaizes response
+     * @param {object} response - Response
+     * @param {object} normalizationObject -  Normalization object
+     * @returns {{}} - Normalized response
      */
     static normalizeResponse(response, normalizationObject) {
         let result = {};
@@ -34,7 +34,6 @@ class WebSocketApiResolver {
     }
 
     /**
-     *
      * @param action
      * @param bodyKey
      */
@@ -46,9 +45,9 @@ class WebSocketApiResolver {
     }
 
     /**
-     *
-     * @param parameters
-     * @param body
+     * Builds request
+     * @param {object} parameters
+     * @param {object} body
      * @returns {{action: *}}
      */
     build(parameters, body) {

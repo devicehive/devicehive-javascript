@@ -11,7 +11,7 @@ class DeviceTypeAPI extends API {
 
     /**
      * Creates DeviceTypeAPI
-     * @param {number} deviceTypeId
+     * @param {number} deviceTypeId - Device type ID
      * @returns {Promise} selected deviceType
      */
     get(deviceTypeId) {

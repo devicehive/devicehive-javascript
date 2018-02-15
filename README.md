@@ -1777,13 +1777,13 @@ Creates new DeviceNotification model
 | Param | Type | Description |
 | --- | --- | --- |
 | options | <code>object</code> | model options object |
-| options.id | <code>number</code> |  |
-| options.deviceId | <code>string</code> |  |
-| options.networkId | <code>number</code> |  |
-| options.deviceTypeId | <code>number</code> |  |
-| options.notification | <code>string</code> |  |
-| options.timestamp | <code>string</code> |  |
-| options.parameters | <code>object</code> |  |
+| options.id | <code>number</code> | Notification identifier |
+| options.deviceId | <code>string</code> | Device unique identifier |
+| options.networkId | <code>number</code> | Network unique identifier |
+| options.deviceTypeId | <code>number</code> | Device type unique identifier |
+| options.notification | <code>string</code> | Notification name |
+| options.timestamp | <code>string</code> | Notification UTC datetime (yyyy-MM-dd'T'HH:mm:ss.SSS ISO 8601) |
+| options.parameters | <code>object</code> | Notification parameters, a JSON object with an arbitrary structure |
 
 <a name="DeviceNotification+toObject"></a>
 
