@@ -22,7 +22,7 @@ class ConfigurationAPI extends API {
      * @returns {Promise} count of configuration
      */
     put(configuration) {
-        return this.send(ApiMap.putConfiguration, { name: configuration.name, value: configuration.value });
+        return this.send(ApiMap.putConfiguration, configuration.toObject(), configuration.toObject()); // TODO
     }
 
     /**

@@ -137,11 +137,12 @@ class PluginUpdateQuery extends BaseModel {
     }
 
     /**
-     * Returns instance as a plain JS object
-     * @returns {Object}
+     *
+     * @returns {{topicName: string, deviceId: string, networkIds: string, deviceTypeIds: string, names: string, returnCommands: boolean, returnUpdatedCommands: boolean, returnNotifications: boolean, status: string,name: string, description: string, parameters: string }}
      */
     toObject() {
         return {
+            topicName: this.topicName,
             deviceId: this.deviceId,
             networkIds: this.networkIds,
             deviceTypeIds: this.deviceTypeIds,

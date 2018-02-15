@@ -13,7 +13,7 @@ class NotificationPollManyQuery extends BaseModel {
      * @param {string} options.networkIds - List of network IDs
      * @param {string} options.deviceTypeIds - List of devicetype IDs
      * @param {string} options.names - Notification names
-     * @param {number} options.timestamp - Timestamp to start from
+     * @param {string} options.timestamp - Timestamp to start from
      * @param {number} options.waitTimeout - Wait timeout in seconds
      */
     constructor({ deviceIds, networkIds, deviceTypeIds, names, timestamp, waitTimeout } = {}) {

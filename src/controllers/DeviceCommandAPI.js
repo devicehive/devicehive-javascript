@@ -3,6 +3,7 @@ const ApiMap = require(`./transportResolvers/ApiMap`);
 const CommandListQuery = require('../models/query/CommandListQuery');
 const CommandPollQuery = require('../models/query/CommandPollQuery');
 const CommandPollManyQuery = require('../models/query/CommandPollManyQuery');
+const CommandWaitQuery = require('../models/query/CommandWaitQuery');
 
 
 /**
@@ -72,8 +73,11 @@ class DeviceCommandAPI extends API {
      * @param commandId
      * @returns {Promise}
      */
-    wait(deviceId, commandId) {
-        return this.send(ApiMap.waitCommand, { deviceId: deviceId, commandId: commandId });
+    wait(deviceId, commandId, commandWaitQuery = new CommandWaitQuery()) {
+        return this.send(ApiMap.waitCommand, Object.assign({}, {
+            deviceId,
+            commandId,
+        }, commandWaitQuery.toObject()));
     }
 
     /**

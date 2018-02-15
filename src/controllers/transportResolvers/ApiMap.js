@@ -160,7 +160,7 @@ apiMap.set(ApiMap.login, { http: { method: 'POST', uri: '/token', base: ApiMap.A
 apiMap.set(ApiMap.createUserToken, { http: { method: 'POST', uri: '/token/create', base: ApiMap.AUTH_BASE }, ws: { action: 'token/create', bodyKey: 'payload', response: [`accessToken`, `refreshToken`] } });
 apiMap.set(ApiMap.createPluginToken, { http: { method: 'POST', uri: '/token/plugin/create', base: ApiMap.AUTH_BASE } });
 apiMap.set(ApiMap.refreshToken, { http: { method: 'POST', uri: '/token/refresh', base: ApiMap.AUTH_BASE }, ws: { action: 'token/refresh', response: [`accessToken`] } });
-apiMap.set(ApiMap.authenticatePlugin, { http: { method: 'POST', uri: '/token/plugin/authenticate', base: ApiMap.AUTH_BASE } });
+apiMap.set(ApiMap.authenticatePlugin, { http: { method: 'GET', uri: '/token/plugin/authenticate', base: ApiMap.AUTH_BASE } });
 
 apiMap.set(ApiMap.getServerInfo, { http: { method: 'GET', uri: '/info', base: ApiMap.MAIN_BASE }, ws: { action: 'server/info', response: { bodyKey: `info` } } });
 apiMap.set(ApiMap.getCacheInfo, { http: { method: 'GET', uri: '/info/cache', base: ApiMap.MAIN_BASE } });
@@ -186,7 +186,7 @@ apiMap.set(ApiMap.deleteDeviceType, { http: { method: 'DELETE', uri: '/devicetyp
 apiMap.set(ApiMap.listCommand, { http: { method: 'GET', uri: '/device/{deviceId}/command', base: ApiMap.MAIN_BASE }, ws: { action: 'command/list', response: { bodyKey: 'commands' } } });
 apiMap.set(ApiMap.getCommand, { http: { method: 'GET', uri: '/device/{deviceId}/command/{commandId}', base: ApiMap.MAIN_BASE }, ws: { action: 'command/get', response: { bodyKey: 'command' } } });
 apiMap.set(ApiMap.insertCommand, { http: { method: 'POST', uri: '/device/{deviceId}/command', base: ApiMap.MAIN_BASE }, ws: { action: 'command/insert', bodyKey: 'command', response: { bodyKey: 'command' } } });
-apiMap.set(ApiMap.updateCommand, { http: { method: 'POST', uri: '/device/{deviceId}/command/{commandId}', base: ApiMap.MAIN_BASE }, ws: { action: 'command/update', bodyKey: 'command', response: null } });
+apiMap.set(ApiMap.updateCommand, { http: { method: 'PUT', uri: '/device/{deviceId}/command/{commandId}', base: ApiMap.MAIN_BASE }, ws: { action: 'command/update', bodyKey: 'command', response: null } });
 apiMap.set(ApiMap.pollCommand, { http: { method: 'GET', uri: '/device/{deviceId}/command/poll', base: ApiMap.MAIN_BASE } });
 apiMap.set(ApiMap.pollManyCommand, { http: { method: 'GET', uri: '/device/command/poll', base: ApiMap.MAIN_BASE } });
 apiMap.set(ApiMap.waitCommand, { http: { method: 'GET', uri: '/device/{deviceId}/command/{commandId}/poll', base: ApiMap.MAIN_BASE } });
