@@ -11,7 +11,7 @@ const DeviceHive = require('../../../index');
 
 let authService, mainService, deviceHive;
 
-describe('NotificationAPI WS', () => {
+describe('NotificationAPI HTTP', () => {
 
     before(done => {
         // authService
@@ -79,7 +79,7 @@ describe('NotificationAPI WS', () => {
 
     it('NotificationAPI.list()', done => {
 
-        const expectedQuery = {
+        const source = {
             deviceId: 'deviceId',
             start: '2018-02-09T10:09:03.033Z',
             end: '2018-02-09T10:09:03.033Z',
@@ -91,16 +91,27 @@ describe('NotificationAPI WS', () => {
             skip: '1'
         };
 
+        const expected = {
+            start: '2018-02-09T10:09:03.033Z',
+            end: '2018-02-09T10:09:03.033Z',
+            notification: 'notification',
+            status: 'status',
+            sortField: 'sortField',
+            sortOrder: 'sortOrder',
+            take: '1',
+            skip: '1'
+        };
+
         // Configurating Notification List query
-        const notificationListQuery = new DeviceHive.models.query.NotificationListQuery(expectedQuery);
+        const notificationListQuery = new DeviceHive.models.query.NotificationListQuery(source);
 
         deviceHive.notification.list(notificationListQuery);
 
         // sent data
         events.once('request', data => {
             assert.equal(data.method, 'GET', 'Not correct method');
-            assert.equal(data.url.pathname, `/device/${expectedQuery.deviceId}/notification`, 'Not correct URL');
-            assert.deepEqual(data.url.parameters, expectedQuery, 'Not correct query');
+            assert.equal(data.url.pathname, `/device/${source.deviceId}/notification`, 'Not correct URL');
+            assert.deepEqual(data.url.parameters, expected, 'Not correct query');
 
             done();
         });
@@ -136,23 +147,29 @@ describe('NotificationAPI WS', () => {
 
     it('NotificationAPI.poll()', done => {
 
-        const expectedQuery = {
+        const source = {
             deviceId: 'deviceId',
             names: 'names',
             timestamp: '2018-02-09T10:09:03.033Z',
             waitTimeout: '10'
         };
 
+        const expected = {
+            names: 'names',
+            timestamp: '2018-02-09T10:09:03.033Z',
+            waitTimeout: '10'
+        };
+
         // Configurating Notification List query
-        const notificationPollQuery = new DeviceHive.models.query.NotificationPollQuery(expectedQuery);
+        const notificationPollQuery = new DeviceHive.models.query.NotificationPollQuery(source);
 
         deviceHive.notification.poll(notificationPollQuery);
 
         // sent data
         events.once('request', data => {
             assert.equal(data.method, 'GET', 'Not correct method');
-            assert.equal(data.url.pathname, `/device/${expectedQuery.deviceId}/notification/poll`, 'Not correct URL');
-            assert.deepEqual(data.url.parameters, expectedQuery, 'Not correct query');
+            assert.equal(data.url.pathname, `/device/${source.deviceId}/notification/poll`, 'Not correct URL');
+            assert.deepEqual(data.url.parameters, expected, 'Not correct query');
 
             done();
         });

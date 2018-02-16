@@ -11,7 +11,7 @@ const DeviceHive = require('../../../index');
 
 let authService, mainService, deviceHive;
 
-describe('TokenAPI', () => {
+describe('TokenAPI HTTP', () => {
 
     before(done => {
         // authService
