@@ -13,9 +13,22 @@ class HttpApiResolver {
      * @param {object} parameters - URI parameters
      * @returns {string}
      */
-    static buildUrl(base, parameters) {
-        const stringParameters = queryString.stringify(parameters);
-        const url = format(base, parameters);
+    static buildUrl(base, parameters = {}) {
+        // console.log(base, parameters);
+        const pathRegex = /[^{}]+(?=\})/g;
+        const pathParameterKeys = pathRegex.test(base) ? base.match(pathRegex) : [];
+        const pathParameters = {};
+        const queryParameters = {};
+        Object.keys(parameters).forEach(key => {
+            if (pathParameterKeys.includes(key)) {
+                pathParameters[key] = parameters[key];
+            } else {
+                queryParameters[key] = parameters[key];
+            }
+        });
+
+        const stringParameters = queryString.stringify(queryParameters);
+        const url = format(base, pathParameters);
 
         return stringParameters ? `${url}?${stringParameters}` : url;
     }
