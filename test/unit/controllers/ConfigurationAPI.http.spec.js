@@ -84,8 +84,7 @@ describe('ConfigurationAPI HTTP', () => {
         // Configurating Configaration model
         const expectedBody = {
             name: 'myTestName',
-            value: 'string',
-            entityVersion: '1'
+            value: 'string'
         };
         const configuration = new DeviceHive.models.Configuration(expectedBody);
 
