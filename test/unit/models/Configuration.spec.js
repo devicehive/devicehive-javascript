@@ -6,8 +6,7 @@ describe('Configuration', () => {
 
     const expected = {
         name: 'string',
-        value: 'string',
-        entityVersion: 0
+        value: 'string'
     };
 
 

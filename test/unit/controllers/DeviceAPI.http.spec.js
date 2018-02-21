@@ -107,7 +107,7 @@ describe('DeviceAPI', () => {
             name: 'myTestName',
             networkId: 1,
             deviceTypeId: 1,
-            blocked: false
+            isBlocked: false
         };
         const device = new DeviceHive.models.Device(expectedBody);
 

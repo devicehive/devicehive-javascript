@@ -17,9 +17,8 @@ class PluginRegisterQuery extends BaseModel {
      * @param {boolean} [options.returnUpdatedCommands] - Checks if updated commands should be returned
      * @param {boolean} [options.returnNotifications] - Checks if commands should be returned
      */
-    constructor({ deviceId, networkIds, deviceTypeIds, names, returnCommands, returnUpdatedCommands, returnNotifications } = {}) {
+    constructor({ deviceId, networkIds, deviceTypeIds, names, returnCommands = true, returnUpdatedCommands = false, returnNotifications = false } = {}) {
         super();
-
         this.deviceId = deviceId;
         this.networkIds = networkIds;
         this.deviceTypeIds = deviceTypeIds;
