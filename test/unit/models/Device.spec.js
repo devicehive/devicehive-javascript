@@ -11,7 +11,7 @@ describe('Device', () => {
         },
         networkId: 0,
         deviceTypeId: 0,
-        blocked: false
+        isBlocked: false
     };
 
 
