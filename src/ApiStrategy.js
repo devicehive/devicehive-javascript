@@ -83,7 +83,13 @@ class ApiStrategy extends EventEmitter {
         }
 
         return me.strategy.send(sendData)
-            .then((response) => API.normalizeResponse(me.strategy.type, key, response));
+            .then((response) => API.normalizeResponse(me.strategy.type, key, response))
+            .catch(error => {
+                if (error === `Token expired`) {
+                } else {
+                    throw error;
+                }
+            });
     }
 }
 
