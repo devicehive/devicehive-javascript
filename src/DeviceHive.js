@@ -1,3 +1,4 @@
+const Utils = require(`./utils/Utils`);
 const EventEmitter = require('events');
 const APIStrategy = require('./ApiStrategy');
 const InfoAPI = require('./controllers/ServerInfoAPI');
@@ -98,7 +99,7 @@ class DeviceHive extends EventEmitter {
      * @param {string} [options.authServiceURL] - Auth Service URL (required only for http)
      * @param {string} [options.pluginServiceURL] - Alug inServi ceURL (required only for http)
      */
-    constructor({ accessToken, refreshToken, login, password, mainServiceURL, authServiceURL, pluginServiceURL }) {
+    constructor({ mainServiceURL, authServiceURL, pluginServiceURL, accessToken, refreshToken, login, password, autoUpdateSession  }) {
         super();
 
         const me = this;
@@ -107,6 +108,7 @@ class DeviceHive extends EventEmitter {
         me.refreshToken = refreshToken;
         me.login = login;
         me.password = password;
+        me.autoUpdateSession = autoUpdateSession;
 
         me.strategy = new APIStrategy({ mainServiceURL, authServiceURL, pluginServiceURL });
 
@@ -130,19 +132,32 @@ class DeviceHive extends EventEmitter {
      * Connect to the DeviceHive service
      * @returns {Promise<DeviceHive>}
      */
-    async connect() {
+    async connect({ accessToken, refreshToken, login, password } = {}) {
         const me = this;
+
+        me.accessToken = accessToken || me.accessToken;
+        me.refreshToken = refreshToken || me.refreshToken;
+        me.login = login || me.login;
+        me.password = password || me.password;
 
         if (me.accessToken || me.refreshToken || (me.login && me.password)) {
             try {
-                if (me.accessToken) {
-                    await me.strategy.authorize(me.accessToken);
+                if (me.login && me.password) {
+                    const { accessToken } = await me.token.login(me.login, me.password);
+                    await me.strategy.authorize(accessToken);
                 } else if (me.refreshToken) {
                     const accessToken = await me.token.refresh(me.refreshToken);
                     await me.strategy.authorize(accessToken);
-                } else if (me.login && me.password) {
-                    const { accessToken } = await me.token.login(me.login, me.password);
-                    await me.strategy.authorize(accessToken);
+                } else if (me.accessToken) {
+                    await me.strategy.authorize(me.accessToken);
+
+                    if (me.autoUpdateSession === true) {
+                        const { accessToken, refreshToken } = await me.token.createUserToken(
+                            Utils.createUserTokenFromJWT(me.accessToken));
+
+                        me.accessToken = accessToken;
+                        me.refreshToken = refreshToken;
+                    }
                 }
             } catch (error) {
                 throw new InvalidCredentialsError();
