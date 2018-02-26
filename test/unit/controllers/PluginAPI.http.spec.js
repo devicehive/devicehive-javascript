@@ -73,6 +73,7 @@ describe('PluginAPI HTTP', () => {
             mainServiceURL: 'http://localhost:3390',
             authServiceURL: 'http://localhost:3391',
             pluginServiceURL: 'http://localhost:3392',
+            autoUpdateSession: false
         });
 
         deviceHive.connect()
