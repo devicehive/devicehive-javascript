@@ -24,8 +24,6 @@ const testPlugins = [
 describe('PluginAPI', () => {
 
     before(done => {
-        // Configaratuion DeviceHive
-
         Promise.all([httpDeviceHive.connect(), wsDeviceHive.connect()])
             .then(() => done());
     });
@@ -50,8 +48,6 @@ describe('PluginAPI', () => {
     });
 
     it('PluginAPI.list()', done => {
-
-        // Configurating Plugin List query
         const pluginListQuery = new DeviceHive.models.query.PluginListQuery({
             take: 1,
             skip: 0
@@ -68,14 +64,31 @@ describe('PluginAPI', () => {
     });
 
 
-    // TODO
-    // it('PluginAPI.update()', done => {
-    // });
+    it('PluginAPI.update()', done => {
+        const updatedName = `${testPlugins[0].name}-updated`;
+        const pluginUpdateQuery = new DeviceHive.models.query.PluginUpdateQuery({
+            topicName: testPlugins[0].topicName,
+            name: updatedName
+        });
+        const pluginListQuery = new DeviceHive.models.query.PluginListQuery({
+            name: updatedName,
+            take: 1,
+            skip: 0
+        });
+
+        Promise.all([httpDeviceHive.plugin.update(pluginUpdateQuery)])
+            .then(() => Promise.all([httpDeviceHive.plugin.list(pluginListQuery)]))
+            .then(dataAll => {
+                for (const data of dataAll) {
+                    assert.strictEqual(data[0].name, updatedName);
+                }
+            })
+            .then(() => done())
+            .catch(done);
+    });
 
 
     it('PluginAPI.count()', done => {
-
-        // Configurating Plugin List query
         const pluginCountQuery = new DeviceHive.models.query.PluginCountQuery({
             status: '1'
         });
@@ -91,8 +104,6 @@ describe('PluginAPI', () => {
     });
 
     it('TokenAPI.createPluginToken()', done => {
-
-        // Configurating Token model
         const token = new DeviceHive.models.PluginToken({
             actions: [0],
             expiration: '2018-02-09T10:09:03.033Z',
