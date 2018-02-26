@@ -135,32 +135,45 @@ class DeviceHive extends EventEmitter {
     async connect({ accessToken, refreshToken, login, password } = {}) {
         const me = this;
 
-        me.accessToken = accessToken || me.accessToken;
-        me.refreshToken = refreshToken || me.refreshToken;
-        me.login = login || me.login;
-        me.password = password || me.password;
+        if (!accessToken && !refreshToken && !(login && password)) {
+            accessToken = accessToken || me.accessToken;
+            refreshToken = refreshToken || me.refreshToken;
+            login = login || me.login;
+            password = password || me.password;
+        }
 
-        if (me.accessToken || me.refreshToken || (me.login && me.password)) {
+        if (accessToken || refreshToken || (login && password)) {
             try {
-                if (me.login && me.password) {
-                    const { accessToken } = await me.token.login(me.login, me.password);
-                    await me.strategy.authorize(accessToken);
-                } else if (me.refreshToken) {
-                    const accessToken = await me.token.refresh(me.refreshToken);
-                    await me.strategy.authorize(accessToken);
-                } else if (me.accessToken) {
-                    await me.strategy.authorize(me.accessToken);
+                if (login && password) {
+                    const { accessToken, refreshToken } = await me.token.login(login, password);
 
-                    if (me.autoUpdateSession === true) {
-                        const { accessToken, refreshToken } = await me.token.createUserToken(
-                            Utils.createUserTokenFromJWT(me.accessToken));
+                    await me.strategy.authorize(accessToken);
 
-                        me.accessToken = accessToken;
-                        me.refreshToken = refreshToken;
-                    }
+                    me.accessToken = accessToken;
+                    me.refreshToken = refreshToken;
+                } else if (refreshToken) {
+                    const { accessToken } = await me.token.refresh(refreshToken);
+
+                    await me.strategy.authorize(accessToken);
+
+                    me.accessToken = accessToken;
+                    me.refreshToken = refreshToken;
+                } else if (accessToken) {
+                    await me.strategy.authorize(accessToken);
+
+                    me.accessToken = accessToken;
+                }
+
+                if (me.autoUpdateSession === true) {
+                    const userTokens = await me.token.createUserToken(
+                        Utils.createUserTokenFromJWT(me.accessToken));
+
+                    me.accessToken = userTokens.accessToken;
+                    me.refreshToken = userTokens.refreshToken;
+                    me.strategy.reconnectionHandler = () => me.connect({ refreshToken: me.refreshToken });
                 }
             } catch (error) {
-                throw new InvalidCredentialsError();
+                throw new InvalidCredentialsError(error);
             }
         } else {
             throw new NoAuthCredentialsError();

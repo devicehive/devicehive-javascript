@@ -8,7 +8,7 @@ const events = new EventEmitter();
 const DeviceHive = require('../../../index');
 
 const httpDeviceHive = new DeviceHive(config.server.http);
-const wsDeviceHive = new DeviceHive(config.server.ws)
+const wsDeviceHive = new DeviceHive(config.server.ws);
 
 
 const testUsers = [
@@ -159,7 +159,7 @@ describe('UserAPI', () => {
             login: 'login',
             loginPattern: 'loginPattern',
             role: '1',
-            status: '1',
+            status: '1'
         });
 
         Promise.all([httpDeviceHive.user.count(userListQuery), wsDeviceHive.user.count(userListQuery)])

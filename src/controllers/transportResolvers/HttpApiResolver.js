@@ -54,7 +54,7 @@ class HttpApiResolver {
      * @param {boolean} options.subscription
      * @param {boolean} options.unsubscription
      */
-    constructor({ method, uri, base, subscription, unsubscription }) {
+    constructor({ method, uri, base, subscription, unsubscription, noAuth }) {
         const me = this;
 
         me.method = method;
@@ -62,6 +62,7 @@ class HttpApiResolver {
         me.base = base;
         me.subscription = subscription;
         me.unsubscription = unsubscription;
+        me.noAuth = noAuth;
     }
 
     /**
@@ -76,6 +77,7 @@ class HttpApiResolver {
         
         if (me.unsubscription === true) {
             result = {
+                noAuth: me.noAuth,
                 unsubscription: me.unsubscription,
                 body: {
                     subscriptionId: parameters.subscriptionId
@@ -83,6 +85,7 @@ class HttpApiResolver {
             };
         } else {
             result = {
+                noAuth: me.noAuth,
                 method: me.method,
                 endpoint: HttpApiResolver.buildUrl(me.uri, parameters),
                 base: me.base,

@@ -8,7 +8,7 @@ const events = new EventEmitter();
 const DeviceHive = require('../../../index');
 
 const httpDeviceHive = new DeviceHive(config.server.http);
-const wsDeviceHive = new DeviceHive(config.server.ws)
+const wsDeviceHive = new DeviceHive(config.server.ws);
 
 
 const testDevices = [

@@ -40,6 +40,8 @@ class ApiStrategy extends EventEmitter {
 
         const me = this;
 
+        me.reconnectionHandler = null;
+
         me.urlsMap = new Map();
 
         me.urlsMap.set(API.MAIN_BASE, mainServiceURL);
@@ -85,7 +87,10 @@ class ApiStrategy extends EventEmitter {
         return me.strategy.send(sendData)
             .then((response) => API.normalizeResponse(me.strategy.type, key, response))
             .catch(error => {
-                if (error === `Token expired`) {
+                if (error === `Token expired` && me.reconnectionHandler) {
+                    return me.reconnectionHandler()
+                        .then(() => me.strategy.send(sendData))
+                        .then((response) => API.normalizeResponse(me.strategy.type, key, response));
                 } else {
                     throw error;
                 }

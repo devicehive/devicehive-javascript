@@ -37,7 +37,7 @@ class HTTP extends Transport {
     /**
      * Rest API send method
      */
-    send({ endpoint, method, body, subscription, unsubscription }) {
+    send({ endpoint, method, body, subscription, unsubscription, noAuth }) {
         const me = this;
 
         if (subscription === true) {
@@ -62,7 +62,7 @@ class HTTP extends Transport {
                 return Promise.resolve({ status: `No such subscription` })
             }
         } else {
-            return fetch(endpoint, { headers: me._getHeaders(), method: method, body: JSON.stringify(body) })
+            return fetch(endpoint, { headers: me._getHeaders(noAuth), method: method, body: JSON.stringify(body) })
                 .then(response => response.text())
                 .then(responseText => {
                     return responseText ? JSON.parse(responseText) : responseText
@@ -110,15 +110,15 @@ class HTTP extends Transport {
      * @returns {Object}
      * @private
      */
-    _getHeaders() {
+    _getHeaders(noAuth = false) {
         const me = this;
         const headers = {
             "Content-type": `application/json`,
             "Accept": `application/json`
         };
 
-        if (me.token) {
-            headers[`Authorization`] = `Bearer ${me.token}`;
+        if (me.token && !noAuth) {
+            headers.Authorization = `Bearer ${me.token}`;
         }
 
         return headers;
