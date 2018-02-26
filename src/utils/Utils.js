@@ -1,4 +1,4 @@
-const jwt = require(`jsonwebtoken`);
+const jwtDecode = require(`jwt-decode`);
 const UserToken = require(`../models/UserToken`);
 
 
@@ -30,15 +30,19 @@ class Utils {
         return `${firstPart}${secondPart}`;
     }
 
+    /**
+     * Creates UserToken from jwt
+     * @param jwtToken
+     * @returns {UserToken}
+     */
     static createUserTokenFromJWT(jwtToken) {
-        const tokenPayload = jwt.decode(jwtToken).payload;
+        const tokenPayload = jwtDecode(jwtToken).payload;
 
         return new UserToken({
             userId: tokenPayload.u,
             actions: tokenPayload.a,
             networkIds: tokenPayload.n,
-            deviceTypeIds: tokenPayload.dt,
-            expiration: tokenPayload.e
+            deviceTypeIds: tokenPayload.dt
         });
     }
 }

@@ -17,7 +17,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "isomorphic-fetch": "^2.2.1",
-    "jsonwebtoken": "^8.1.1",
+    "jwt-decode": "^2.2.0",
     "query-string": "^5.1.0",
     "string-template": "^1.0.0",
     "universal-websocket-client": "^1.0.1"
