@@ -40,7 +40,8 @@ describe('DeviceAPI WS', () => {
         deviceHive = new DeviceHive({
             login: `dhadmin`,
             password: `dhadmin_#911`,
-            mainServiceURL: 'ws://localhost:4390'
+            mainServiceURL: 'ws://localhost:4390',
+            autoUpdateSession: false
         });
 
         deviceHive.connect()

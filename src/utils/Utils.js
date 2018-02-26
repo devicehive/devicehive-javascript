@@ -7,6 +7,8 @@ const UserToken = require(`../models/UserToken`);
  */
 class Utils {
 
+    static get TOKEN_EXPIRED_MARK() { return `Token expired`; }
+
     /**
      * Checks that object is empty
      * @returns {boolean} - Is object empty

@@ -20,9 +20,9 @@ class ApiStrategy extends EventEmitter {
     static getType(url) {
         let result;
 
-        if (url.startsWith('http') || url.startsWith('https')) {
+        if (url.startsWith(HTTP.TYPE)) {
             result = HTTP;
-        } else if (url.startsWith('ws') || url.startsWith('wss')) {
+        } else if (url.startsWith(WS.TYPE)) {
             result = WS;
         } else {
             throw new UnsupportedTransportError();
@@ -87,7 +87,7 @@ class ApiStrategy extends EventEmitter {
         return me.strategy.send(sendData)
             .then((response) => API.normalizeResponse(me.strategy.type, key, response))
             .catch(error => {
-                if (error === `Token expired` && me.reconnectionHandler) {
+                if (error === Utils.TOKEN_EXPIRED_MARK && me.reconnectionHandler) {
                     return me.reconnectionHandler()
                         .then(() => me.strategy.send(sendData))
                         .then((response) => API.normalizeResponse(me.strategy.type, key, response));
