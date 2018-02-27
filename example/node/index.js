@@ -4,7 +4,6 @@ const DeviceHive = require(`../../index`);
 const httpDeviceHive = new DeviceHive({
     login: `dhadmin`,
     password: `dhadmin_#911`,
-    accessToken: "eyJhbGciOiJIUzI1NiJ9.eyJwYXlsb2FkIjp7ImEiOlswXSwiZSI6MTUxOTY1MDIxMDgwNSwidCI6MSwidSI6MSwibiI6WyIqIl0sImR0IjpbIioiXX19.8MX7MiQeKmKCUGkNSqce1xCUTVBYX6GQKqgAwGvHB9Y",
     mainServiceURL: 'http://localhost:8080/dh/rest',
     authServiceURL: 'http://localhost:8090/dh/rest',
     pluginServiceURL: 'http://localhost:8110/dh/rest'
@@ -13,7 +12,6 @@ const httpDeviceHive = new DeviceHive({
 const wsDeviceHive = new DeviceHive({
     login: `dhadmin`,
     password: `dhadmin_#911`,
-    accessToken: "eyJhbGciOiJIUzI1NiJ9.eyJwYXlsb2FkIjp7ImEiOlswXSwiZSI6MTUxOTY0OTczMDgwNSwidCI6MSwidSI6MSwibiI6WyIqIl0sImR0IjpbIioiXX19.3Kb1Lkqza0VzG8gsX2tlp5B5BcL2w55gVmMM1aMsDbY",
     mainServiceURL: 'ws://localhost:8080/dh/websocket',
     autoUpdateSession: true
 });
