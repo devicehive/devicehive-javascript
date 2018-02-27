@@ -2622,12 +2622,3 @@ Creates User List Query
 
 ### userListQuery.toObject() ⇒ <code>Object</code>
 Returns instance as a plain JS object
-
-
-
-## License
-
-[DeviceHive] is developed by [DataArt] Apps and distributed under Open Source
-[Apache 2.0 license](https://en.wikipedia.org/wiki/Apache_License). 
-
-© Copyright 2018 [DataArt] Apps © All Rights Reservedstrong text
