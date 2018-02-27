@@ -8,9 +8,9 @@ const events = new EventEmitter();
 const DeviceHive = require('../../../index');
 
 const httpDeviceHive = new DeviceHive(config.server.http);
-const wsDeviceHive = new DeviceHive(config.server.ws)
+const wsDeviceHive = new DeviceHive(config.server.ws);
 
-const deviceId = 'e50d6085-2aba-48e9-b1c3-73c673e414be2';
+const deviceId = 'e50d6085-2aba-48e9-b1c3-73c673e414be';
 
 const testDeviceCommands = [
     {

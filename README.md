@@ -137,10 +137,11 @@ DeviceHive module
 | [options.accessToken] | <code>string</code> | Access token |
 | [options.refreshToken] | <code>string</code> | Refresh token |
 | [options.login] | <code>string</code> | Login |
-| [options.password] | <code>string</code> | Paaword |
+| [options.password] | <code>string</code> | Password |
 | options.mainServiceURL | <code>string</code> | Main Service URL |
 | [options.authServiceURL] | <code>string</code> | Auth Service URL (required only for http) |
-| [options.pluginServiceURL] | <code>string</code> | Alug inServi ceURL (required only for http) |
+| [options.pluginServiceURL] | <code>string</code> | Plugin Service URL (required only for http) |
+| [options.autoUpdateSession] | <code>boolean</code> | Flag to enable/disable autoupdating session. Default: true |
 
 <a name="DeviceHive+connect"></a>
 
@@ -2552,7 +2553,7 @@ Creates Plugin Update Query model
 | [options.returnCommands] | <code>boolean</code> | Checks if commands should be returned |
 | [options.returnUpdatedCommands] | <code>boolean</code> | Checks if updated commands should be returned |
 | [options.returnNotifications] | <code>boolean</code> | Checks if commands should be returned |
-| [options.status] | <code>string</code> | Plugin status - active or disabled (ACTIVE | DISABLED | CREATED) |
+| [options.status] | <code>string</code> | Plugin status - active or disabled (ACTIVE | INACTIVE | CREATED) |
 | [options.name] | <code>string</code> | Plugin name |
 | [options.description] | <code>string</code> | Plugin description |
 | [options.parameters] | <code>string</code> | Plugin parameters |
@@ -2621,12 +2622,3 @@ Creates User List Query
 
 ### userListQuery.toObject() ⇒ <code>Object</code>
 Returns instance as a plain JS object
-
-
-
-## License
-
-[DeviceHive] is developed by [DataArt] Apps and distributed under Open Source
-[Apache 2.0 license](https://en.wikipedia.org/wiki/Apache_License). 
-
-© Copyright 2018 [DataArt] Apps © All Rights Reservedstrong text
