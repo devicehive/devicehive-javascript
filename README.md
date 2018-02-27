@@ -2553,7 +2553,7 @@ Creates Plugin Update Query model
 | [options.returnCommands] | <code>boolean</code> | Checks if commands should be returned |
 | [options.returnUpdatedCommands] | <code>boolean</code> | Checks if updated commands should be returned |
 | [options.returnNotifications] | <code>boolean</code> | Checks if commands should be returned |
-| [options.status] | <code>string</code> | Plugin status - active or disabled (ACTIVE | DISABLED | CREATED) |
+| [options.status] | <code>string</code> | Plugin status - active or disabled (ACTIVE | INACTIVE | CREATED) |
 | [options.name] | <code>string</code> | Plugin name |
 | [options.description] | <code>string</code> | Plugin description |
 | [options.parameters] | <code>string</code> | Plugin parameters |
