@@ -137,10 +137,11 @@ DeviceHive module
 | [options.accessToken] | <code>string</code> | Access token |
 | [options.refreshToken] | <code>string</code> | Refresh token |
 | [options.login] | <code>string</code> | Login |
-| [options.password] | <code>string</code> | Paaword |
+| [options.password] | <code>string</code> | Password |
 | options.mainServiceURL | <code>string</code> | Main Service URL |
 | [options.authServiceURL] | <code>string</code> | Auth Service URL (required only for http) |
-| [options.pluginServiceURL] | <code>string</code> | Alug inServi ceURL (required only for http) |
+| [options.pluginServiceURL] | <code>string</code> | Plugin Service URL (required only for http) |
+| [options.autoUpdateSession] | <code>boolean</code> | Flag to enable/disable autoupdating session. Default: true |
 
 <a name="DeviceHive+connect"></a>
 
