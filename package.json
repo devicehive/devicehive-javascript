@@ -19,6 +19,7 @@
     "isomorphic-fetch": "^2.2.1",
     "jwt-decode": "^2.2.0",
     "query-string": "^5.1.0",
+    "randomstring": "^1.1.5",
     "string-template": "^1.0.0",
     "universal-websocket-client": "^1.0.1"
   },

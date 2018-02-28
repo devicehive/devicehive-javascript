@@ -123,6 +123,15 @@ class HTTP extends Transport {
 
         return headers;
     }
+
+    /**
+     * Disconnects HTTP transport
+     */
+    disconnect() {
+        const me = this;
+
+        me.token= ``;
+    }
 }
 
 

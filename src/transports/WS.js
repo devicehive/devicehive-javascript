@@ -98,6 +98,15 @@ class WS extends Transport {
                 });
             });
     }
+
+    /**
+     * Disconnects WS transport
+     */
+    disconnect() {
+        const me = this;
+
+        me.socket.close();
+    }
 }
 
 

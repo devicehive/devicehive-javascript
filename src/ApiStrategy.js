@@ -50,7 +50,13 @@ class ApiStrategy extends EventEmitter {
 
         me.strategy = new (ApiStrategy.getType(mainServiceURL))({ mainServiceURL, authServiceURL, pluginServiceURL });
 
-        me.strategy.on(`message`, (message) => { me.emit(`message`, message) });
+        me.strategy.on(`message`, (message) => {
+            if (message.subscriptionId && message.action) {
+                me.emit(`message`, message[message.action.split(`/`)[0]]);
+            } else {
+                me.emit(`message`, message);
+            }
+        });
     }
 
 
@@ -95,6 +101,15 @@ class ApiStrategy extends EventEmitter {
                     throw error;
                 }
             });
+    }
+
+    /**
+     * Disconnects transport
+     */
+    disconnect() {
+        const me = this;
+
+        me.strategy.disconnect();
     }
 }
 

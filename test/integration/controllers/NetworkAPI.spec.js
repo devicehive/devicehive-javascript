@@ -1,129 +1,167 @@
+const randomString = require(`randomstring`);
 const chai = require(`chai`);
 const assert = chai.assert;
 const config = require('../config');
-
-const EventEmitter = require('events');
-const events = new EventEmitter();
-
 const DeviceHive = require('../../../index');
+const Network = DeviceHive.models.Network;
+const NetworkListQuery = DeviceHive.models.query.NetworkListQuery;
+const NetworkCountQuery = DeviceHive.models.query.NetworkCountQuery;
 
 const httpDeviceHive = new DeviceHive(config.server.http);
 const wsDeviceHive = new DeviceHive(config.server.ws);
 
 
-const testNetworks = [
-    {
-        name: 'name',
-        description: 'description'
-    }, {
-        name: 'name2',
-        description: 'description2'
+const TEST_NETWORK_NAME_PREFIX = `DH-JS-LIB-NETWORK-NAME-`;
+const TEST_NETWORK_DESCRIPTION_PREFIX = `DH-JS-LIB-NETWORK-NAME-`;
+const TEST_NETWORKS = {
+    HTTP: {
+        name: `${TEST_NETWORK_NAME_PREFIX}-${randomString.generate()}`,
+        description: `${TEST_NETWORK_DESCRIPTION_PREFIX}-${randomString.generate()}`
+    },
+    WS: {
+        name: `${TEST_NETWORK_NAME_PREFIX}-${randomString.generate()}`,
+        description: `${TEST_NETWORK_DESCRIPTION_PREFIX}-${randomString.generate()}`
     }
-];
+};
 
 describe('NetworkAPI', () => {
 
     before(done => {
-        // Configaratuion DeviceHive
-
         Promise.all([httpDeviceHive.connect(), wsDeviceHive.connect()])
             .then(() => done());
     });
 
+    it(`should insert new network with next configuration: ${JSON.stringify(TEST_NETWORKS.HTTP)} via HTTP`, done => {
+        const networkModel = new Network(TEST_NETWORKS.HTTP);
 
-    it('NetworkAPI.insert()', done => {
+        httpDeviceHive.network.insert(networkModel)
+            .then(({ id }) => {
+                TEST_NETWORKS.HTTP.id = id;
+                done();
+            })
+            .catch(done);
+    });
 
-        // Configurating Network model
-        const Network = DeviceHive.models.Network;
+    it(`should insert new network with next configuration: ${JSON.stringify(TEST_NETWORKS.WS)} via WS`, done => {
+        const networkModel = new Network(TEST_NETWORKS.WS);
 
-        const network = new Network(testNetworks[0]);
-        const network2 = new Network(testNetworks[1]);
+        wsDeviceHive.network.insert(networkModel)
+            .then(({ id }) => {
+                TEST_NETWORKS.WS.id = id;
+                done();
+            })
+            .catch(done);
+    });
 
-        Promise.all([httpDeviceHive.network.insert(network), wsDeviceHive.network.insert(network2)])
+    it(`should list all device types with the next name pattern: ${TEST_NETWORK_NAME_PREFIX}% via HTTP`, done => {
+        const networkListQuery = new NetworkListQuery({ namePattern: `${TEST_NETWORK_NAME_PREFIX}%` });
+
+        httpDeviceHive.network.list(networkListQuery)
+            .then(networks => {
+                assert(networks.length, Object.keys(TEST_NETWORKS).length);
+            })
             .then(() => done())
             .catch(done);
     });
 
+    it(`should list all device types with the next name pattern: ${TEST_NETWORK_NAME_PREFIX}% via WS`, done => {
+        const networkListQuery = new NetworkListQuery({ namePattern: `${TEST_NETWORK_NAME_PREFIX}%` });
 
-    it('NetworkAPI.list()', done => {
-
-        // Configurating Device List query
-        const networkListQuery = new DeviceHive.models.query.NetworkListQuery({
-            namePattern: 'name%',
-            sortField: 'name',
-            sortOrder: 'asc',
-            take: 2,
-            skip: 0
-        });
-
-
-        Promise.all([httpDeviceHive.network.list(networkListQuery), wsDeviceHive.network.list(networkListQuery)])
-            .then(dataAll => {
-                for (const data of dataAll) {
-                    for (const networkKey in data) {
-                        testNetworks[networkKey].id = data[networkKey].id;
-                        testNetworks[networkKey].name = data[networkKey].name;
-                        testNetworks[networkKey].description = data[networkKey].description;
-                        assert.containsAllKeys(data[networkKey], Object.keys(testNetworks[0]));
-                    }
-                }
+        wsDeviceHive.network.list(networkListQuery)
+            .then(networks => {
+                assert(networks.length, Object.keys(TEST_NETWORKS).length);
             })
-            .then(done)
+            .then(() => done())
             .catch(done);
     });
 
-
-    it('NetworkAPI.get()', done => {
-
-        Promise.all([httpDeviceHive.network.get(testNetworks[0].id), wsDeviceHive.network.get(testNetworks[0].id)])
-            .then(dataAll => {
-                const expected = testNetworks[0];
-                for (const data of dataAll) {
-                    assert.isObject(data);
-                    assert.deepInclude(data, expected);
-                }
+    it(`should get network with name: ${TEST_NETWORKS.HTTP.name} via HTTP`, done => {
+        httpDeviceHive.network.get(TEST_NETWORKS.HTTP.id)
+            .then(network => {
+                assert.equal(network.id, TEST_NETWORKS.HTTP.id);
+                assert.equal(network.name, TEST_NETWORKS.HTTP.name);
             })
-            .then(done)
+            .then(() => done())
             .catch(done);
     });
 
+    it(`should get network with name: ${TEST_NETWORKS.WS.name} via WS`, done => {
+        wsDeviceHive.network.get(TEST_NETWORKS.WS.id)
+            .then(network => {
+                assert.equal(network.id, TEST_NETWORKS.WS.id);
+                assert.equal(network.name, TEST_NETWORKS.WS.name);
+            })
+            .then(() => done())
+            .catch(done);
+    });
 
-    it('NetworkAPI.update()', done => {
+    it(`should update network with name: ${TEST_NETWORKS.HTTP.name} via HTTP`, done => {
+        TEST_NETWORKS.HTTP.description = `${TEST_NETWORK_DESCRIPTION_PREFIX}-${randomString.generate()}`;
 
-        // Configurating Network model
-        const Network = DeviceHive.models.Network;
+        const networkModel = new Network(TEST_NETWORKS.HTTP);
 
-        const network = new Network(testNetworks[0]);
-        const network2 = new Network(testNetworks[1]);
-
-        Promise.all([httpDeviceHive.network.update(network), wsDeviceHive.network.update(network2)])
+        httpDeviceHive.network.update(networkModel)
+            .then(() => httpDeviceHive.network.get(TEST_NETWORKS.HTTP.id))
+            .then((network) => {
+                assert.equal(network.description, TEST_NETWORKS.HTTP.description);
+            })
             .then(() => done())
             .catch(done);
 
     });
 
-    it('NetworkAPI.count()', done => {
+    it(`should update network with name: ${TEST_NETWORKS.WS.name} via WS`, done => {
+        TEST_NETWORKS.WS.description = `${TEST_NETWORK_DESCRIPTION_PREFIX}-${randomString.generate()}`;
 
-        // Configurating Network List query
-        const networkListQuery = new DeviceHive.models.query.NetworkCountQuery({
-            name: 'name',
-            namePattern: 'namePattern'
-        });
+        const networkModel = new Network(TEST_NETWORKS.WS);
 
-        Promise.all([httpDeviceHive.network.count(networkListQuery), wsDeviceHive.network.count(networkListQuery)])
-            .then(dataAll => {
-                for (const data of dataAll) {
-                    assert.property(data, 'count');
-                }
+        wsDeviceHive.network.update(networkModel)
+            .then(() => wsDeviceHive.network.get(TEST_NETWORKS.WS.id))
+            .then((network) => {
+                assert.equal(network.description, TEST_NETWORKS.WS.description);
             })
-            .then(done)
+            .then(() => done())
             .catch(done);
     });
 
-    it('NetworkAPI.delete()', done => {
-        
-        Promise.all([httpDeviceHive.network.delete(testNetworks[0].id), wsDeviceHive.network.delete(testNetworks[1].id)])
+    it(`should count device types with the next name pattern: ${TEST_NETWORK_NAME_PREFIX}% via HTTP`, done => {
+        const networkCountQuery = new NetworkCountQuery({ namePattern: `${TEST_NETWORK_NAME_PREFIX}%` });
+
+        httpDeviceHive.network.count(networkCountQuery)
+            .then(({ count }) => {
+                assert.equal(count, Object.keys(TEST_NETWORKS).length);
+            })
             .then(() => done())
             .catch(done);
+    });
+
+    it(`should count device types with the next name pattern: ${TEST_NETWORK_NAME_PREFIX}% via WS`, done => {
+        const networkCountQuery = new NetworkCountQuery({ namePattern: `${TEST_NETWORK_NAME_PREFIX}%` });
+
+        wsDeviceHive.network.count(networkCountQuery)
+            .then(({ count }) => {
+                assert.equal(count, Object.keys(TEST_NETWORKS).length);
+            })
+            .then(() => done())
+            .catch(done);
+    });
+
+    it(`should delete network with name: ${TEST_NETWORKS.HTTP.name} via HTTP`, done => {
+        httpDeviceHive.network.delete(TEST_NETWORKS.HTTP.id)
+            .then(() => done())
+            .catch(done);
+    });
+
+    it(`should delete network with name: ${TEST_NETWORKS.WS.name} via WS`, done => {
+        wsDeviceHive.network.delete(TEST_NETWORKS.WS.id)
+            .then(() => done())
+            .catch(done);
+    });
+
+    after(done => {
+        httpDeviceHive.disconnect();
+        wsDeviceHive.disconnect();
+
+        done();
     });
 });

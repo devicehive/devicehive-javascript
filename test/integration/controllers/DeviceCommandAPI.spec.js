@@ -1,25 +1,36 @@
+const randomString = require(`randomstring`);
 const chai = require(`chai`);
 const assert = chai.assert;
 const config = require('../config');
-
-const EventEmitter = require('events');
-const events = new EventEmitter();
-
 const DeviceHive = require('../../../index');
+const Device = DeviceHive.models.Device;
+const Command = DeviceHive.models.Command;
+const CommandListQuery = DeviceHive.models.query.CommandListQuery;
+const CommandPollQuery = DeviceHive.models.query.CommandPollQuery;
+const CommandPollManyQuery = DeviceHive.models.query.CommandPollManyQuery;
+const CommandWaitQuery = DeviceHive.models.query.CommandWaitQuery;
 
 const httpDeviceHive = new DeviceHive(config.server.http);
 const wsDeviceHive = new DeviceHive(config.server.ws);
 
-const deviceId = 'e50d6085-2aba-48e9-b1c3-73c673e414be';
 
-const testDeviceCommands = [
-    {
-        deviceId,
-        command: 'command',
-        timestamp: new Date().toISOString(),
-        lastUpdated: new Date().toISOString(),
+const TIMESTAMP = new Date().toISOString();
+const DH_COMMANDS_TEST_DEVICE = {
+    id: randomString.generate(),
+    name: `DH_COMMANDS_TEST_DEVICE`,
+    networkId: 1,
+    deviceTypeId: 1,
+    isBlocked: false,
+    data: {}
+};
+const TEST_DEVICE_COMMANDS = {
+    HTTP: {
+        deviceId: DH_COMMANDS_TEST_DEVICE.id,
+        command: `command-${randomString.generate()}`,
+        timestamp: TIMESTAMP,
         userId: 1,
         networkId: 1,
+        deviceTypeId: 1,
         parameters: {
             jsonString: 'jsonString'
         },
@@ -29,13 +40,13 @@ const testDeviceCommands = [
             jsonString: 'jsonString'
         }
     },
-    {
-        deviceId,
-        command: 'command2',
-        timestamp: new Date().toISOString(),
-        lastUpdated: new Date().toISOString(),
+    WS: {
+        deviceId: DH_COMMANDS_TEST_DEVICE.id,
+        command: `command-${randomString.generate()}`,
+        timestamp: TIMESTAMP,
         userId: 1,
         networkId: 1,
+        deviceTypeId: 1,
         parameters: {
             jsonString: 'jsonString'
         },
@@ -45,141 +56,262 @@ const testDeviceCommands = [
             jsonString: 'jsonString'
         }
     }
-];
+};
 
 describe('DeviceCommandAPI', () => {
 
     before(done => {
-        // Configaratuion DeviceHive
         Promise.all([httpDeviceHive.connect(), wsDeviceHive.connect()])
-            .then(() => done());
-    });
-
-
-    it('DeviceCommandAPI.insert()', done => {
-        const command = new DeviceHive.models.Command(testDeviceCommands[0]);
-        const command2 = new DeviceHive.models.Command(testDeviceCommands[1]);
-
-        Promise.all([httpDeviceHive.command.insert(deviceId, command), wsDeviceHive.command.insert(deviceId, command2)])
+            .then(() => httpDeviceHive.device.add(new Device(DH_COMMANDS_TEST_DEVICE)))
             .then(() => done())
             .catch(done);
     });
 
+    it(`should insert new command with name ${TEST_DEVICE_COMMANDS.HTTP.command} via HTTP`, done => {
+        const commandModel = new Command(TEST_DEVICE_COMMANDS.HTTP);
 
-    it('DeviceCommandAPI.list()', done => {
+        httpDeviceHive.command.insert(DH_COMMANDS_TEST_DEVICE.id, commandModel)
+            .then((commandResponse) => {
+                TEST_DEVICE_COMMANDS.HTTP.id = commandResponse.id;
 
-        // Configurating Device List query
-        const commandListQuery = new DeviceHive.models.query.CommandListQuery({
-            deviceId,
-            command: 'command',
-            status: 'status',
-            sortField: 'id',
-            sortOrder: 'id',
-            take: 2,
-            skip: 0
+                done();
+            })
+            .catch(done);
+    });
+
+    it(`should insert new command with name ${TEST_DEVICE_COMMANDS.WS.command} via WS`, done => {
+        const commandModel = new Command(TEST_DEVICE_COMMANDS.WS);
+
+        wsDeviceHive.command.insert(DH_COMMANDS_TEST_DEVICE.id, commandModel)
+            .then((commandResponse) => {
+                TEST_DEVICE_COMMANDS.WS.id = commandResponse.id;
+
+                done();
+            })
+            .catch(done);
+    });
+
+    it(`should list all commands for device with id ${DH_COMMANDS_TEST_DEVICE.id} via HTTP`, done => {
+        const commandListQuery = new CommandListQuery({
+            deviceId: DH_COMMANDS_TEST_DEVICE.id
         });
 
-        Promise.all([httpDeviceHive.command.list(commandListQuery), wsDeviceHive.command.list(commandListQuery)])
-            .then(dataAll => {
-                for (const data of dataAll) {
-                    for (const deviceCommandKey in data) {
-                        testDeviceCommands[deviceCommandKey].id = data[deviceCommandKey].id;
-                        testDeviceCommands[deviceCommandKey].timestamp = data[deviceCommandKey].timestamp;
-                        testDeviceCommands[deviceCommandKey].lastUpdated = data[deviceCommandKey].lastUpdated;
-                        assert.containsAllKeys(data[deviceCommandKey], Object.keys(testDeviceCommands[0]));
-                    }
-                }
+        httpDeviceHive.command.list(commandListQuery)
+            .then(commands => {
+                assert.equal(commands.length, Object.keys(TEST_DEVICE_COMMANDS).length);
             })
-            .then(done)
-            .catch(done);
-    });
-
-
-    it('DeviceCommand API.get()', done => {
-
-
-        Promise.all([httpDeviceHive.command.get(deviceId, testDeviceCommands[0].id), wsDeviceHive.command.get(deviceId, testDeviceCommands[0].id)])
-            .then(dataAll => {
-                const expected = testDeviceCommands[0];
-                for (const data of dataAll) {
-                    assert.isObject(data);
-                    assert.deepInclude(data, expected);
-                }
-            })
-            .then(done)
-            .catch(done);
-    });
-
-
-    it('DeviceCommandAPI.update()', done => {
-
-        const command = new DeviceHive.models.Command(testDeviceCommands[0], testDeviceCommands[0]);
-        const command2 = new DeviceHive.models.Command(testDeviceCommands[0], testDeviceCommands[1]);
-
-        Promise.all([httpDeviceHive.command.update(command), wsDeviceHive.command.update(command2)])
             .then(() => done())
             .catch(done);
     });
 
+    it(`should list all commands for device with id ${DH_COMMANDS_TEST_DEVICE.id} via WS`, done => {
+        const commandListQuery = new CommandListQuery({
+            deviceId: DH_COMMANDS_TEST_DEVICE.id
+        });
 
-    it('DeviceCommandAPI.poll()', done => {
+        wsDeviceHive.command.list(commandListQuery)
+            .then(commands => {
+                assert.equal(commands.length, Object.keys(TEST_DEVICE_COMMANDS).length);
+            })
+            .then(() => done())
+            .catch(done);
+    });
 
-        // Configurating Command List query
-        const commandPollQuery = new DeviceHive.models.query.CommandPollQuery({
-            deviceId,
-            returnUpdatedCommands: true,
-            limit: 1,
+    it(`should get command with id ${TEST_DEVICE_COMMANDS.HTTP.id} for device with id ${DH_COMMANDS_TEST_DEVICE.id} via HTTP`, done => {
+        httpDeviceHive.command.get(DH_COMMANDS_TEST_DEVICE.id, TEST_DEVICE_COMMANDS.HTTP.id)
+            .then(command => {
+                assert.equal(command.id, TEST_DEVICE_COMMANDS.HTTP.id);
+            })
+            .then(done)
+            .catch(done);
+    });
+
+    it(`should get command with id ${TEST_DEVICE_COMMANDS.WS.id} for device with id ${DH_COMMANDS_TEST_DEVICE.id} via WS`, done => {
+        wsDeviceHive.command.get(DH_COMMANDS_TEST_DEVICE.id, TEST_DEVICE_COMMANDS.WS.id)
+            .then(command => {
+                assert.equal(command.id, TEST_DEVICE_COMMANDS.WS.id);
+            })
+            .then(done)
+            .catch(done);
+    });
+
+    it(`should update command with id ${TEST_DEVICE_COMMANDS.HTTP.id} for device with id ${DH_COMMANDS_TEST_DEVICE.id} via HTTP`, done => {
+        TEST_DEVICE_COMMANDS.HTTP.status = `status-${randomString.generate()}`;
+
+        const commandModel = new Command(TEST_DEVICE_COMMANDS.HTTP);
+
+        httpDeviceHive.command.update(commandModel)
+            .then(() => httpDeviceHive.command.get(DH_COMMANDS_TEST_DEVICE.id, TEST_DEVICE_COMMANDS.HTTP.id))
+            .then((command) => {
+                assert.equal(command.status, TEST_DEVICE_COMMANDS.HTTP.status);
+
+                done();
+            })
+            .catch(done);
+    });
+
+    it(`should update command with id ${TEST_DEVICE_COMMANDS.HTTP.id} for device with id ${DH_COMMANDS_TEST_DEVICE.id} via WS`, done => {
+        TEST_DEVICE_COMMANDS.WS.status = `status-${randomString.generate()}`;
+
+        const commandModel = new Command(TEST_DEVICE_COMMANDS.WS);
+
+        wsDeviceHive.command.update(commandModel)
+            .then(() => wsDeviceHive.command.get(DH_COMMANDS_TEST_DEVICE.id, TEST_DEVICE_COMMANDS.WS.id))
+            .then((command) => {
+                assert.equal(command.status, TEST_DEVICE_COMMANDS.WS.status);
+
+                done();
+            })
+            .catch(done);
+    });
+
+    it(`should poll new command for device with id ${DH_COMMANDS_TEST_DEVICE.id} via HTTP`, done => {
+        const commandPollQuery = new CommandPollQuery({
+            deviceId: DH_COMMANDS_TEST_DEVICE.id,
             waitTimeout: 1
         });
 
         httpDeviceHive.command.poll(commandPollQuery)
-            .then(() => done())
+            .then((commands) => {
+                assert.equal(commands.length, 1);
+                assert.equal(commands[0].command, TEST_DEVICE_COMMANDS.HTTP.command);
+
+                TEST_DEVICE_COMMANDS.HTTP.id = commands[0].id;
+                done();
+            })
             .catch(done);
 
-        // emit command
         setTimeout(() => {
-            const command = new DeviceHive.models.Command(testDeviceCommands[0]);
-            httpDeviceHive.command.insert(deviceId, command);
-        }, 50);
+            TEST_DEVICE_COMMANDS.HTTP.command = `command-${randomString.generate()}`;
+            httpDeviceHive.command.insert(DH_COMMANDS_TEST_DEVICE.id, new Command(TEST_DEVICE_COMMANDS.HTTP));
+        }, 100);
     });
 
+    it(`should poll command update for device with id ${DH_COMMANDS_TEST_DEVICE.id} via HTTP`, done => {
+        const commandPollQuery = new CommandPollQuery({
+            deviceId: DH_COMMANDS_TEST_DEVICE.id,
+            returnUpdatedCommands: true,
+            waitTimeout: 1
+        });
 
-    it('DeviceCommandAPI.pollMany()', done => {
+        httpDeviceHive.command.poll(commandPollQuery)
+            .then((commands) => {
+                assert.equal(commands.length, 1);
+                assert.equal(commands[0].command, TEST_DEVICE_COMMANDS.HTTP.command);
+                assert.equal(commands[0].status, TEST_DEVICE_COMMANDS.HTTP.status);
 
-        const commandPollManyQuery = new DeviceHive.models.query.CommandPollManyQuery({
-            deviceIds: deviceId
+                TEST_DEVICE_COMMANDS.HTTP.id = commands[0].id;
+                done();
+            })
+            .catch(done);
+
+        setTimeout(() => {
+            TEST_DEVICE_COMMANDS.HTTP.status = `status-${randomString.generate()}`;
+            httpDeviceHive.command.update(new Command(TEST_DEVICE_COMMANDS.HTTP));
+        }, 100);
+    });
+
+    it(`should poll new command for network with id ${DH_COMMANDS_TEST_DEVICE.networkId} via HTTP`, done => {
+        const commandPollManyQuery = new CommandPollManyQuery({
+            networkIds: [ DH_COMMANDS_TEST_DEVICE.networkId ],
+            waitTimeout: 1
         });
 
         httpDeviceHive.command.pollMany(commandPollManyQuery)
-            .then(() => done())
+            .then((commands) => {
+                assert.equal(commands.length, 1);
+                assert.equal(commands[0].command, TEST_DEVICE_COMMANDS.HTTP.command);
+
+                done();
+            })
             .catch(done);
 
-        // emit command
         setTimeout(() => {
-            const command = new DeviceHive.models.Command(testDeviceCommands[0]);
-            httpDeviceHive.command.insert(deviceId, command);
-        }, 50);
+            TEST_DEVICE_COMMANDS.HTTP.command = `command-${randomString.generate()}`;
+            httpDeviceHive.command.insert(DH_COMMANDS_TEST_DEVICE.id, new Command(TEST_DEVICE_COMMANDS.HTTP));
+        }, 100);
     });
 
+    it(`should wait while command will be processed by device with id ${DH_COMMANDS_TEST_DEVICE.id}`, done => {
+        const commandWaitQuery = new CommandWaitQuery({ waitTimeout: 1 });
 
-    it('DeviceCommandAPI.wait()', done => {
+        httpDeviceHive.command.wait(DH_COMMANDS_TEST_DEVICE.id, TEST_DEVICE_COMMANDS.HTTP.id, commandWaitQuery)
+            .then((command) => {
+                assert.equal(command.status, TEST_DEVICE_COMMANDS.HTTP.status);
 
-        // TODO
-        done();
+                done()
+            })
+            .catch(done);
 
-        // Configurating Command List query
-        // const commandWaitQuery = new DeviceHive.models.query.CommandWaitQuery({
-        //     deviceId,
-        //     commandId: testDeviceCommands[0].id,
-        //     waitTimeout: 1
-        // });
+        setTimeout(() => {
+            TEST_DEVICE_COMMANDS.HTTP.command = `command-${randomString.generate()}`;
 
-        // httpDeviceHive.command.wait(commandWaitQuery.deviceId, commandWaitQuery.commandId, commandWaitQuery)
-        //     .then(() => done())
-        //     .catch(done);
+            httpDeviceHive.command.insert(DH_COMMANDS_TEST_DEVICE.id, new Command(TEST_DEVICE_COMMANDS.HTTP))
+                .then(() => {
+                    TEST_DEVICE_COMMANDS.HTTP.status = `status-${randomString.generate()}`;
 
-        // // emit command
-        // const command = new DeviceHive.models.Command(testDeviceCommands[0]);
-        // httpDeviceHive.command.insert(deviceId, command);
+                    httpDeviceHive.command.update(new Command(TEST_DEVICE_COMMANDS.HTTP));
+                });
+        }, 100);
+    });
+
+    it(`should subscribe for command insertion notifications on device with id ${DH_COMMANDS_TEST_DEVICE.id} via HTTP`, done => {
+        const commandPollQuery = new CommandPollQuery({ deviceId: DH_COMMANDS_TEST_DEVICE.id });
+        let subscriptionId;
+
+        httpDeviceHive.command.subscribe(commandPollQuery)
+            .then((response) => {
+                subscriptionId = response.subscriptionId;
+
+                setTimeout(() => {
+                    httpDeviceHive.on(`message`, (command) => {
+                        assert.equal(command.command, TEST_DEVICE_COMMANDS.HTTP.command);
+                        httpDeviceHive.command.unsubscribe(subscriptionId)
+                            .then(() => done())
+                            .catch(done);
+                    });
+                }, 200);
+
+                setTimeout(() => {
+                    TEST_DEVICE_COMMANDS.HTTP.command = `command-${randomString.generate()}`;
+                    httpDeviceHive.command.insert(DH_COMMANDS_TEST_DEVICE.id, new Command(TEST_DEVICE_COMMANDS.HTTP));
+                }, 300);
+            })
+            .catch(done);
+    });
+
+    it(`should subscribe for command insertion notifications on device with id ${DH_COMMANDS_TEST_DEVICE.id} via WS`, done => {
+        const commandPollQuery = new CommandPollQuery({ deviceId: DH_COMMANDS_TEST_DEVICE.id });
+        let subscriptionId;
+
+        wsDeviceHive.command.subscribe(commandPollQuery)
+            .then((response) => {
+                subscriptionId = response.subscriptionId;
+
+                setTimeout(() => {
+                    wsDeviceHive.on(`message`, (command) => {
+                        assert.equal(command.command, TEST_DEVICE_COMMANDS.WS.command);
+                        wsDeviceHive.command.unsubscribe(subscriptionId)
+                            .then(() => done())
+                            .catch(done);
+                    });
+                }, 200);
+
+                setTimeout(() => {
+                    TEST_DEVICE_COMMANDS.WS.command = `command-${randomString.generate()}`;
+                    wsDeviceHive.command.insert(DH_COMMANDS_TEST_DEVICE.id, new Command(TEST_DEVICE_COMMANDS.WS));
+                }, 300);
+            })
+            .catch(done);
+    });
+
+    after(done => {
+        httpDeviceHive.device.delete(DH_COMMANDS_TEST_DEVICE.id)
+            .then(() => {
+                httpDeviceHive.disconnect();
+                wsDeviceHive.disconnect();
+
+                done();
+            });
     });
 });

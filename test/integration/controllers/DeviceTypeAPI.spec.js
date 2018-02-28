@@ -1,130 +1,167 @@
+const randomString = require(`randomstring`);
 const chai = require(`chai`);
 const assert = chai.assert;
 const config = require('../config');
-
-const EventEmitter = require('events');
-const events = new EventEmitter();
-
 const DeviceHive = require('../../../index');
+const DeviceType = DeviceHive.models.DeviceType;
+const DeviceTypeListQuery = DeviceHive.models.query.DeviceTypeListQuery;
+const DeviceTypeCountQuery = DeviceHive.models.query.DeviceTypeCountQuery;
 
 const httpDeviceHive = new DeviceHive(config.server.http);
 const wsDeviceHive = new DeviceHive(config.server.ws);
 
 
-const testDeviceTypes = [
-    {
-        name: 'name',
-        description: 'description'
-    }, {
-        name: 'name2',
-        description: 'description2'
+const TEST_DEVICE_TYPE_NAME_PREFIX = `DH-JS-LIB-DEVICE-TYPE-NAME-`;
+const TEST_DEVICE_TYPE_DESCRIPTION_PREFIX = `DH-JS-LIB-DEVICE-TYPE-NAME-`;
+const TEST_DEVICE_TYPES = {
+    HTTP: {
+        name: `${TEST_DEVICE_TYPE_NAME_PREFIX}-${randomString.generate()}`,
+        description: `${TEST_DEVICE_TYPE_DESCRIPTION_PREFIX}-${randomString.generate()}`
+    },
+    WS: {
+        name: `${TEST_DEVICE_TYPE_NAME_PREFIX}-${randomString.generate()}`,
+        description: `${TEST_DEVICE_TYPE_DESCRIPTION_PREFIX}-${randomString.generate()}`
     }
-];
+};
 
 describe('DeviceTypeAPI', () => {
 
     before(done => {
-        // Configaratuion DeviceHive
-
         Promise.all([httpDeviceHive.connect(), wsDeviceHive.connect()])
             .then(() => done());
     });
 
+    it(`should insert new device type with next configuration: ${JSON.stringify(TEST_DEVICE_TYPES.HTTP)} via HTTP`, done => {
+        const deviceTypeModel = new DeviceType(TEST_DEVICE_TYPES.HTTP);
 
-    it('DeviceTypeAPI.insert()', done => {
+        httpDeviceHive.deviceType.insert(deviceTypeModel)
+            .then(({ id }) => {
+                TEST_DEVICE_TYPES.HTTP.id = id;
+                done();
+            })
+            .catch(done);
+    });
 
-        // Configurating DeviceType model
-        const DeviceType = DeviceHive.models.DeviceType;
+    it(`should insert new device type with next configuration: ${JSON.stringify(TEST_DEVICE_TYPES.WS)} via WS`, done => {
+        const deviceTypeModel = new DeviceType(TEST_DEVICE_TYPES.WS);
 
-        const deviceType = new DeviceType(testDeviceTypes[0]);
-        const deviceType2 = new DeviceType(testDeviceTypes[1]);
+        wsDeviceHive.deviceType.insert(deviceTypeModel)
+            .then(({ id }) => {
+                TEST_DEVICE_TYPES.WS.id = id;
+                done();
+            })
+            .catch(done);
+    });
 
-        Promise.all([httpDeviceHive.deviceType.insert(deviceType), wsDeviceHive.deviceType.insert(deviceType2)])
+    it(`should list all device types with the next name pattern: ${TEST_DEVICE_TYPE_NAME_PREFIX}% via HTTP`, done => {
+        const deviceTypeListQuery = new DeviceTypeListQuery({ namePattern: `${TEST_DEVICE_TYPE_NAME_PREFIX}%` });
+
+        httpDeviceHive.deviceType.list(deviceTypeListQuery)
+            .then(deviceTypes => {
+                assert(deviceTypes.length, Object.keys(TEST_DEVICE_TYPES).length);
+            })
             .then(() => done())
             .catch(done);
     });
 
+    it(`should list all device types with the next name pattern: ${TEST_DEVICE_TYPE_NAME_PREFIX}% via WS`, done => {
+        const deviceTypeListQuery = new DeviceTypeListQuery({ namePattern: `${TEST_DEVICE_TYPE_NAME_PREFIX}%` });
 
-    it('DeviceTypeAPI.list()', done => {
-
-
-        // Configurating Device List query
-        const deviceTypeListQuery = new DeviceHive.models.query.DeviceTypeListQuery({
-            namePattern: 'name%',
-            sortField: 'name',
-            sortOrder: 'asc',
-            take: 2,
-            skip: 0
-        });
-
-
-        Promise.all([httpDeviceHive.deviceType.list(deviceTypeListQuery), wsDeviceHive.deviceType.list(deviceTypeListQuery)])
-            .then(dataAll => {
-                for (const data of dataAll) {
-                    for (const deviceTypeKey in data) {
-                        testDeviceTypes[deviceTypeKey].id = data[deviceTypeKey].id;
-                        testDeviceTypes[deviceTypeKey].name = data[deviceTypeKey].name;
-                        testDeviceTypes[deviceTypeKey].description = data[deviceTypeKey].description;
-                        assert.containsAllKeys(data[deviceTypeKey], Object.keys(testDeviceTypes[0]));
-                    }
-                }
+        wsDeviceHive.deviceType.list(deviceTypeListQuery)
+            .then(deviceTypes => {
+                assert(deviceTypes.length, Object.keys(TEST_DEVICE_TYPES).length);
             })
-            .then(done)
+            .then(() => done())
             .catch(done);
     });
 
-
-    it('DeviceTypeAPI.get()', done => {
-
-        Promise.all([httpDeviceHive.deviceType.get(testDeviceTypes[0].id), wsDeviceHive.deviceType.get(testDeviceTypes[0].id)])
-            .then(dataAll => {
-                const expected = testDeviceTypes[0];
-                for (const data of dataAll) {
-                    assert.isObject(data);
-                    assert.deepInclude(data, expected);
-                }
+    it(`should get device type with name: ${TEST_DEVICE_TYPES.HTTP.name} via HTTP`, done => {
+        httpDeviceHive.deviceType.get(TEST_DEVICE_TYPES.HTTP.id)
+            .then(deviceType => {
+                assert.equal(deviceType.id, TEST_DEVICE_TYPES.HTTP.id);
+                assert.equal(deviceType.name, TEST_DEVICE_TYPES.HTTP.name);
             })
-            .then(done)
+            .then(() => done())
             .catch(done);
     });
 
+    it(`should get device type with name: ${TEST_DEVICE_TYPES.WS.name} via WS`, done => {
+        wsDeviceHive.deviceType.get(TEST_DEVICE_TYPES.WS.id)
+            .then(deviceType => {
+                assert.equal(deviceType.id, TEST_DEVICE_TYPES.WS.id);
+                assert.equal(deviceType.name, TEST_DEVICE_TYPES.WS.name);
+            })
+            .then(() => done())
+            .catch(done);
+    });
 
-    it('DeviceTypeAPI.update()', done => {
+    it(`should update device type with name: ${TEST_DEVICE_TYPES.HTTP.name} via HTTP`, done => {
+        TEST_DEVICE_TYPES.HTTP.description = `${TEST_DEVICE_TYPE_DESCRIPTION_PREFIX}-${randomString.generate()}`;
 
-        // Configurating DeviceType model
-        const DeviceType = DeviceHive.models.DeviceType;
+        const deviceTypeModel = new DeviceType(TEST_DEVICE_TYPES.HTTP);
 
-        const deviceType = new DeviceType(testDeviceTypes[0]);
-        const deviceType2 = new DeviceType(testDeviceTypes[1]);
-
-        Promise.all([httpDeviceHive.deviceType.update(deviceType), wsDeviceHive.deviceType.update(deviceType2)])
+        httpDeviceHive.deviceType.update(deviceTypeModel)
+            .then(() => httpDeviceHive.deviceType.get(TEST_DEVICE_TYPES.HTTP.id))
+            .then((deviceType) => {
+                assert.equal(deviceType.description, TEST_DEVICE_TYPES.HTTP.description);
+            })
             .then(() => done())
             .catch(done);
 
     });
 
-    it('DeviceTypeAPI.count()', done => {
+    it(`should update device type with name: ${TEST_DEVICE_TYPES.WS.name} via WS`, done => {
+        TEST_DEVICE_TYPES.WS.description = `${TEST_DEVICE_TYPE_DESCRIPTION_PREFIX}-${randomString.generate()}`;
 
-        // Configurating DeviceType List query
-        const deviceTypeListQuery = new DeviceHive.models.query.DeviceTypeCountQuery({
-            name: 'name',
-            namePattern: 'namePattern'
-        });
+        const deviceTypeModel = new DeviceType(TEST_DEVICE_TYPES.WS);
 
-        Promise.all([httpDeviceHive.deviceType.count(deviceTypeListQuery), wsDeviceHive.deviceType.count(deviceTypeListQuery)])
-            .then(dataAll => {
-                for (const data of dataAll) {
-                    assert.property(data, 'count');
-                }
+        wsDeviceHive.deviceType.update(deviceTypeModel)
+            .then(() => wsDeviceHive.deviceType.get(TEST_DEVICE_TYPES.WS.id))
+            .then((deviceType) => {
+                assert.equal(deviceType.description, TEST_DEVICE_TYPES.WS.description);
             })
-            .then(done)
+            .then(() => done())
             .catch(done);
     });
 
-    it('DeviceTypeAPI.delete()', done => {
-        
-        Promise.all([httpDeviceHive.deviceType.delete(testDeviceTypes[0].id), wsDeviceHive.deviceType.delete(testDeviceTypes[1].id)])
+    it(`should count device types with the next name pattern: ${TEST_DEVICE_TYPE_NAME_PREFIX}% via HTTP`, done => {
+        const deviceTypeCountQuery = new DeviceTypeCountQuery({ namePattern: `${TEST_DEVICE_TYPE_NAME_PREFIX}%` });
+
+        httpDeviceHive.deviceType.count(deviceTypeCountQuery)
+            .then(({ count }) => {
+                assert.equal(count, Object.keys(TEST_DEVICE_TYPES).length);
+            })
             .then(() => done())
             .catch(done);
+    });
+
+    it(`should count device types with the next name pattern: ${TEST_DEVICE_TYPE_NAME_PREFIX}% via WS`, done => {
+        const deviceTypeCountQuery = new DeviceTypeCountQuery({ namePattern: `${TEST_DEVICE_TYPE_NAME_PREFIX}%` });
+
+        wsDeviceHive.deviceType.count(deviceTypeCountQuery)
+            .then(({ count }) => {
+                assert.equal(count, Object.keys(TEST_DEVICE_TYPES).length);
+            })
+            .then(() => done())
+            .catch(done);
+    });
+
+    it(`should delete device type with name: ${TEST_DEVICE_TYPES.HTTP.name} via HTTP`, done => {
+        httpDeviceHive.deviceType.delete(TEST_DEVICE_TYPES.HTTP.id)
+            .then(() => done())
+            .catch(done);
+    });
+
+    it(`should delete device type with name: ${TEST_DEVICE_TYPES.WS.name} via WS`, done => {
+        wsDeviceHive.deviceType.delete(TEST_DEVICE_TYPES.WS.id)
+            .then(() => done())
+            .catch(done);
+    });
+
+    after(done => {
+        httpDeviceHive.disconnect();
+        wsDeviceHive.disconnect();
+
+        done();
     });
 });
