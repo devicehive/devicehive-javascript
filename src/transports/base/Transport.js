@@ -20,6 +20,13 @@ class Transport extends EventEmitter {
     send() {
         console.warn(`Method "send" should be implemented in nested classes`);
     }
+
+    /**
+     * Disconnects transport
+     */
+    disconnect() {
+        console.warn(`Method "disconnect" should be implemented in nested classes`);
+    }
 }
 
 

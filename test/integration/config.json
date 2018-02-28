@@ -1,4 +1,7 @@
 {
+    "TEST_USER_ID": 1,
+    "TEST_USER_LOGIN": "dhadmin",
+    "TEST_USER_PASSWORD": "dhadmin_#911",
     "server": {
         "http": {
             "login": "dhadmin",

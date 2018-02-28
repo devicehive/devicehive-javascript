@@ -181,6 +181,16 @@ class DeviceHive extends EventEmitter {
 
         return me;
     }
+
+    /**
+     * Disconnects from DeviceHive server
+     * @returns {*|void}
+     */
+    disconnect() {
+        const me = this;
+
+        return me.strategy.disconnect();
+    }
 }
 
 
