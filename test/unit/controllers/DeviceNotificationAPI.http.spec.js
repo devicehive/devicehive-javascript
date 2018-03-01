@@ -96,7 +96,6 @@ describe('NotificationAPI HTTP', () => {
             start: '2018-02-09T10:09:03.033Z',
             end: '2018-02-09T10:09:03.033Z',
             notification: 'notification',
-            status: 'status',
             sortField: 'sortField',
             sortOrder: 'sortOrder',
             take: '1',

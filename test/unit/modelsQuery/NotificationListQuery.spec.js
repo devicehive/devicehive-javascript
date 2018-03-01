@@ -9,7 +9,6 @@ describe('NotificationListQuery', () => {
         start: '2018-02-09T10:09:03.033Z',
         end: '2018-02-09T10:09:03.033Z',
         notification: 'string',
-        status: 'string',
         sortField: 'string',
         sortOrder: 'string',
         take: 1,

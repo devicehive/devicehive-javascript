@@ -270,12 +270,12 @@ describe('DeviceCommandAPI', () => {
                             .then(() => done())
                             .catch(done);
                     });
-                }, 200);
+                }, 300);
 
                 setTimeout(() => {
                     TEST_DEVICE_COMMANDS.HTTP.command = `command-${randomString.generate()}`;
                     httpDeviceHive.command.insert(DH_COMMANDS_TEST_DEVICE.id, new Command(TEST_DEVICE_COMMANDS.HTTP));
-                }, 300);
+                }, 500);
             })
             .catch(done);
     });
@@ -295,12 +295,12 @@ describe('DeviceCommandAPI', () => {
                             .then(() => done())
                             .catch(done);
                     });
-                }, 200);
+                }, 300);
 
                 setTimeout(() => {
                     TEST_DEVICE_COMMANDS.WS.command = `command-${randomString.generate()}`;
                     wsDeviceHive.command.insert(DH_COMMANDS_TEST_DEVICE.id, new Command(TEST_DEVICE_COMMANDS.WS));
-                }, 300);
+                }, 500);
             })
             .catch(done);
     });
