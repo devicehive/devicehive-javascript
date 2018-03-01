@@ -51,10 +51,17 @@ class ApiStrategy extends EventEmitter {
         me.strategy = new (ApiStrategy.getType(mainServiceURL))({ mainServiceURL, authServiceURL, pluginServiceURL });
 
         me.strategy.on(`message`, (message) => {
-            if (message.subscriptionId && message.action) {
-                me.emit(`message`, message[message.action.split(`/`)[0]]);
-            } else {
-                me.emit(`message`, message);
+            switch (me.strategy.type) {
+                case HTTP.TYPE:
+                    me.emit(`message`, message);
+                    break;
+                case WS.TYPE:
+                    if (message.subscriptionId && message.action) {
+                        me.emit(`message`, message[message.action.split(`/`)[0]]);
+                    } else {
+                        me.emit(`message`, message);
+                    }
+                    break;
             }
         });
     }
