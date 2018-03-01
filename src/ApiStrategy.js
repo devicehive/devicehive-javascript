@@ -20,9 +20,9 @@ class ApiStrategy extends EventEmitter {
     static getType(url) {
         let result;
 
-        if (url.startsWith('http') || url.startsWith('https')) {
+        if (url.startsWith(HTTP.TYPE)) {
             result = HTTP;
-        } else if (url.startsWith('ws') || url.startsWith('wss')) {
+        } else if (url.startsWith(WS.TYPE)) {
             result = WS;
         } else {
             throw new UnsupportedTransportError();
@@ -40,6 +40,8 @@ class ApiStrategy extends EventEmitter {
 
         const me = this;
 
+        me.reconnectionHandler = null;
+
         me.urlsMap = new Map();
 
         me.urlsMap.set(API.MAIN_BASE, mainServiceURL);
@@ -48,7 +50,20 @@ class ApiStrategy extends EventEmitter {
 
         me.strategy = new (ApiStrategy.getType(mainServiceURL))({ mainServiceURL, authServiceURL, pluginServiceURL });
 
-        me.strategy.on(`message`, (message) => { me.emit(`message`, message) });
+        me.strategy.on(`message`, (message) => {
+            switch (me.strategy.type) {
+                case HTTP.TYPE:
+                    me.emit(`message`, message);
+                    break;
+                case WS.TYPE:
+                    if (message.subscriptionId && message.action) {
+                        me.emit(`message`, message[message.action.split(`/`)[0]]);
+                    } else {
+                        me.emit(`message`, message);
+                    }
+                    break;
+            }
+        });
     }
 
 
@@ -83,7 +98,25 @@ class ApiStrategy extends EventEmitter {
         }
 
         return me.strategy.send(sendData)
-            .then((response) => API.normalizeResponse(me.strategy.type, key, response));
+            .then((response) => API.normalizeResponse(me.strategy.type, key, response))
+            .catch(error => {
+                if (error === Utils.TOKEN_EXPIRED_MARK && me.reconnectionHandler) {
+                    return me.reconnectionHandler()
+                        .then(() => me.strategy.send(sendData))
+                        .then((response) => API.normalizeResponse(me.strategy.type, key, response));
+                } else {
+                    throw error;
+                }
+            });
+    }
+
+    /**
+     * Disconnects transport
+     */
+    disconnect() {
+        const me = this;
+
+        me.strategy.disconnect();
     }
 }
 

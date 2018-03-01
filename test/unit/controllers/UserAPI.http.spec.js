@@ -11,7 +11,7 @@ const DeviceHive = require('../../../index');
 
 let authService, mainService, deviceHive;
 
-describe('UserAPI', () => {
+describe('UserAPI HTTP', () => {
 
     before(done => {
         // authService
@@ -50,7 +50,8 @@ describe('UserAPI', () => {
             login: `dhadmin`,
             password: `dhadmin_#911`,
             mainServiceURL: 'http://localhost:3390',
-            authServiceURL: 'http://localhost:3391'
+            authServiceURL: 'http://localhost:3391',
+            autoUpdateSession: false
         });
 
         deviceHive.connect()

@@ -13,9 +13,22 @@ class HttpApiResolver {
      * @param {object} parameters - URI parameters
      * @returns {string}
      */
-    static buildUrl(base, parameters) {
-        const stringParameters = queryString.stringify(parameters);
-        const url = format(base, parameters);
+    static buildUrl(base, parameters = {}) {
+        // console.log(base, parameters);
+        const pathRegex = /[^{}]+(?=\})/g;
+        const pathParameterKeys = pathRegex.test(base) ? base.match(pathRegex) : [];
+        const pathParameters = {};
+        const queryParameters = {};
+        Object.keys(parameters).forEach(key => {
+            if (pathParameterKeys.includes(key)) {
+                pathParameters[key] = parameters[key];
+            } else {
+                queryParameters[key] = parameters[key];
+            }
+        });
+
+        const stringParameters = queryString.stringify(queryParameters);
+        const url = format(base, pathParameters);
 
         return stringParameters ? `${url}?${stringParameters}` : url;
     }
@@ -41,7 +54,7 @@ class HttpApiResolver {
      * @param {boolean} options.subscription
      * @param {boolean} options.unsubscription
      */
-    constructor({ method, uri, base, subscription, unsubscription }) {
+    constructor({ method, uri, base, subscription, unsubscription, noAuth }) {
         const me = this;
 
         me.method = method;
@@ -49,6 +62,7 @@ class HttpApiResolver {
         me.base = base;
         me.subscription = subscription;
         me.unsubscription = unsubscription;
+        me.noAuth = noAuth;
     }
 
     /**
@@ -63,6 +77,7 @@ class HttpApiResolver {
         
         if (me.unsubscription === true) {
             result = {
+                noAuth: me.noAuth,
                 unsubscription: me.unsubscription,
                 body: {
                     subscriptionId: parameters.subscriptionId
@@ -70,6 +85,7 @@ class HttpApiResolver {
             };
         } else {
             result = {
+                noAuth: me.noAuth,
                 method: me.method,
                 endpoint: HttpApiResolver.buildUrl(me.uri, parameters),
                 base: me.base,

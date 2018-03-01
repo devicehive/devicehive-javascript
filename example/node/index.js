@@ -1,5 +1,6 @@
 const DeviceHive = require(`../../index`);
 
+
 const httpDeviceHive = new DeviceHive({
     login: `dhadmin`,
     password: `dhadmin_#911`,
@@ -11,7 +12,8 @@ const httpDeviceHive = new DeviceHive({
 const wsDeviceHive = new DeviceHive({
     login: `dhadmin`,
     password: `dhadmin_#911`,
-    mainServiceURL: 'ws://localhost:8080/dh/websocket'
+    mainServiceURL: 'ws://localhost:8080/dh/websocket',
+    autoUpdateSession: true
 });
 
 const DeviceListQuery = DeviceHive.models.query.DeviceListQuery;
@@ -48,7 +50,10 @@ void async function start () {
             console.log(await  wsDeviceHive.network.list(networkListQuery));
             console.log(await  wsDeviceHive.token.refresh(refreshToken));
         }
+
     } catch (error) {
         console.warn(error);
     }
+
+    process.exit(1);
 }();

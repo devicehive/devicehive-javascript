@@ -40,7 +40,8 @@ describe('DeviceAPI WS', () => {
         deviceHive = new DeviceHive({
             login: `dhadmin`,
             password: `dhadmin_#911`,
-            mainServiceURL: 'ws://localhost:4390'
+            mainServiceURL: 'ws://localhost:4390',
+            autoUpdateSession: false
         });
 
         deviceHive.connect()
@@ -97,7 +98,7 @@ describe('DeviceAPI WS', () => {
             name: 'myTestName',
             networkId: 1,
             deviceTypeId: 1,
-            blocked: false
+            isBlocked: false
         };
         const device = new DeviceHive.models.Device(expected);
 

@@ -1,0 +1,19 @@
+{
+    "TEST_USER_ID": 1,
+    "TEST_USER_LOGIN": "dhadmin",
+    "TEST_USER_PASSWORD": "dhadmin_#911",
+    "server": {
+        "http": {
+            "login": "dhadmin",
+            "password": "dhadmin_#911",
+            "mainServiceURL": "http://localhost:8080/dh/rest",
+            "authServiceURL": "http://localhost:8090/dh/rest",
+            "pluginServiceURL": "http://localhost:8110/dh/rest"
+        },
+        "ws": {
+           "login": "dhadmin",
+            "password": "dhadmin_#911",
+            "mainServiceURL": "ws://localhost:8080/dh/websocket"
+        }
+    }
+}

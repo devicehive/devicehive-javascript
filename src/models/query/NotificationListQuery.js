@@ -13,20 +13,18 @@ class NotificationListQuery extends BaseModel {
      * @param {string} options.start - Start timestamp
      * @param {string} options.end - End timestamp
      * @param {string} options.notification - Notification name
-     * @param {string} options.status - Command status
      * @param {string} options.sortField - Sort field
      * @param {string} options.sortOrder - Sort order
      * @param {number} options.take - Limit param
      * @param {number} options.skip - Skip param
      */
-    constructor({ deviceId, start, end, notification, status, sortField, sortOrder, take, skip } = {}) {
+    constructor({ deviceId, start, end, notification, sortField, sortOrder, take, skip } = {}) {
         super();
 
         this.deviceId = deviceId;
         this.start = start;
         this.end = end;
         this.notification = notification;
-        this.status = status;
         this.sortField = sortField;
         this.sortOrder = sortOrder;
         this.take = take;
@@ -63,14 +61,6 @@ class NotificationListQuery extends BaseModel {
 
     set notification(value) {
         this._notification = value;
-    }
-
-    get status() {
-        return this._status;
-    }
-
-    set status(value) {
-        this._status = value;
     }
 
     get sortField() {
@@ -115,7 +105,6 @@ class NotificationListQuery extends BaseModel {
             start: this.start,
             end: this.end,
             notification: this.notification,
-            status: this.status,
             sortField: this.sortField,
             sortOrder: this.sortOrder,
             take: this.take,

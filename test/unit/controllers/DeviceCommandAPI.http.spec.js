@@ -50,7 +50,8 @@ describe('DeviceCommandAPI HTTP', () => {
             login: `dhadmin`,
             password: `dhadmin_#911`,
             mainServiceURL: 'http://localhost:3390',
-            authServiceURL: 'http://localhost:3391'
+            authServiceURL: 'http://localhost:3391',
+            autoUpdateSession: false
         });
 
         deviceHive.connect()
@@ -79,7 +80,7 @@ describe('DeviceCommandAPI HTTP', () => {
 
     it('DeviceCommandAPI.list()', done => {
 
-        const expectedQuery = {
+        const source = {
             deviceId: 'deviceId',
             start: '2018-02-09T10:09:03.033Z',
             end: '2018-02-09T10:09:03.033Z',
@@ -91,16 +92,27 @@ describe('DeviceCommandAPI HTTP', () => {
             skip: '1'
         };
 
+        const expected = {
+            start: '2018-02-09T10:09:03.033Z',
+            end: '2018-02-09T10:09:03.033Z',
+            command: 'command',
+            status: 'status',
+            sortField: 'sortField',
+            sortOrder: 'sortOrder',
+            take: '1',
+            skip: '1'
+        };
+
         // Configurating Device List query
-        const commandListQuery = new DeviceHive.models.query.CommandListQuery(expectedQuery);
+        const commandListQuery = new DeviceHive.models.query.CommandListQuery(source);
 
         deviceHive.command.list(commandListQuery);
 
         // sent data
         events.once('request', data => {
             assert.equal(data.method, 'GET', 'Not correct method');
-            assert.equal(data.url.pathname, `/device/${expectedQuery.deviceId}/command`, 'Not correct URL');
-            assert.deepEqual(data.url.parameters, expectedQuery, 'Not correct query');
+            assert.equal(data.url.pathname, `/device/${source.deviceId}/command`, 'Not correct URL');
+            assert.deepEqual(data.url.parameters, expected, 'Not correct query');
 
             done();
         });
@@ -180,7 +192,7 @@ describe('DeviceCommandAPI HTTP', () => {
 
     it('DeviceCommandAPI.poll()', done => {
 
-        const expectedQuery = {
+        const source = {
             deviceId: 'deviceId',
             names: 'names',
             timestamp: '2018-02-09T10:09:03.033Z',
@@ -189,16 +201,24 @@ describe('DeviceCommandAPI HTTP', () => {
             limit: '1',
         };
 
+        const expected = {
+            names: 'names',
+            timestamp: '2018-02-09T10:09:03.033Z',
+            returnUpdatedCommands: 'returnUpdatedCommands',
+            waitTimeout: '10',
+            limit: '1',
+        };
+
         // Configurating Command List query
-        const commandPollQuery = new DeviceHive.models.query.CommandPollQuery(expectedQuery);
+        const commandPollQuery = new DeviceHive.models.query.CommandPollQuery(source);
 
         deviceHive.command.poll(commandPollQuery);
 
         // sent data
         events.once('request', data => {
             assert.equal(data.method, 'GET', 'Not correct method');
-            assert.equal(data.url.pathname, `/device/${expectedQuery.deviceId}/command/poll`, 'Not correct URL');
-            assert.deepEqual(data.url.parameters, expectedQuery, 'Not correct query');
+            assert.equal(data.url.pathname, `/device/${source.deviceId}/command/poll`, 'Not correct URL');
+            assert.deepEqual(data.url.parameters, expected, 'Not correct query');
 
             done();
         });
@@ -233,22 +253,26 @@ describe('DeviceCommandAPI HTTP', () => {
 
     it('DeviceCommandAPI.wait()', done => {
 
-        const expectedQuery = {
+        const source = {
             deviceId: '1',
             commandId: '1',
             waitTimeout: '1'
         };
 
-        // Configurating Command List query
-        const commandWaitQuery = new DeviceHive.models.query.CommandWaitQuery(expectedQuery);
+        const expected = {
+            waitTimeout: '1'
+        };
 
-        deviceHive.command.wait(expectedQuery.deviceId, expectedQuery.commandId, commandWaitQuery);
+        // Configurating Command List query
+        const commandWaitQuery = new DeviceHive.models.query.CommandWaitQuery(source);
+
+        deviceHive.command.wait(source.deviceId, source.commandId, commandWaitQuery);
 
         // sent data
         events.once('request', data => {
             assert.equal(data.method, 'GET', 'Not correct method');
-            assert.equal(data.url.pathname, `/device/${expectedQuery.deviceId}/command/${expectedQuery.commandId}/poll`, 'Not correct URL');
-            assert.deepEqual(data.url.parameters, expectedQuery, 'Not correct query');
+            assert.equal(data.url.pathname, `/device/${source.deviceId}/command/${source.commandId}/poll`, 'Not correct URL');
+            assert.deepEqual(data.url.parameters, expected, 'Not correct query');
 
             done();
         });

@@ -1,3 +1,4 @@
+const Utils = require(`./utils/Utils`);
 const EventEmitter = require('events');
 const APIStrategy = require('./ApiStrategy');
 const InfoAPI = require('./controllers/ServerInfoAPI');
@@ -98,7 +99,7 @@ class DeviceHive extends EventEmitter {
      * @param {string} [options.authServiceURL] - Auth Service URL (required only for http)
      * @param {string} [options.pluginServiceURL] - Alug inServi ceURL (required only for http)
      */
-    constructor({ accessToken, refreshToken, login, password, mainServiceURL, authServiceURL, pluginServiceURL }) {
+    constructor({ mainServiceURL, authServiceURL, pluginServiceURL, accessToken, refreshToken, login, password, autoUpdateSession = true }) {
         super();
 
         const me = this;
@@ -107,6 +108,7 @@ class DeviceHive extends EventEmitter {
         me.refreshToken = refreshToken;
         me.login = login;
         me.password = password;
+        me.autoUpdateSession = autoUpdateSession;
 
         me.strategy = new APIStrategy({ mainServiceURL, authServiceURL, pluginServiceURL });
 
@@ -130,28 +132,64 @@ class DeviceHive extends EventEmitter {
      * Connect to the DeviceHive service
      * @returns {Promise<DeviceHive>}
      */
-    async connect() {
+    async connect({ accessToken, refreshToken, login, password } = {}) {
         const me = this;
 
-        if (me.accessToken || me.refreshToken || (me.login && me.password)) {
+        if (!accessToken && !refreshToken && !(login && password)) {
+            accessToken = accessToken || me.accessToken;
+            refreshToken = refreshToken || me.refreshToken;
+            login = login || me.login;
+            password = password || me.password;
+        }
+
+        if (accessToken || refreshToken || (login && password)) {
             try {
-                if (me.accessToken) {
-                    await me.strategy.authorize(me.accessToken);
-                } else if (me.refreshToken) {
-                    const accessToken = await me.token.refresh(me.refreshToken);
+                if (login && password) {
+                    const { accessToken, refreshToken } = await me.token.login(login, password);
+
                     await me.strategy.authorize(accessToken);
-                } else if (me.login && me.password) {
-                    const { accessToken } = await me.token.login(me.login, me.password);
+
+                    me.accessToken = accessToken;
+                    me.refreshToken = refreshToken;
+                } else if (refreshToken) {
+                    const { accessToken } = await me.token.refresh(refreshToken);
+
                     await me.strategy.authorize(accessToken);
+
+                    me.accessToken = accessToken;
+                    me.refreshToken = refreshToken;
+                } else if (accessToken) {
+                    await me.strategy.authorize(accessToken);
+
+                    me.accessToken = accessToken;
+                }
+
+                if (me.autoUpdateSession === true) {
+                    const userTokens = await me.token.createUserToken(
+                        Utils.createUserTokenFromJWT(me.accessToken));
+
+                    me.accessToken = userTokens.accessToken;
+                    me.refreshToken = userTokens.refreshToken;
+                    me.strategy.reconnectionHandler = () => me.connect({ refreshToken: me.refreshToken });
                 }
             } catch (error) {
-                throw new InvalidCredentialsError();
+                throw new InvalidCredentialsError(error);
             }
         } else {
             throw new NoAuthCredentialsError();
         }
 
         return me;
+    }
+
+    /**
+     * Disconnects from DeviceHive server
+     * @returns {*|void}
+     */
+    disconnect() {
+        const me = this;
+
+        return me.strategy.disconnect();
     }
 }
 

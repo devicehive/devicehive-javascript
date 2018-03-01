@@ -6,10 +6,10 @@ class InvalidCredentialsError extends Error {
     /**
      * Creates new InvalidCredentialsError
      */
-    constructor() {
+    constructor(message) {
         super();
 
-        this.message = `Invalid credentials error during attempt to authenticate.`;
+        this.message = `Invalid credentials error during attempt to authenticate. Error: ${message}`;
     }
 }
 

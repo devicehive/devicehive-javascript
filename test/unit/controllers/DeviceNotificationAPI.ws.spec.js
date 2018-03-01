@@ -40,7 +40,8 @@ describe('NotificationAPI WS', () => {
         deviceHive = new DeviceHive({
             login: `dhadmin`,
             password: `dhadmin_#911`,
-            mainServiceURL: 'ws://localhost:4390'
+            mainServiceURL: 'ws://localhost:4390',
+            autoUpdateSession: false
         });
 
         deviceHive.connect()
@@ -75,7 +76,6 @@ describe('NotificationAPI WS', () => {
             start: '2018-02-09T10:09:03.033Z',
             end: '2018-02-09T10:09:03.033Z',
             notification: 'notification',
-            status: 'status',
             sortField: 'sortField',
             sortOrder: 'sortOrder',
             take: '1',

@@ -50,7 +50,8 @@ describe('DeviceAPI', () => {
             login: `dhadmin`,
             password: `dhadmin_#911`,
             mainServiceURL: 'http://localhost:3390',
-            authServiceURL: 'http://localhost:3391'
+            authServiceURL: 'http://localhost:3391',
+            autoUpdateSession: false
         });
 
         deviceHive.connect()
@@ -107,7 +108,7 @@ describe('DeviceAPI', () => {
             name: 'myTestName',
             networkId: 1,
             deviceTypeId: 1,
-            blocked: false
+            isBlocked: false
         };
         const device = new DeviceHive.models.Device(expectedBody);
 

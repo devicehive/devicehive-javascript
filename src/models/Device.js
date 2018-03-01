@@ -14,9 +14,9 @@ class Device extends BaseModel {
      * @param {object} options.data - Device data, a JSON object with an arbitrary structure
      * @param {number} options.networkId - Associated network id
      * @param {number} options.deviceTypeId - Associated deviceType id
-     * @param {boolean} options.blocked - Indicates whether device is blocked
+     * @param {boolean} options.isBlocked - Indicates whether device is isBlocked
      */
-    constructor({ id, name, data, networkId, deviceTypeId, blocked } = {}) {
+    constructor({ id, name, data, networkId, deviceTypeId, isBlocked } = {}) {
         super();
 
         this.id = id;
@@ -24,7 +24,7 @@ class Device extends BaseModel {
         this.data = data;
         this.networkId = networkId;
         this.deviceTypeId = deviceTypeId;
-        this.blocked = blocked;
+        this.isBlocked = isBlocked;
     }
 
     get id() {
@@ -67,12 +67,12 @@ class Device extends BaseModel {
         this._deviceTypeId = value;
     }
 
-    get blocked() {
-        return this._blocked;
+    get isBlocked() {
+        return this._isBlocked;
     }
 
-    set blocked(value) {
-        this._blocked = value;
+    set isBlocked(value) {
+        this._isBlocked = value;
     }
 
     /**
@@ -86,7 +86,7 @@ class Device extends BaseModel {
             data: this.data,
             networkId: this.networkId,
             deviceTypeId: this.deviceTypeId,
-            blocked: this.blocked
+            isBlocked: this.isBlocked
         };
     }
 }

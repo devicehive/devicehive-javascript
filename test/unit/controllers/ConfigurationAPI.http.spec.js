@@ -50,7 +50,8 @@ describe('ConfigurationAPI HTTP', () => {
             login: `dhadmin`,
             password: `dhadmin_#911`,
             mainServiceURL: 'http://localhost:3390',
-            authServiceURL: 'http://localhost:3391'
+            authServiceURL: 'http://localhost:3391',
+            autoUpdateSession: false
         });
 
         deviceHive.connect()
@@ -84,8 +85,7 @@ describe('ConfigurationAPI HTTP', () => {
         // Configurating Configaration model
         const expectedBody = {
             name: 'myTestName',
-            value: 'string',
-            entityVersion: '1'
+            value: 'string'
         };
         const configuration = new DeviceHive.models.Configuration(expectedBody);
 

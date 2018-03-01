@@ -11,14 +11,12 @@ class Configuration extends BaseModel {
      * @param {Object} options - model options object
      * @param {string} options.name - Configuration parameter name.
      * @param {string} options.value - Configuration parameter value.
-     * @param {number} options.entityVersion - Specifies the version field or property of an entity class.
      */
     constructor({ name, value, entityVersion } = {}) {
         super();
 
         this.name = name;
         this.value = value;
-        this.entityVersion = entityVersion;
     }
 
     get name() {
@@ -35,14 +33,6 @@ class Configuration extends BaseModel {
 
     set value(value) {
         this._value = value;
-    }
-
-    get entityVersion() {
-        return this._entityVersion;
-    }
-
-    set entityVersion(value) {
-        this._entityVersion = value;
     }
 
     /**

@@ -156,15 +156,15 @@ class ApiMap {
 }
 
 
-apiMap.set(ApiMap.login, { http: { method: 'POST', uri: '/token', base: ApiMap.AUTH_BASE }, ws: { action: 'token', response: [`accessToken`, `refreshToken`] } });
+apiMap.set(ApiMap.login, { http: { method: 'POST', uri: '/token', base: ApiMap.AUTH_BASE, noAuth: true }, ws: { action: 'token', response: [`accessToken`, `refreshToken`] } });
 apiMap.set(ApiMap.createUserToken, { http: { method: 'POST', uri: '/token/create', base: ApiMap.AUTH_BASE }, ws: { action: 'token/create', bodyKey: 'payload', response: [`accessToken`, `refreshToken`] } });
 apiMap.set(ApiMap.createPluginToken, { http: { method: 'POST', uri: '/token/plugin/create', base: ApiMap.AUTH_BASE } });
-apiMap.set(ApiMap.refreshToken, { http: { method: 'POST', uri: '/token/refresh', base: ApiMap.AUTH_BASE }, ws: { action: 'token/refresh', response: [`accessToken`] } });
+apiMap.set(ApiMap.refreshToken, { http: { method: 'POST', uri: '/token/refresh', base: ApiMap.AUTH_BASE, noAuth: true }, ws: { action: 'token/refresh', response: [`accessToken`] } });
 apiMap.set(ApiMap.authenticatePlugin, { http: { method: 'GET', uri: '/token/plugin/authenticate', base: ApiMap.AUTH_BASE } });
 
-apiMap.set(ApiMap.getServerInfo, { http: { method: 'GET', uri: '/info', base: ApiMap.MAIN_BASE }, ws: { action: 'server/info', response: { bodyKey: `info` } } });
-apiMap.set(ApiMap.getCacheInfo, { http: { method: 'GET', uri: '/info/cache', base: ApiMap.MAIN_BASE } });
-apiMap.set(ApiMap.getClusterInfo, { http: { method: 'GET', uri: '/info/config/cluster', base: ApiMap.MAIN_BASE }, ws: { action: 'cluster/info', response: { bodyKey: `clusterInfo` } } });
+apiMap.set(ApiMap.getServerInfo, { http: { method: 'GET', uri: '/info', base: ApiMap.MAIN_BASE, noAuth: true }, ws: { action: 'server/info', response: { bodyKey: `info` } } });
+apiMap.set(ApiMap.getCacheInfo, { http: { method: 'GET', uri: '/info/cache', base: ApiMap.MAIN_BASE, noAuth: true } });
+apiMap.set(ApiMap.getClusterInfo, { http: { method: 'GET', uri: '/info/config/cluster', base: ApiMap.MAIN_BASE, noAuth: true }, ws: { action: 'cluster/info', response: { bodyKey: `clusterInfo` } } });
 
 apiMap.set(ApiMap.getConfiguration, { http: { method: 'GET', uri: '/configuration/{name}', base: ApiMap.MAIN_BASE }, ws: { action: 'configuration/get', response: { bodyKey: `configuration` } } });
 apiMap.set(ApiMap.putConfiguration, { http: { method: 'PUT', uri: '/configuration/{name}', base: ApiMap.MAIN_BASE }, ws: { action: 'configuration/put', response: { bodyKey: `configuration` } } });
