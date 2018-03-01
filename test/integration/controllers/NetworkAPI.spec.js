@@ -15,12 +15,12 @@ const TEST_NETWORK_NAME_PREFIX = `DH-JS-LIB-NETWORK-NAME-`;
 const TEST_NETWORK_DESCRIPTION_PREFIX = `DH-JS-LIB-NETWORK-NAME-`;
 const TEST_NETWORKS = {
     HTTP: {
-        name: `${TEST_NETWORK_NAME_PREFIX}-${randomString.generate()}`,
-        description: `${TEST_NETWORK_DESCRIPTION_PREFIX}-${randomString.generate()}`
+        name: `${TEST_NETWORK_NAME_PREFIX}${randomString.generate()}`,
+        description: `${TEST_NETWORK_DESCRIPTION_PREFIX}${randomString.generate()}`
     },
     WS: {
-        name: `${TEST_NETWORK_NAME_PREFIX}-${randomString.generate()}`,
-        description: `${TEST_NETWORK_DESCRIPTION_PREFIX}-${randomString.generate()}`
+        name: `${TEST_NETWORK_NAME_PREFIX}${randomString.generate()}`,
+        description: `${TEST_NETWORK_DESCRIPTION_PREFIX}${randomString.generate()}`
     }
 };
 
