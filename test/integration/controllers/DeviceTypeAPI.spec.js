@@ -15,12 +15,12 @@ const TEST_DEVICE_TYPE_NAME_PREFIX = `DH-JS-LIB-DEVICE-TYPE-NAME-`;
 const TEST_DEVICE_TYPE_DESCRIPTION_PREFIX = `DH-JS-LIB-DEVICE-TYPE-NAME-`;
 const TEST_DEVICE_TYPES = {
     HTTP: {
-        name: `${TEST_DEVICE_TYPE_NAME_PREFIX}-${randomString.generate()}`,
-        description: `${TEST_DEVICE_TYPE_DESCRIPTION_PREFIX}-${randomString.generate()}`
+        name: `${TEST_DEVICE_TYPE_NAME_PREFIX}${randomString.generate()}`,
+        description: `${TEST_DEVICE_TYPE_DESCRIPTION_PREFIX}${randomString.generate()}`
     },
     WS: {
-        name: `${TEST_DEVICE_TYPE_NAME_PREFIX}-${randomString.generate()}`,
-        description: `${TEST_DEVICE_TYPE_DESCRIPTION_PREFIX}-${randomString.generate()}`
+        name: `${TEST_DEVICE_TYPE_NAME_PREFIX}${randomString.generate()}`,
+        description: `${TEST_DEVICE_TYPE_DESCRIPTION_PREFIX}${randomString.generate()}`
     }
 };
 
