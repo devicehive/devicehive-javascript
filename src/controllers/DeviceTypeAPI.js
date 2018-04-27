@@ -2,6 +2,7 @@ const API = require('./API');
 const ApiMap = require(`./transportResolvers/ApiMap`);
 const DeviceTypeListQuery = require('../models/query/DeviceTypeListQuery');
 const DeviceTypeCountQuery = require('../models/query/DeviceTypeCountQuery');
+const DeviceTypeDeleteQuery = require('../models/query/DeviceTypeDeleteQuery');
 
 
 /**
@@ -59,8 +60,8 @@ class DeviceTypeAPI extends API {
      * @param {number} deviceTypeId
      * @returns {Promise}
      */
-    delete(deviceTypeId) {
-        return this.send(ApiMap.deleteDeviceType, { deviceTypeId: deviceTypeId });
+    delete(deviceTypeDeleteQuery = new DeviceTypeDeleteQuery()) {
+        return this.send(ApiMap.deleteDeviceType, deviceTypeDeleteQuery.toObject());
     }
 }
 
