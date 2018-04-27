@@ -29,9 +29,11 @@ const DeviceCountQuery = require(`./models/query/DeviceCountQuery`);
 const DeviceListQuery = require(`./models/query/DeviceListQuery`);
 const DeviceTypeCountQuery = require(`./models/query/DeviceTypeCountQuery`);
 const DeviceTypeListQuery = require(`./models/query/DeviceTypeListQuery`);
+const DeviceTypeDeleteQuery = require('./models/query/DeviceTypeDeleteQuery');
 const PluginUpdateQuery = require(`./models/query/PluginUpdateQuery`);
 const NetworkCountQuery = require(`./models/query/NetworkCountQuery`);
 const NetworkListQuery = require(`./models/query/NetworkListQuery`);
+const NetworkDeleteQuery = require('./models/query/NetworkDeleteQuery');
 const NotificationListQuery = require(`./models/query/NotificationListQuery`);
 const NotificationPollManyQuery = require(`./models/query/NotificationPollManyQuery`);
 const NotificationPollQuery = require(`./models/query/NotificationPollQuery`);
@@ -73,9 +75,11 @@ class DeviceHive extends EventEmitter {
                 DeviceListQuery: DeviceListQuery,
                 DeviceTypeCountQuery: DeviceTypeCountQuery,
                 DeviceTypeListQuery: DeviceTypeListQuery,
+                DeviceTypeDeleteQuery: DeviceTypeDeleteQuery,
                 PluginUpdateQuery: PluginUpdateQuery,
                 NetworkCountQuery: NetworkCountQuery,
                 NetworkListQuery: NetworkListQuery,
+                NetworkDeleteQuery: NetworkDeleteQuery,
                 NotificationListQuery: NotificationListQuery,
                 NotificationPollManyQuery: NotificationPollManyQuery,
                 NotificationPollQuery: NotificationPollQuery,

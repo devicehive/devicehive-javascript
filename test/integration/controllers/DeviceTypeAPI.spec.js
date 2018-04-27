@@ -6,6 +6,7 @@ const DeviceHive = require('../../../index');
 const DeviceType = DeviceHive.models.DeviceType;
 const DeviceTypeListQuery = DeviceHive.models.query.DeviceTypeListQuery;
 const DeviceTypeCountQuery = DeviceHive.models.query.DeviceTypeCountQuery;
+const DeviceTypeDeleteQuery = DeviceHive.models.query.DeviceTypeDeleteQuery;
 
 const httpDeviceHive = new DeviceHive(config.server.http);
 const wsDeviceHive = new DeviceHive(config.server.ws);
@@ -147,13 +148,15 @@ describe('DeviceTypeAPI', () => {
     });
 
     it(`should delete device type with name: ${TEST_DEVICE_TYPES.HTTP.name} via HTTP`, done => {
-        httpDeviceHive.deviceType.delete(TEST_DEVICE_TYPES.HTTP.id)
+        const deviceTypeDeleteQuery = new DeviceTypeDeleteQuery({ deviceTypeId: TEST_DEVICE_TYPES.HTTP.id });
+        httpDeviceHive.deviceType.delete(deviceTypeDeleteQuery)
             .then(() => done())
             .catch(done);
     });
 
     it(`should delete device type with name: ${TEST_DEVICE_TYPES.WS.name} via WS`, done => {
-        wsDeviceHive.deviceType.delete(TEST_DEVICE_TYPES.WS.id)
+        const deviceTypeDeleteQuery = new DeviceTypeDeleteQuery({ deviceTypeId: TEST_DEVICE_TYPES.WS.id });
+        wsDeviceHive.deviceType.delete(deviceTypeDeleteQuery)
             .then(() => done())
             .catch(done);
     });

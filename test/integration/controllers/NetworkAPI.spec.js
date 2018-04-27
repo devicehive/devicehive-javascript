@@ -6,6 +6,7 @@ const DeviceHive = require('../../../index');
 const Network = DeviceHive.models.Network;
 const NetworkListQuery = DeviceHive.models.query.NetworkListQuery;
 const NetworkCountQuery = DeviceHive.models.query.NetworkCountQuery;
+const NetworkDeleteQuery = DeviceHive.models.query.NetworkDeleteQuery;
 
 const httpDeviceHive = new DeviceHive(config.server.http);
 const wsDeviceHive = new DeviceHive(config.server.ws);
@@ -147,13 +148,15 @@ describe('NetworkAPI', () => {
     });
 
     it(`should delete network with name: ${TEST_NETWORKS.HTTP.name} via HTTP`, done => {
-        httpDeviceHive.network.delete(TEST_NETWORKS.HTTP.id)
+        const networkDeleteQuery = new NetworkDeleteQuery({ networkId: TEST_NETWORKS.HTTP.id });
+        httpDeviceHive.network.delete(networkDeleteQuery)
             .then(() => done())
             .catch(done);
     });
 
     it(`should delete network with name: ${TEST_NETWORKS.WS.name} via WS`, done => {
-        wsDeviceHive.network.delete(TEST_NETWORKS.WS.id)
+        const networkDeleteQuery = new NetworkDeleteQuery({ networkId: TEST_NETWORKS.WS.id });
+        wsDeviceHive.network.delete(networkDeleteQuery)
             .then(() => done())
             .catch(done);
     });
