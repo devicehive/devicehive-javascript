@@ -161,11 +161,17 @@ describe('DeviceTypeAPI WS', () => {
 
     it('DeviceTypeAPI.delete()', done => {
 
+        const id = '1';
         const expected = {
-            deviceTypeId: '1'
+            deviceTypeId: id,
+            force: false
         }
+        const deviceTypeDeleteQuery = new DeviceHive.models.query.DeviceTypeDeleteQuery({
+            deviceTypeId: id,
+            force: false
+        });
 
-        deviceHive.deviceType.delete(expected.deviceTypeId);
+        deviceHive.deviceType.delete(deviceTypeDeleteQuery);
 
         // sent data
         events.once('request', data => {

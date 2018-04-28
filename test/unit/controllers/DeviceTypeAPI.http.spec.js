@@ -172,15 +172,22 @@ describe('DeviceTypeAPI HTTP', () => {
     });
 
     it('DeviceTypeAPI.delete()', done => {
-
         const id = '1';
+        const expectedQuery = {
+            force: 'false'
+        }
+        const deviceTypeDeleteQuery = new DeviceHive.models.query.DeviceTypeDeleteQuery({
+            deviceTypeId: id,
+            force: false
+        });
 
-        deviceHive.deviceType.delete(id);
+        deviceHive.deviceType.delete(deviceTypeDeleteQuery);
 
         // sent data
         events.once('request', data => {
             assert.equal(data.method, 'DELETE', 'Not correct method');
             assert.equal(data.url.pathname, `/devicetype/${id}`, 'Not correct URL');
+            assert.deepEqual(data.url.parameters, expectedQuery, 'Not correct query');
 
             done();
         });

@@ -174,13 +174,21 @@ describe('NetworkAPI', () => {
     it('NetworkAPI.delete()', done => {
 
         const id = '1';
+        const expectedQuery = {
+            force: 'false'
+        }
+        const networkDeleteQuery = new DeviceHive.models.query.NetworkDeleteQuery({
+            networkId: id,
+            force: false
+        });
 
-        deviceHive.network.delete(id);
+        deviceHive.network.delete(networkDeleteQuery);
 
         // sent data
         events.once('request', data => {
             assert.equal(data.method, 'DELETE', 'Not correct method');
             assert.equal(data.url.pathname, `/network/${id}`, 'Not correct URL');
+            assert.deepEqual(data.url.parameters, expectedQuery, 'Not correct query');
 
             done();
         });
