@@ -9,6 +9,8 @@ const DeviceType = DeviceHive.models.DeviceType;
 const Network = DeviceHive.models.Network;
 const UserListQuery = DeviceHive.models.query.UserListQuery;
 const UserCountQuery = DeviceHive.models.query.UserCountQuery;
+const NetworkDeleteQuery = DeviceHive.models.query.NetworkDeleteQuery;
+const DeviceTypeDeleteQuery = DeviceHive.models.query.DeviceTypeDeleteQuery;
 
 const httpDeviceHive = new DeviceHive(config.server.http);
 const wsDeviceHive = new DeviceHive(config.server.ws);
@@ -276,7 +278,7 @@ describe(`UserAPI`, () => {
     });
 
     it(`should assign network with name: ${TEST_NETWORK.name} to user with login: ${TEST_USERS.HTTP.login} via HTTP`, done => {
-            httpDeviceHive.user.assignNetwork(TEST_USERS.HTTP.id, TEST_NETWORK.id)
+        httpDeviceHive.user.assignNetwork(TEST_USERS.HTTP.id, TEST_NETWORK.id)
             .then(() => done())
             .catch(done);
     });
@@ -334,8 +336,12 @@ describe(`UserAPI`, () => {
     });
 
     after(done => {
-        httpDeviceHive.deviceType.delete(TEST_DEVICE_TYPE.id)
-            .then(() => httpDeviceHive.network.delete(TEST_NETWORK.id))
+        const deviceTypeDeleteQuery = new DeviceTypeDeleteQuery({ deviceTypeId: TEST_DEVICE_TYPE.id });
+        httpDeviceHive.deviceType.delete(deviceTypeDeleteQuery)
+            .then(() => {
+                const networkDeleteQuery = new NetworkDeleteQuery({ networkId: TEST_NETWORK.id });
+                return httpDeviceHive.network.delete(networkDeleteQuery);
+            })
             .then(() => {
                 httpDeviceHive.disconnect();
                 wsDeviceHive.disconnect();

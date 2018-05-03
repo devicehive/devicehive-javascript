@@ -4,8 +4,10 @@ const assert = chai.assert;
 const config = require('../config');
 const DeviceHive = require('../../../index');
 const Network = DeviceHive.models.Network;
+const Device = DeviceHive.models.Device;
 const NetworkListQuery = DeviceHive.models.query.NetworkListQuery;
 const NetworkCountQuery = DeviceHive.models.query.NetworkCountQuery;
+const NetworkDeleteQuery = DeviceHive.models.query.NetworkDeleteQuery;
 
 const httpDeviceHive = new DeviceHive(config.server.http);
 const wsDeviceHive = new DeviceHive(config.server.ws);
@@ -21,6 +23,28 @@ const TEST_NETWORKS = {
     WS: {
         name: `${TEST_NETWORK_NAME_PREFIX}${randomString.generate()}`,
         description: `${TEST_NETWORK_DESCRIPTION_PREFIX}${randomString.generate()}`
+    }
+};
+
+const TEST_DEVICE_ID_PREFIX = `DH-JS-LIB-DEVICE-ID-`;
+const TEST_DEVICE_NAME_PREFIX = `DH-JS-LIB-DEVICE-NAME-`;
+
+const TEST_DEVICES = {
+    HTTP: {
+        id: `${TEST_DEVICE_ID_PREFIX}HTTP`,
+        name: `${TEST_DEVICE_NAME_PREFIX}HTTP`,
+        networkId: 1,
+        deviceTypeId: 1,
+        isBlocked: false,
+        data: {}
+    },
+    WS: {
+        id: `${TEST_DEVICE_ID_PREFIX}WS`,
+        name: `${TEST_DEVICE_NAME_PREFIX}WS`,
+        networkId: 1,
+        deviceTypeId: 1,
+        isBlocked: false,
+        data: {}
     }
 };
 
@@ -147,15 +171,68 @@ describe('NetworkAPI', () => {
     });
 
     it(`should delete network with name: ${TEST_NETWORKS.HTTP.name} via HTTP`, done => {
-        httpDeviceHive.network.delete(TEST_NETWORKS.HTTP.id)
+        const networkDeleteQuery = new NetworkDeleteQuery({ networkId: TEST_NETWORKS.HTTP.id });
+        httpDeviceHive.network.delete(networkDeleteQuery)
             .then(() => done())
             .catch(done);
     });
 
     it(`should delete network with name: ${TEST_NETWORKS.WS.name} via WS`, done => {
-        wsDeviceHive.network.delete(TEST_NETWORKS.WS.id)
+        const networkDeleteQuery = new NetworkDeleteQuery({ networkId: TEST_NETWORKS.WS.id });
+        wsDeviceHive.network.delete(networkDeleteQuery)
             .then(() => done())
             .catch(done);
+    });
+
+    it(`should delete network with name: ${TEST_NETWORKS.HTTP.name} via HTTP and delete all it's devices`, done => {
+
+        TEST_NETWORKS.HTTP.id = null;
+        const networkModel = new Network(TEST_NETWORKS.HTTP);
+
+        httpDeviceHive.network.insert(networkModel)
+            .then(({ id }) => {
+                TEST_NETWORKS.HTTP.id = id;
+                TEST_DEVICES.HTTP.networkId = id;
+            })
+            .then(() => {
+                const deviceModel = new Device(TEST_DEVICES.HTTP);
+                return httpDeviceHive.device.add(deviceModel);
+            })
+            .then(() => {
+                const networkDeleteQuery = new NetworkDeleteQuery({ networkId: TEST_NETWORKS.HTTP.id, force: true });
+                return httpDeviceHive.network.delete(networkDeleteQuery)
+            })
+            .then(() => httpDeviceHive.device.get(TEST_DEVICES.HTTP.id))
+            .catch(err => {
+                assert.equal(err,`Device with such deviceId = ${TEST_DEVICES.HTTP.id} not found`);
+                done();
+            });
+
+    });
+
+    it(`should delete network with name: ${TEST_NETWORKS.WS.name} via WS and delete all it's devices`, done => {
+        
+        TEST_NETWORKS.WS.id = null;
+        const networkModel = new Network(TEST_NETWORKS.WS);
+
+        wsDeviceHive.network.insert(networkModel)
+            .then(({ id }) => {
+                TEST_NETWORKS.WS.id = id;
+                TEST_DEVICES.WS.networkId = id;
+            })
+            .then(() => {
+                const deviceModel = new Device(TEST_DEVICES.WS);
+                return wsDeviceHive.device.add(deviceModel);
+            })
+            .then(() => {
+                const networkDeleteQuery = new NetworkDeleteQuery({ networkId: TEST_NETWORKS.WS.id, force: true });
+                return wsDeviceHive.network.delete(networkDeleteQuery)
+            })
+            .then(() => wsDeviceHive.device.get(TEST_DEVICES.WS.id))
+            .catch(err => {
+                assert.equal(err,`Device with such deviceId = ${TEST_DEVICES.WS.id} not found`);
+                done();
+            });
     });
 
     after(done => {
