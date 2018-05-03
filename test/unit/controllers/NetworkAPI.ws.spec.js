@@ -161,11 +161,17 @@ describe('NetworkAPI WS', () => {
 
     it('NetworkAPI.delete()', done => {
 
+        const id = '1';
         const expected = {
-            networkId: '1'
+            networkId: id,
+            force: false
         }
+        const networkDeleteQuery = new DeviceHive.models.query.NetworkDeleteQuery({
+            networkId: id,
+            force: false
+        });
 
-        deviceHive.network.delete(expected.networkId);
+        deviceHive.network.delete(networkDeleteQuery);
 
         // sent data
         events.once('request', data => {

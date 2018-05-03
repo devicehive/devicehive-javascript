@@ -2,6 +2,7 @@ const API = require('./API');
 const ApiMap = require(`./transportResolvers/ApiMap`);
 const NetworkListQuery = require('../models/query/NetworkListQuery');
 const NetworkCountQuery = require('../models/query/NetworkCountQuery');
+const NetworkDeleteQuery = require('../models/query/NetworkDeleteQuery');
 
 
 /**
@@ -59,8 +60,8 @@ class NetworkAPI extends API {
      * @param {number} networkId
      * @returns {Promise} Network
      */
-    delete(networkId) {
-        return this.send(ApiMap.deleteNetwork, { networkId: networkId });
+    delete(networkDeleteQuery = new NetworkDeleteQuery()) {
+        return this.send(ApiMap.deleteNetwork, networkDeleteQuery.toObject());
     }
 }
 
