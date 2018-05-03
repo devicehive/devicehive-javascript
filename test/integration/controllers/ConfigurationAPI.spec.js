@@ -10,12 +10,12 @@ const wsDeviceHive = new DeviceHive(config.server.ws);
 
 const TEST_CONFIGURATIONS = {
     HTTP: {
-        name: `myTestConfigurationName-HTTP}`,
-        value: `myTestConfigurationValue-HTTP}`
+        name: `myTestConfigurationName-HTTP`,
+        value: `myTestConfigurationValue-HTTP`
     },
     WS: {
-        name: `myTestConfigurationName-WS}`,
-        value: `myTestConfigurationValue-WS}`
+        name: `myTestConfigurationName-WS`,
+        value: `myTestConfigurationValue-WS`
     }
 };
 
