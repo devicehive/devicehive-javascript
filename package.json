@@ -1,6 +1,6 @@
 {
   "name": "devicehive",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "DeviceHive JS Library",
   "main": "index.js",
   "scripts": {

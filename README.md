@@ -170,9 +170,11 @@ Returns DeviceHive models
     * [DeviceListQuery](#DeviceListQuery)
     * [DeviceTypeCountQuery](#DeviceTypeCountQuery)
     * [DeviceTypeListQuery](#DeviceTypeListQuery)
+    * [DeviceTypeDeleteQuery](#DeviceTypeDeleteQuery)
     * [PluginUpdateQuery](#PluginUpdateQuery)
     * [NetworkCountQuery](#NetworkCountQuery)
     * [NetworkListQuery](#NetworkListQuery)
+    * [NetworkDeleteQuery](#NetworkDeleteQuery)
     * [NotificationListQuery](#NotificationListQuery)
     * [NotificationPollManyQuery](#NotificationPollManyQuery)
     * [NotificationPollQuery](#NotificationPollQuery)
@@ -510,7 +512,7 @@ Returns information about the current deviceType
     * [.count(deviceTypeCountQuery)](#DeviceTypeAPI+count) ⇒ <code>Promise</code>
     * [.insert(deviceType)](#DeviceTypeAPI+insert) ⇒ <code>Promise</code>
     * [.update(deviceType)](#DeviceTypeAPI+update) ⇒ <code>Promise</code>
-    * [.delete(deviceTypeId)](#DeviceTypeAPI+delete) ⇒ <code>Promise</code>
+    * [.delete(deviceTypeDeleteQuery)](#DeviceTypeAPI+delete) ⇒ <code>Promise</code>
 
 <a name="DeviceTypeAPI+get"></a>
 
@@ -559,13 +561,13 @@ Updates a deviceType
 
 <a name="DeviceTypeAPI+delete"></a>
 
-### deviceTypeAPI.delete(deviceTypeId) ⇒ <code>Promise</code>
+### deviceTypeAPI.delete(deviceTypeDeleteQuery) ⇒ <code>Promise</code>
 Deletes an existing deviceType
 
 
 | Param | Type |
 | --- | --- |
-| deviceTypeId | <code>number</code> | 
+| deviceTypeDeleteQuery | <code>deviceTypeDeleteQuery</code> | 
 
 <a name="NetworkAPI"></a>
 
@@ -579,7 +581,7 @@ Returns information about the current network
     * [.count(networkCountQuery)](#NetworkAPI+count) ⇒ <code>Promise</code>
     * [.insert(network)](#NetworkAPI+insert) ⇒ <code>Promise</code>
     * [.update(networkId, network)](#NetworkAPI+update) ⇒ <code>Promise</code>
-    * [.delete(networkId)](#NetworkAPI+delete) ⇒ <code>Promise</code>
+    * [.delete(networkDeleteQuery)](#NetworkAPI+delete) ⇒ <code>Promise</code>
 
 <a name="NetworkAPI+get"></a>
 
@@ -629,12 +631,12 @@ Updates a network
 
 <a name="NetworkAPI+delete"></a>
 
-### networkAPI.delete(networkId) ⇒ <code>Promise</code>
+### networkAPI.delete(networkDeleteQuery) ⇒ <code>Promise</code>
 Deletes an existing network
 
 | Param | Type |
 | --- | --- |
-| networkId | <code>number</code> | 
+| networkDeleteQuery | <code>networkDeleteQuery</code> | 
 
 <a name="PluginAPI"></a>
 
@@ -1131,7 +1133,7 @@ Returns information about the current deviceType
     * [.count(deviceTypeCountQuery)](#DeviceTypeAPI+count) ⇒ <code>Promise</code>
     * [.insert(deviceType)](#DeviceTypeAPI+insert) ⇒ <code>Promise</code>
     * [.update(deviceType)](#DeviceTypeAPI+update) ⇒ <code>Promise</code>
-    * [.delete(deviceTypeId)](#DeviceTypeAPI+delete) ⇒ <code>Promise</code>
+    * [.delete(deviceTypeDeleteQuery)](#DeviceTypeAPI+delete) ⇒ <code>Promise</code>
 
 <a name="DeviceTypeAPI+get"></a>
 
@@ -1190,13 +1192,13 @@ Updates a deviceType
 
 <a name="DeviceTypeAPI+delete"></a>
 
-### deviceTypeAPI.delete(deviceTypeId) ⇒ <code>Promise</code>
+### deviceTypeAPI.delete(deviceTypeDeleteQuery) ⇒ <code>Promise</code>
 Deletes an existing deviceType
 
 
 | Param | Type |
 | --- | --- |
-| deviceTypeId | <code>number</code> | 
+| deviceTypeDeleteQuery | <code>deviceTypeDeleteQuery</code> | 
 
 <a name="NetworkAPI"></a>
 
@@ -1210,7 +1212,7 @@ Returns information about the current network
     * [.count(networkCountQuery)](#NetworkAPI+count) ⇒ <code>Promise</code>
     * [.insert(network)](#NetworkAPI+insert) ⇒ <code>Promise</code>
     * [.update(network)](#NetworkAPI+update) ⇒ <code>Promise</code>
-    * [.delete(networkId)](#NetworkAPI+delete) ⇒ <code>Promise</code>
+    * [.delete(networkDeleteQuery)](#NetworkAPI+delete) ⇒ <code>Promise</code>
 
 <a name="NetworkAPI+get"></a>
 
@@ -1269,14 +1271,14 @@ Updates a network
 
 <a name="NetworkAPI+delete"></a>
 
-### networkAPI.delete(networkId) ⇒ <code>Promise</code>
+### networkAPI.delete(networkDeleteQuery) ⇒ <code>Promise</code>
 Deletes an existing network
 
 **Returns**: <code>Promise</code> - Network  
 
 | Param | Type |
 | --- | --- |
-| networkId | <code>number</code> | 
+| networkDeleteQuery | <code>networkDeleteQuery</code> | 
 
 <a name="PluginAPI"></a>
 
@@ -2280,6 +2282,33 @@ Creates new DeviceTypeListQuery model
 ### deviceTypeListQuery.toObject() ⇒ <code>Object</code>
 Returns instance as a plain JS object
 
+<a name="DeviceTypeDeleteQuery"></a>
+
+## DeviceTypeDeleteQuery
+DeviceTypeDeleteQuery class
+
+
+* [DeviceTypeDeleteQuery](#DeviceTypeDeleteQuery)
+    * [new DeviceTypeDeleteQuery(options)](#new_DeviceTypeDeleteQuery_new)
+    * [.toObject()](#DeviceTypeDeleteQuery+toObject) ⇒ <code>Object</code>
+
+<a name="new_DeviceTypeDeleteQuery_new"></a>
+
+### new DeviceTypeDeleteQuery(options)
+Creates new DeviceTypeDeleteQuery model
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | model options object |
+| options.deviceTypeId | <code>number</code> | Id of device type |
+| options.force | <code>boolean</code> | Flag, if true then it will delete device type with existing devices |
+
+<a name="DeviceTypeDeleteQuery+toObject"></a>
+
+### deviceTypeDeleteQuery.toObject() ⇒ <code>Object</code>
+Returns instance as a plain JS object
+
 <a name="NetworkCountQuery"></a>
 
 ## NetworkCountQuery
@@ -2336,6 +2365,33 @@ Creates new NetworkListQuery model
 <a name="NetworkListQuery+toObject"></a>
 
 ### networkListQuery.toObject() ⇒ <code>Object</code>
+Returns instance as a plain JS object
+
+<a name="NetworkDeleteQuery"></a>
+
+## NetworkDeleteQuery
+NetworkDeleteQuery class
+
+
+* [NetworkDeleteQuery](#NetworkDeleteQuery)
+    * [new NetworkDeleteQuery(options)](#new_NetworkDeleteQuery_new)
+    * [.toObject()](#NetworkDeleteQuery+toObject) ⇒ <code>Object</code>
+
+<a name="new_NetworkDeleteQuery_new"></a>
+
+### new NetworkDeleteQuery(options)
+Creates new NetworkDeleteQuery model
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> | model options object |
+| options.networkId | <code>number</code> | Id of network |
+| options.force | <code>boolean</code> | Flag, if true then it will delete network with existing devices |
+
+<a name="NetworkDeleteQuery+toObject"></a>
+
+### networkDeleteQuery.toObject() ⇒ <code>Object</code>
 Returns instance as a plain JS object
 
 <a name="NotificationListQuery"></a>
