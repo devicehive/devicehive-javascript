@@ -57,7 +57,7 @@ class DeviceTypeAPI extends API {
 
     /**
      * Deletes an existing deviceType
-     * @param {number} deviceTypeId
+     * @param {DeviceTypeDeleteQuery} deviceTypeDeleteQuery
      * @returns {Promise}
      */
     delete(deviceTypeDeleteQuery = new DeviceTypeDeleteQuery()) {

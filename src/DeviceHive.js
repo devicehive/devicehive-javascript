@@ -21,6 +21,7 @@ const Plugin = require(`./models/Plugin`);
 const UserToken = require(`./models/UserToken`);
 const PluginToken = require(`./models/PluginToken`);
 const User = require(`./models/User`);
+const CommandGetQuery = require(`./models/query/CommandGetQuery`);
 const CommandListQuery = require(`./models/query/CommandListQuery`);
 const CommandPollManyQuery = require(`./models/query/CommandPollManyQuery`);
 const CommandPollQuery = require(`./models/query/CommandPollQuery`);
@@ -67,6 +68,7 @@ class DeviceHive extends EventEmitter {
             User: User,
             UserToken: UserToken,
             query: {
+                CommandGetQuery: CommandGetQuery,
                 CommandListQuery: CommandListQuery,
                 CommandPollManyQuery: CommandPollManyQuery,
                 CommandPollQuery: CommandPollQuery,

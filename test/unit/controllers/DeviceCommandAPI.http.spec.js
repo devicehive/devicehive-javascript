@@ -27,6 +27,7 @@ describe('DeviceCommandAPI HTTP', () => {
         mainService = http.createServer((request, res) => {
 
             let body = [];
+            let parsedURL;
             request.on('error', (err) => {
                 console.error(err);
             }).on('data', (chunk) => {
@@ -56,7 +57,7 @@ describe('DeviceCommandAPI HTTP', () => {
 
         deviceHive.connect()
             .then(() => done());
-    })
+    });
 
     after(() => {
         authService.close();
@@ -64,15 +65,17 @@ describe('DeviceCommandAPI HTTP', () => {
     });
 
     it('DeviceCommandAPI.get()', done => {
-
         const deviceId = 1;
         const commandId = 1;
+        const query = { returnUpdatedCommands: 'false' };
+
         deviceHive.command.get(deviceId, commandId);
 
         // sent data
         events.once('request', data => {
             assert.equal(data.method, 'GET', 'Not correct method');
             assert.equal(data.url.pathname, `/device/${deviceId}/command/${commandId}`, 'Not correct URL');
+            assert.deepEqual(data.url.parameters, query, 'Not correct query');
 
             done();
         });

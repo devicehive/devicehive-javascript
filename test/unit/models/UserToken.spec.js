@@ -9,7 +9,8 @@ describe('UserToken', () => {
         actions: ['string'],
         networkIds: ['string'],
         deviceTypeIds: ['string'],
-        expiration: '2018-02-09T10:09:03.033Z'
+        expiration: '2018-02-09T10:09:03.033Z',
+        refreshExpiration: '2019-02-09T10:09:03.033Z'
     };
 
 
