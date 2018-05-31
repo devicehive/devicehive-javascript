@@ -57,7 +57,7 @@ class NetworkAPI extends API {
 
     /**
      * Deletes an existing network
-     * @param {number} networkId
+     * @param {NetworkDeleteQuery} networkDeleteQuery
      * @returns {Promise} Network
      */
     delete(networkDeleteQuery = new NetworkDeleteQuery()) {

@@ -5,6 +5,7 @@ const config = require('../config');
 const DeviceHive = require('../../../index');
 const Device = DeviceHive.models.Device;
 const Command = DeviceHive.models.Command;
+const CommandGetQuery = DeviceHive.models.query.CommandGetQuery;
 const CommandListQuery = DeviceHive.models.query.CommandListQuery;
 const CommandPollQuery = DeviceHive.models.query.CommandPollQuery;
 const CommandPollManyQuery = DeviceHive.models.query.CommandPollManyQuery;
@@ -135,6 +136,11 @@ describe('DeviceCommandAPI', () => {
             .catch(done);
     });
 
+    it(`should not get command with id ${TEST_DEVICE_COMMANDS.HTTP.id} for device with id ${DH_COMMANDS_TEST_DEVICE.id} via HTTP (returnUpdatedCommands = true)`, done => {
+        httpDeviceHive.command.get(DH_COMMANDS_TEST_DEVICE.id, TEST_DEVICE_COMMANDS.HTTP.id, new CommandGetQuery({ returnUpdatedCommands: true }))
+            .catch(() => done());
+    });
+
     it(`should update command with id ${TEST_DEVICE_COMMANDS.HTTP.id} for device with id ${DH_COMMANDS_TEST_DEVICE.id} via HTTP`, done => {
         TEST_DEVICE_COMMANDS.HTTP.status = `status-${randomString.generate()}`;
 
@@ -147,6 +153,15 @@ describe('DeviceCommandAPI', () => {
 
                 done();
             })
+            .catch(done);
+    });
+
+    it(`should get updated command with id ${TEST_DEVICE_COMMANDS.HTTP.id} for device with id ${DH_COMMANDS_TEST_DEVICE.id} via HTTP (returnUpdatedCommands = true)`, done => {
+        httpDeviceHive.command.get(DH_COMMANDS_TEST_DEVICE.id, TEST_DEVICE_COMMANDS.HTTP.id, new CommandGetQuery({ returnUpdatedCommands: true }))
+            .then(command => {
+                assert.equal(command.id, TEST_DEVICE_COMMANDS.HTTP.id);
+            })
+            .then(done)
             .catch(done);
     });
 

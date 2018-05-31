@@ -218,7 +218,6 @@ describe('DeviceTypeAPI', () => {
 
         wsDeviceHive.deviceType.insert(deviceTypeModel)
             .then(({ id }) => {
-                console.log('wow');
                 TEST_DEVICE_TYPES.WS.id = id;
                 TEST_DEVICES.WS.deviceTypeId = id;
             })

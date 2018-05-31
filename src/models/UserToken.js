@@ -15,7 +15,7 @@ class UserToken extends BaseModel {
      * @param {Array} options.deviceTypeIds - Devicetype id's
      * @param {string} options.expiration - Token expiration datetme
      */
-    constructor({ userId, actions, networkIds, deviceTypeIds, expiration } = {}) {
+    constructor({ userId, actions, networkIds, deviceTypeIds, expiration, refreshExpiration } = {}) {
         super();
 
         this.userId = userId;
@@ -23,6 +23,7 @@ class UserToken extends BaseModel {
         this.networkIds = networkIds;
         this.deviceTypeIds = deviceTypeIds;
         this.expiration = expiration;
+        this.refreshExpiration = refreshExpiration;
     }
 
     get userId() {
@@ -65,6 +66,14 @@ class UserToken extends BaseModel {
         this._expiration = value;
     }
 
+    get refreshExpiration() {
+        return this._refreshExpiration;
+    }
+
+    set refreshExpiration(value) {
+        this._refreshExpiration = value;
+    }
+
     /**
      * Returns instance as a plain JS object
      * @returns {Object}
@@ -75,7 +84,8 @@ class UserToken extends BaseModel {
             actions: this.actions,
             networkIds: this.networkIds,
             deviceTypeIds: this.deviceTypeIds,
-            expiration: this.expiration
+            expiration: this.expiration,
+            refreshExpiration: this.refreshExpiration
         }
     }
 }

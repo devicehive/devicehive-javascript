@@ -1,5 +1,6 @@
 const API = require('./API');
 const ApiMap = require(`./transportResolvers/ApiMap`);
+const CommandGetQuery = require('../models/query/CommandGetQuery');
 const CommandListQuery = require('../models/query/CommandListQuery');
 const CommandPollQuery = require('../models/query/CommandPollQuery');
 const CommandPollManyQuery = require('../models/query/CommandPollManyQuery');
@@ -15,10 +16,11 @@ class DeviceCommandAPI extends API {
      * Creates DeviceCommandAPI
      * @param {number} deviceId - Device ID
      * @param {number} commandId - Command ID
+     * @param {CommandGetQuery} commandGetQuery
      * @returns {Promise} selected command
      */
-    get(deviceId, commandId) {
-        return this.send(ApiMap.getCommand, { deviceId: deviceId, commandId: commandId });
+    get(deviceId, commandId, commandGetQuery = new CommandGetQuery()) {
+        return this.send(ApiMap.getCommand, Object.assign({ deviceId: deviceId, commandId: commandId }, commandGetQuery.toObject()));
     }
 
     /**
@@ -71,6 +73,7 @@ class DeviceCommandAPI extends API {
      * Wait for command to be processed
      * @param deviceId
      * @param commandId
+     * @param {CommandWaitQuery} commandWaitQuery
      * @returns {Promise}
      */
     wait(deviceId, commandId, commandWaitQuery = new CommandWaitQuery()) {
