@@ -2,9 +2,20 @@ const EventEmitter = require('events');
 
 
 /**
+ * @event open
  * @event message
+ * @event error
+ * @event reconnected
  */
 class Transport extends EventEmitter {
+
+    static get OPEN_EVENT() { return `open` };
+    static get MESSAGE_EVENT() { return `message` };
+    static get ERROR_EVENT() { return `error` };
+    static get RECONNECTED_EVENT() { return `reconnected` };
+
+    static get RECONNECTION_TIMEOUT_MS() { return 5000; }
+
 
     /**
      * Authenticate transport with token

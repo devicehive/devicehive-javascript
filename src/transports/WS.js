@@ -6,10 +6,22 @@ const WebSocketError = require('../error/WebSocketError');
 
 /**
  * WebSocket Transport
+ * @event open
+ * @event message
+ * @event error
+ * @event reconnected
  */
 class WS extends Transport {
 
     static get TYPE() { return `ws`; }
+
+    static get OPEN_EVENT() { return `open` };
+    static get MESSAGE_EVENT() { return `message` };
+    static get ERROR_EVENT() { return `error` };
+    static get CLOSE_EVENT() { return `close` };
+
+    static get ERROR_CONNECTION_RESET_CODE() { return `ECONNRESET`; }
+    static get ERROR_CONNECTION_REFUSED_CODE() { return `ECONNREFUSED`; }
 
 
     /**
@@ -19,29 +31,71 @@ class WS extends Transport {
     constructor({ mainServiceURL }) {
         super();
 
-        this.type = WS.TYPE;
-        this.isOpend = false;
-        this.socket = new WebSocket(mainServiceURL);
+        const me = this;
 
-        this.socket.addEventListener('message', event => {
+        me.type = WS.TYPE;
+        me.mainServiceURL = mainServiceURL;
+        me.isOpend = false;
+        me.isReconnecting = false;
+
+        me._open();
+    }
+
+    /**
+     * Opens WS connection
+     * @private
+     */
+    _open() {
+        const me = this;
+
+        me.socket = new WebSocket(this.mainServiceURL);
+
+        me.socket.addEventListener(WS.MESSAGE_EVENT, event => {
             try {
                 const messageData = JSON.parse(event.data);
 
                 if (messageData.requestId) {
-                    this.emit(messageData.requestId, messageData);
+                    me.emit(messageData.requestId, messageData);
                 } else {
-                    this.emit('message', messageData);
+                    me.emit(Transport.MESSAGE_EVENT, messageData);
                 }
             } catch (error) {
                 console.warn(error);
             }
         });
 
-        this.socket.addEventListener('error', error => {
-            this.emit('error', new WebSocketError(error));
+        me.socket.addEventListener(WS.ERROR_EVENT, (error) => {
+            me.isReconnecting = false;
+
+            switch (error.code){
+                case WS.ERROR_CONNECTION_RESET_CODE:
+                case WS.ERROR_CONNECTION_REFUSED_CODE:
+                    me._reconnect();
+                    break;
+                default:
+                    me.emit(Transport.ERROR_EVENT, new WebSocketError(error));
+                    break;
+            }
+
+            console.log(error);
         });
 
-        this.socket.addEventListener('open', () => this.isOpend = true);
+        me.socket.addEventListener(WS.OPEN_EVENT, () => {
+            if (me.isReconnecting === true) {
+                me.isReconnecting = false;
+
+                me.emit(Transport.RECONNECTED_EVENT);
+            } else {
+                me.emit(Transport.OPEN_EVENT);
+            }
+
+            me.isOpend = true;
+        });
+
+        me.socket.addEventListener(WS.CLOSE_EVENT, () => {
+            console.log(`closed`);
+            me.isOpend = false;
+        });
     }
 
     /**
@@ -49,27 +103,17 @@ class WS extends Transport {
      * @returns {Promise} when socket opened
      */
     _getSocket() {
+        const me = this;
+
         return new Promise(resolve => {
-            if (this.isOpend === true) {
-                resolve(this.socket);
+            if (me.isOpend === true) {
+                resolve(me.socket);
             } else {
-                this.socket.addEventListener('open', () => {
-                    this.isOpend = true;
-                    resolve(this.socket);
+                me.socket.addEventListener(WS.OPEN_EVENT, () => {
+                    me.isOpend = true;
+                    resolve(me.socket);
                 });
             }
-        });
-    }
-
-    /**
-     * TODO
-     * Authenticate transport
-     * @param {String} token - Auth token
-     */
-    authenticate(token) {
-        this.send({
-            action: `authenticate`,
-            token: token
         });
     }
 
@@ -77,26 +121,42 @@ class WS extends Transport {
      * WebSocket API send method
      */
     send(params) {
-        return this._getSocket()
+        const me = this;
+
+        return me._getSocket()
             .then(() => {
                 const { requestId = Utils.randomString() } = params;
 
                 params.requestId = requestId;
 
                 return new Promise((resolve) => {
-                    this.socket.send(JSON.stringify(params));
+                    me.socket.send(JSON.stringify(params));
 
                     const listener = messageData => {
                         if (messageData.requestId === requestId) {
-                            this.removeListener(params.requestId, listener);
+                            me.removeListener(params.requestId, listener);
 
                             resolve(messageData);
                         }
                     };
 
-                    this.addListener(params.requestId, listener);
+                    me.addListener(params.requestId, listener);
                 });
             });
+    }
+
+    /**
+     * Reconnection routine
+     * @private
+     */
+    _reconnect() {
+        const me = this;
+
+        me.isOpend = false;
+        me.isReconnecting = true;
+        me.ws.removeAllListeners();
+
+        setTimeout(() => me._open(), Transport.RECONNECTION_TIMEOUT_MS);
     }
 
     /**
@@ -106,6 +166,16 @@ class WS extends Transport {
         const me = this;
 
         me.socket.close();
+    }
+
+    /**
+     * Authenticate transport
+     * @param {String} token - Auth token
+     */
+    authenticate(token) {
+        const me = this;
+
+        me.send({ action: `authenticate`, token: token });
     }
 }
 

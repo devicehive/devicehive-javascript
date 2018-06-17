@@ -21,11 +21,11 @@
     "query-string": "^5.1.1",
     "randomstring": "^1.1.5",
     "string-template": "^1.0.0",
-    "universal-websocket-client": "^1.0.1"
+    "universal-websocket-client": "^1.0.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.0.0-beta.49",
-    "@babel/preset-env": "^7.0.0-beta.49",
+    "@babel/core": "^7.0.0-beta.51",
+    "@babel/preset-env": "^7.0.0-beta.51",
     "babel-core": "^6.26.3",
     "babel-loader": "^8.0.0-beta.3",
     "babelify": "^8.0.0",
@@ -33,7 +33,7 @@
     "chai": "^4.1.2",
     "exorcist": "^1.0.1",
     "mocha": "^5.2.0",
-    "tinyify": "^2.4.1",
+    "tinyify": "^2.4.3",
     "ws": "^4.1.0"
   }
 }

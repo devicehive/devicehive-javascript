@@ -2,6 +2,7 @@ const EventEmitter = require('events');
 const HTTP = require('./transports/HTTP');
 const WS = require('./transports/WS');
 const API = require(`./controllers/API`);
+const ApiMap = require(`./controllers/transportResolvers/ApiMap`);
 const Utils = require('./utils/Utils');
 const UnsupportedTransportError = require('./error/UnsupportedTransportError');
 
@@ -40,6 +41,7 @@ class ApiStrategy extends EventEmitter {
 
         const me = this;
 
+        me.subscriptionMap = new Map();
         me.reconnectionHandler = null;
 
         me.urlsMap = new Map();
@@ -63,6 +65,12 @@ class ApiStrategy extends EventEmitter {
                     }
                     break;
             }
+        });
+
+        me.strategy.on(`reconnected`, () => {
+            console.log(`reconnected`);
+
+            me.subscriptionMap.forEach(({ key, parameters, body }) => me.send(key, parameters, body));
         });
     }
 
@@ -98,7 +106,17 @@ class ApiStrategy extends EventEmitter {
         }
 
         return me.strategy.send(sendData)
-            .then((response) => API.normalizeResponse(me.strategy.type, key, response))
+            .then((response) => {
+                const normalizedResponse = API.normalizeResponse(me.strategy.type, key, response);
+
+                if (me._isSubscriptionRequest(key)) {
+                    me._handleSubscriptionRequest(normalizedResponse.subscriptionId, key, parameters, body);
+                } else if (me._isUnsubscriptionRequest(key)) {
+                    me._handleUnsubscriptionRequest(parameters.subscriptionId);
+                }
+
+                return normalizedResponse;
+            })
             .catch(error => {
                 if (error === Utils.TOKEN_EXPIRED_MARK && me.reconnectionHandler) {
                     return me.reconnectionHandler()
@@ -117,6 +135,49 @@ class ApiStrategy extends EventEmitter {
         const me = this;
 
         me.strategy.disconnect();
+    }
+
+    /**
+     *
+     * @param key
+     * @private
+     */
+    _isSubscriptionRequest(key) {
+        return key === ApiMap.subscribeNotification || key === ApiMap.subscribeCommand;
+    }
+
+    /**
+     *
+     * @param key
+     * @private
+     */
+    _isUnsubscriptionRequest(key) {
+        return key === ApiMap.unsubscribeNotification || key === ApiMap.unsubscribeCommand;
+    }
+
+    /**
+     *
+     * @param subscriptionId
+     * @param key
+     * @param parameters
+     * @param body
+     * @private
+     */
+    _handleSubscriptionRequest(subscriptionId, key, parameters, body) {
+        const me = this;
+
+        me.subscriptionMap.set(subscriptionId, { key, parameters, body });
+    }
+
+    /**
+     *
+     * @param subscriptionId
+     * @private
+     */
+    _handleUnsubscriptionRequest(subscriptionId) {
+        const me = this;
+
+        me.subscriptionMap.delete(subscriptionId);
     }
 }
 

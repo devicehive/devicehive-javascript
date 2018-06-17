@@ -100,10 +100,10 @@ class DeviceHive extends EventEmitter {
      * @param {string} [options.accessToken] - Access token
      * @param {string} [options.refreshToken] - Refresh token
      * @param {string} [options.login] - Login
-     * @param {string} [options.password] - Paaword
+     * @param {string} [options.password] - Password
      * @param {string} options.mainServiceURL - Main Service URL
      * @param {string} [options.authServiceURL] - Auth Service URL (required only for http)
-     * @param {string} [options.pluginServiceURL] - Alug inServi ceURL (required only for http)
+     * @param {string} [options.pluginServiceURL] - Plugin Service URL (required only for http)
      */
     constructor({ mainServiceURL, authServiceURL, pluginServiceURL, accessToken, refreshToken, login, password, autoUpdateSession = true }) {
         super();

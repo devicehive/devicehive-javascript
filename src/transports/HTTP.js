@@ -30,7 +30,9 @@ class HTTP extends Transport {
      */
     authenticate(token) {
         const me = this;
+
         me.token = token;
+
         return Promise.resolve();
     }
 
@@ -92,7 +94,7 @@ class HTTP extends Transport {
                         poll(endpoint, method, body)
                     }
                 })
-                .catch((error) => console.warn(error));
+                .catch(() => poll(endpoint, method, body));
         }
 
         /**
