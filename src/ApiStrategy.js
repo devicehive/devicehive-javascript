@@ -19,17 +19,31 @@ class ApiStrategy extends EventEmitter {
      * @returns Transport Class
      */
     static getType(url) {
-        let result;
-
         if (url.startsWith(HTTP.TYPE)) {
-            result = HTTP;
+            return HTTP;
         } else if (url.startsWith(WS.TYPE)) {
-            result = WS;
+            return WS;
         } else {
             throw new UnsupportedTransportError();
         }
+    }
 
-        return result;
+    /**
+     *
+     * @param key
+     * @private
+     */
+    static _isSubscription(key) {
+        return key === ApiMap.subscribeNotification || key === ApiMap.subscribeCommand;
+    }
+
+    /**
+     *
+     * @param key
+     * @private
+     */
+    static _isUnsubscription(key) {
+        return key === ApiMap.unsubscribeNotification || key === ApiMap.unsubscribeCommand;
     }
 
     /**
@@ -42,7 +56,9 @@ class ApiStrategy extends EventEmitter {
         const me = this;
 
         me.subscriptionMap = new Map();
+        me.subscriptionIdsMap = new Map();
         me.reconnectionHandler = null;
+        me.reAuthorizationHandler = null;
 
         me.urlsMap = new Map();
 
@@ -68,10 +84,20 @@ class ApiStrategy extends EventEmitter {
         });
 
         me.strategy.on(`reconnected`, () => {
-            console.log(`reconnected`);
+            if (me.reAuthorizationHandler) {
+                const subscriptionKeys = Array.from(me.subscriptionMap.keys());
+                const subscriptionValues = Array.from(me.subscriptionMap.values());
 
-            me.subscriptionMap.forEach(({ key, parameters, body }) => me.send(key, parameters, body));
+                me.reAuthorizationHandler()
+                    .then(() => Promise.all(subscriptionValues
+                        .map(({ key, parameters, body }) => me.send(key, parameters, body))))
+                    .then(() => subscriptionKeys
+                        .forEach((subscriptionId) => me.subscriptionMap.delete(subscriptionId)))
+                    .catch((error) => me.emit(`error`, error));
+            }
         });
+
+        me.strategy.on(`error`, (error) => me.emit(`error`, error));
     }
 
 
@@ -82,6 +108,8 @@ class ApiStrategy extends EventEmitter {
      */
     authorize(accessToken) {
         const me = this;
+
+        me.reAuthorizationHandler = () => me.strategy.authenticate(accessToken);
 
         return me.strategy.authenticate(accessToken);
     }
@@ -94,6 +122,23 @@ class ApiStrategy extends EventEmitter {
      */
     send(key, parameters, body) {
         const me = this;
+        const isSubscription = ApiStrategy._isSubscription(key);
+        const isUnsubscription = ApiStrategy._isUnsubscription(key);
+        let externalSubscriptionId, internalSubscriptionId;
+
+        if (isSubscription) {
+            me.subscriptionMap.forEach((subscriptionArguments, subscriptionId) => {
+                if (subscriptionArguments.key === key &&
+                    subscriptionArguments.parameters === parameters &&
+                    subscriptionArguments.body === body) {
+                    internalSubscriptionId = subscriptionId;
+                }
+            });
+        } else if (isUnsubscription) {
+            externalSubscriptionId = parameters.subscriptionId;
+            parameters.subscriptionId = me.subscriptionIdsMap.get(externalSubscriptionId);
+        }
+
         const sendData = API.build(me.strategy.type, key, parameters, body);
 
         switch (me.strategy.type) {
@@ -105,23 +150,41 @@ class ApiStrategy extends EventEmitter {
                 break;
         }
 
-        return me.strategy.send(sendData)
-            .then((response) => {
-                const normalizedResponse = API.normalizeResponse(me.strategy.type, key, response);
+        function handleResponse(response) {
+            let normalizedResponse = API.normalizeResponse(me.strategy.type, key, response);
 
-                if (me._isSubscriptionRequest(key)) {
-                    me._handleSubscriptionRequest(normalizedResponse.subscriptionId, key, parameters, body);
-                } else if (me._isUnsubscriptionRequest(key)) {
-                    me._handleUnsubscriptionRequest(parameters.subscriptionId);
+            if (isSubscription) {
+                let newExternalSubscriptionId;
+
+                if (internalSubscriptionId) {
+                    me.subscriptionIdsMap.forEach((internalSubId, externalSubId) => {
+                        if (internalSubscriptionId === internalSubId) {
+                            newExternalSubscriptionId = externalSubId;
+                        }
+                    });
+                } else {
+                    newExternalSubscriptionId = Utils.randomString();
                 }
 
-                return normalizedResponse;
-            })
+                me.subscriptionMap.set(normalizedResponse.subscriptionId, { key, parameters, body });
+                me.subscriptionIdsMap.set(newExternalSubscriptionId, normalizedResponse.subscriptionId);
+                normalizedResponse = { subscriptionId: newExternalSubscriptionId };
+            } else if (isUnsubscription) {
+                me.subscriptionMap.delete(parameters.subscriptionId);
+                me.subscriptionIdsMap.delete(externalSubscriptionId);
+            }
+
+            return normalizedResponse;
+        }
+
+        return me.strategy.send(sendData)
+            .then(handleResponse)
             .catch(error => {
                 if (error === Utils.TOKEN_EXPIRED_MARK && me.reconnectionHandler) {
                     return me.reconnectionHandler()
                         .then(() => me.strategy.send(sendData))
-                        .then((response) => API.normalizeResponse(me.strategy.type, key, response));
+                        .then(handleResponse)
+                        .catch((reconnectionError) => { throw reconnectionError });
                 } else {
                     throw error;
                 }
@@ -135,49 +198,6 @@ class ApiStrategy extends EventEmitter {
         const me = this;
 
         me.strategy.disconnect();
-    }
-
-    /**
-     *
-     * @param key
-     * @private
-     */
-    _isSubscriptionRequest(key) {
-        return key === ApiMap.subscribeNotification || key === ApiMap.subscribeCommand;
-    }
-
-    /**
-     *
-     * @param key
-     * @private
-     */
-    _isUnsubscriptionRequest(key) {
-        return key === ApiMap.unsubscribeNotification || key === ApiMap.unsubscribeCommand;
-    }
-
-    /**
-     *
-     * @param subscriptionId
-     * @param key
-     * @param parameters
-     * @param body
-     * @private
-     */
-    _handleSubscriptionRequest(subscriptionId, key, parameters, body) {
-        const me = this;
-
-        me.subscriptionMap.set(subscriptionId, { key, parameters, body });
-    }
-
-    /**
-     *
-     * @param subscriptionId
-     * @private
-     */
-    _handleUnsubscriptionRequest(subscriptionId) {
-        const me = this;
-
-        me.subscriptionMap.delete(subscriptionId);
     }
 }
 

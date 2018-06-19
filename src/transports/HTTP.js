@@ -39,7 +39,7 @@ class HTTP extends Transport {
     /**
      * Rest API send method
      */
-    send({ endpoint, method, body, subscription, unsubscription, noAuth }) {
+    send({ endpoint, method, body, subscription, unsubscription, noAuth, polling=false }) {
         const me = this;
 
         if (subscription === true) {
@@ -59,15 +59,18 @@ class HTTP extends Transport {
                 longPollingHandler.stop();
                 me.subscriptionMap.delete(subscriptionId);
 
-                return Promise.resolve({ status: `success` })
+                return Promise.resolve({ status: `success` });
             } else {
-                return Promise.resolve({ status: `No such subscription` })
+                return Promise.resolve({ status: `No such subscription` });
             }
         } else {
             return fetch(endpoint, { headers: me._getHeaders(noAuth), method: method, body: JSON.stringify(body) })
                 .then(response => response.text())
-                .then(responseText => {
-                    return responseText ? JSON.parse(responseText) : responseText
+                .then(responseText => responseText ? JSON.parse(responseText) : responseText)
+                .catch(error => {
+                    if (!polling) {
+                        me.emit(Transport.ERROR_EVENT, error);
+                    }
                 });
         }
     }
@@ -87,14 +90,17 @@ class HTTP extends Transport {
          * Poll notifications
          */
         function poll () {
-            me.send({ endpoint, method, body })
+            me.send({ endpoint, method, body, polling: true })
                 .then((messageList) => {
                     if (!stopped) {
-                        messageList.forEach((message) => me.emit(`message`, message));
-                        poll(endpoint, method, body)
+                        if (messageList && messageList.length) {
+                            messageList.forEach((message) => me.emit(Transport.MESSAGE_EVENT, message));
+                        }
+
+                        poll(endpoint, method, body);
                     }
                 })
-                .catch(() => poll(endpoint, method, body));
+                .catch((error) => me.emit(Transport.ERROR_EVENT, error));
         }
 
         /**

@@ -15,10 +15,10 @@ class WS extends Transport {
 
     static get TYPE() { return `ws`; }
 
-    static get OPEN_EVENT() { return `open` };
-    static get MESSAGE_EVENT() { return `message` };
-    static get ERROR_EVENT() { return `error` };
-    static get CLOSE_EVENT() { return `close` };
+    static get OPEN_EVENT() { return `open`; }
+    static get MESSAGE_EVENT() { return `message`; }
+    static get ERROR_EVENT() { return `error`; }
+    static get CLOSE_EVENT() { return `close`; }
 
     static get ERROR_CONNECTION_RESET_CODE() { return `ECONNRESET`; }
     static get ERROR_CONNECTION_REFUSED_CODE() { return `ECONNREFUSED`; }
@@ -76,11 +76,11 @@ class WS extends Transport {
                     me.emit(Transport.ERROR_EVENT, new WebSocketError(error));
                     break;
             }
-
-            console.log(error);
         });
 
         me.socket.addEventListener(WS.OPEN_EVENT, () => {
+            me.isOpend = true;
+
             if (me.isReconnecting === true) {
                 me.isReconnecting = false;
 
@@ -88,14 +88,9 @@ class WS extends Transport {
             } else {
                 me.emit(Transport.OPEN_EVENT);
             }
-
-            me.isOpend = true;
         });
 
-        me.socket.addEventListener(WS.CLOSE_EVENT, () => {
-            console.log(`closed`);
-            me.isOpend = false;
-        });
+        me.socket.addEventListener(WS.CLOSE_EVENT, () => me.isOpend = false);
     }
 
     /**
@@ -105,9 +100,11 @@ class WS extends Transport {
     _getSocket() {
         const me = this;
 
-        return new Promise(resolve => {
+        return new Promise((resolve, reject) => {
             if (me.isOpend === true) {
                 resolve(me.socket);
+            } else if (me.isReconnecting === true) {
+                reject(new Error(`WebSocket is reconnecting`));
             } else {
                 me.socket.addEventListener(WS.OPEN_EVENT, () => {
                     me.isOpend = true;
@@ -154,7 +151,7 @@ class WS extends Transport {
 
         me.isOpend = false;
         me.isReconnecting = true;
-        me.ws.removeAllListeners();
+        me.socket.removeAllListeners();
 
         setTimeout(() => me._open(), Transport.RECONNECTION_TIMEOUT_MS);
     }
@@ -171,11 +168,12 @@ class WS extends Transport {
     /**
      * Authenticate transport
      * @param {String} token - Auth token
+     * @returns {*}
      */
     authenticate(token) {
         const me = this;
 
-        me.send({ action: `authenticate`, token: token });
+        return me.send({ action: `authenticate`, token: token });
     }
 }
 

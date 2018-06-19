@@ -96,7 +96,7 @@
     "sort-imports" : "error",
     "arrow-spacing" : "error",
     "no-class-assign" : "error",
-    "no-confusing-arrow" : "error",
+    "no-confusing-arrow" : "warn",
     "no-dupe-class-members" : "error",
     "no-duplicate-imports" : "error",
     "no-this-before-super" : "error",
