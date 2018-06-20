@@ -1,4 +1,5 @@
 const EventEmitter = require('events');
+const Transport = require('./transports/base/Transport');
 const HTTP = require('./transports/HTTP');
 const WS = require('./transports/WS');
 const API = require(`./controllers/API`);
@@ -8,17 +9,21 @@ const UnsupportedTransportError = require('./error/UnsupportedTransportError');
 
 
 /**
- * ApiStrategy
- * @event onMessage
+ * ApiStrategy. This class handles all transport specific moments
+ * @event message
+ * @event error
 */
 class ApiStrategy extends EventEmitter {
 
+    static get MESSAGE_EVENT() { return Transport.MESSAGE_EVENT; }
+    static get ERROR_EVENT() { return Transport.ERROR_EVENT; }
+
     /**
-     * 
+     * Returns transport by url
      * @param url
      * @returns Transport Class
      */
-    static getType(url) {
+    static getTransport(url) {
         if (url.startsWith(HTTP.TYPE)) {
             return HTTP;
         } else if (url.startsWith(WS.TYPE)) {
@@ -28,23 +33,6 @@ class ApiStrategy extends EventEmitter {
         }
     }
 
-    /**
-     *
-     * @param key
-     * @private
-     */
-    static _isSubscription(key) {
-        return key === ApiMap.subscribeNotification || key === ApiMap.subscribeCommand;
-    }
-
-    /**
-     *
-     * @param key
-     * @private
-     */
-    static _isUnsubscription(key) {
-        return key === ApiMap.unsubscribeNotification || key === ApiMap.unsubscribeCommand;
-    }
 
     /**
      * Creates ApiStrategy
@@ -66,24 +54,26 @@ class ApiStrategy extends EventEmitter {
         me.urlsMap.set(API.AUTH_BASE, authServiceURL);
         me.urlsMap.set(API.PLUGIN_BASE, pluginServiceURL);
 
-        me.strategy = new (ApiStrategy.getType(mainServiceURL))({ mainServiceURL, authServiceURL, pluginServiceURL });
+        me.transport = new (ApiStrategy.getTransport(mainServiceURL))({ url: mainServiceURL });
 
-        me.strategy.on(`message`, (message) => {
-            switch (me.strategy.type) {
+        me._initTransportSpecificFunctionality();
+
+        me.transport.on(Transport.MESSAGE_EVENT, (message) => {
+            switch (me.transport.type) {
                 case HTTP.TYPE:
-                    me.emit(`message`, message);
+                    me.emit(ApiStrategy.MESSAGE_EVENT, message);
                     break;
                 case WS.TYPE:
                     if (message.subscriptionId && message.action) {
-                        me.emit(`message`, message[message.action.split(`/`)[0]]);
+                        me.emit(ApiStrategy.MESSAGE_EVENT, message[message.action.split(`/`)[0]]);
                     } else {
-                        me.emit(`message`, message);
+                        me.emit(ApiStrategy.MESSAGE_EVENT, message);
                     }
                     break;
             }
         });
 
-        me.strategy.on(`reconnected`, () => {
+        me.transport.on(Transport.RECONNECTED_EVENT, () => {
             if (me.reAuthorizationHandler) {
                 const subscriptionKeys = Array.from(me.subscriptionMap.keys());
                 const subscriptionValues = Array.from(me.subscriptionMap.values());
@@ -93,37 +83,70 @@ class ApiStrategy extends EventEmitter {
                         .map(({ key, parameters, body }) => me.send(key, parameters, body))))
                     .then(() => subscriptionKeys
                         .forEach((subscriptionId) => me.subscriptionMap.delete(subscriptionId)))
-                    .catch((error) => me.emit(`error`, error));
+                    .catch((error) => me.emit(ApiStrategy.ERROR_EVENT, error));
             }
         });
 
-        me.strategy.on(`error`, (error) => me.emit(`error`, error));
+        me.transport.on(Transport.ERROR_EVENT, (error) => me.emit(ApiStrategy.ERROR_EVENT, error));
     }
 
+    get reconnectionAttempts() {
+        const me = this;
+
+        return me.transport.reconnectionAttempts;
+    }
+
+    set reconnectionAttempts(value) {
+        const me = this;
+
+        me.transport.reconnectionAttempts = value;
+    }
+
+    get reconnectionInterval() {
+        const me = this;
+
+        return me.transport.reconnectionInterval;
+    }
+
+    set reconnectionInterval(value) {
+        const me = this;
+
+        me.transport.reconnectionInterval = value;
+    }
 
     /**
-     *
+     * Connect transport
+     * @returns {Promise<any>}
+     */
+    connect() {
+        const me = this;
+
+        return me.transport.connect();
+    }
+
+    /**
+     * Authorize transport
      * @param accessToken
      * @returns {Promise}
      */
     authorize(accessToken) {
         const me = this;
 
-        me.reAuthorizationHandler = () => me.strategy.authenticate(accessToken);
+        me.reAuthorizationHandler = () => me.transport.authenticate(accessToken);
 
-        return me.strategy.authenticate(accessToken);
+        return me.transport.authenticate(accessToken);
     }
 
     /**
-     *
+     * Send message via transport
      * @param key
      * @param parameters
      * @param body
      */
     send(key, parameters, body) {
         const me = this;
-        const isSubscription = ApiStrategy._isSubscription(key);
-        const isUnsubscription = ApiStrategy._isUnsubscription(key);
+        const isSubscription = ApiMap.isSubscription(key);
+        const isUnsubscription = ApiMap.isUnsubscription(key);
         let externalSubscriptionId, internalSubscriptionId;
 
         if (isSubscription) {
@@ -139,9 +162,9 @@ class ApiStrategy extends EventEmitter {
             parameters.subscriptionId = me.subscriptionIdsMap.get(externalSubscriptionId);
         }
 
-        const sendData = API.build(me.strategy.type, key, parameters, body);
+        const sendData = API.build(me.transport.type, key, parameters, body);
 
-        switch (me.strategy.type) {
+        switch (me.transport.type) {
             case HTTP.TYPE:
                 sendData.endpoint = `${me.urlsMap.get(sendData.base)}${sendData.endpoint}`;
                 break;
@@ -151,7 +174,7 @@ class ApiStrategy extends EventEmitter {
         }
 
         function handleResponse(response) {
-            let normalizedResponse = API.normalizeResponse(me.strategy.type, key, response);
+            let normalizedResponse = API.normalizeResponse(me.transport.type, key, response);
 
             if (isSubscription) {
                 let newExternalSubscriptionId;
@@ -177,12 +200,12 @@ class ApiStrategy extends EventEmitter {
             return normalizedResponse;
         }
 
-        return me.strategy.send(sendData)
+        return me.transport.send(sendData)
             .then(handleResponse)
             .catch(error => {
                 if (error === Utils.TOKEN_EXPIRED_MARK && me.reconnectionHandler) {
                     return me.reconnectionHandler()
-                        .then(() => me.strategy.send(sendData))
+                        .then(() => me.transport.send(sendData))
                         .then(handleResponse)
                         .catch((reconnectionError) => { throw reconnectionError });
                 } else {
@@ -197,7 +220,21 @@ class ApiStrategy extends EventEmitter {
     disconnect() {
         const me = this;
 
-        me.strategy.disconnect();
+        me.transport.disconnect();
+    }
+
+    /**
+     * Initialize all transport specific functionality
+     * @private
+     */
+    _initTransportSpecificFunctionality() {
+        const me = this;
+
+        switch (me.transport.type) {
+            case HTTP.TYPE:
+                me.transport.initPingParameters(`${me.urlsMap.get(API.MAIN_BASE)}/info`, HTTP.GET_METHOD);
+                break;
+        }
     }
 }
 

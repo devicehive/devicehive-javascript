@@ -95,6 +95,21 @@ class ApiMap {
     static get AUTH_BASE() { return `auth`; }
     static get PLUGIN_BASE() { return `plugin`; }
 
+    /**
+     *
+     * @param key
+     */
+    static isSubscription(key) {
+        return key === ApiMap.subscribeNotification || key === ApiMap.subscribeCommand;
+    }
+
+    /**
+     *
+     * @param key
+     */
+    static isUnsubscription(key) {
+        return key === ApiMap.unsubscribeNotification || key === ApiMap.unsubscribeCommand;
+    }
 
     /**
      *

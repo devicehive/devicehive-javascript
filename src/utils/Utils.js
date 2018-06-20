@@ -47,6 +47,20 @@ class Utils {
             deviceTypeIds: tokenPayload.dt
         });
     }
+
+    /**
+     * Checks for value is not undefined and not null
+     * @param value
+     * @returns {boolean}
+     */
+    static isDefined(value) {
+        return !(typeof value === 'undefined' || value === null);
+    }
+
+    /**
+     * Empty function
+     */
+    static emptyFn() {}
 }
 
 
