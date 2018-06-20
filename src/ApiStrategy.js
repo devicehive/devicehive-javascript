@@ -45,6 +45,7 @@ class ApiStrategy extends EventEmitter {
 
         me.subscriptionMap = new Map();
         me.subscriptionIdsMap = new Map();
+        me.subscriptionLastTimestampMap = new Map();
         me.reconnectionHandler = null;
         me.reAuthorizationHandler = null;
 
@@ -61,11 +62,27 @@ class ApiStrategy extends EventEmitter {
         me.transport.on(Transport.MESSAGE_EVENT, (message) => {
             switch (me.transport.type) {
                 case HTTP.TYPE:
+                    if (message.subscriptionId) {
+                        message.subscriptionId = me._internalSubscriptionIdToExternal(message.subscriptionId);
+                    }
+
+                    if (message.subscriptionId && message.timestamp) {
+                        me.subscriptionLastTimestampMap.set(message.subscriptionId, message.timestamp)
+                    }
+
                     me.emit(ApiStrategy.MESSAGE_EVENT, message);
                     break;
                 case WS.TYPE:
                     if (message.subscriptionId && message.action) {
-                        me.emit(ApiStrategy.MESSAGE_EVENT, message[message.action.split(`/`)[0]]);
+                        const messageData = message[message.action.split(`/`).shift()];
+
+                        messageData.subscriptionId = me._internalSubscriptionIdToExternal(message.subscriptionId);
+
+                        if (messageData.timestamp) {
+                            me.subscriptionLastTimestampMap.set(messageData.subscriptionId, messageData.timestamp)
+                        }
+
+                        me.emit(ApiStrategy.MESSAGE_EVENT, messageData);
                     } else {
                         me.emit(ApiStrategy.MESSAGE_EVENT, message);
                     }
@@ -154,7 +171,9 @@ class ApiStrategy extends EventEmitter {
                 if (subscriptionArguments.key === key &&
                     subscriptionArguments.parameters === parameters &&
                     subscriptionArguments.body === body) {
+                    externalSubscriptionId = me._internalSubscriptionIdToExternal(subscriptionId);
                     internalSubscriptionId = subscriptionId;
+                    parameters.timestamp = me.subscriptionLastTimestampMap.get(externalSubscriptionId);
                 }
             });
         } else if (isUnsubscription) {
@@ -235,6 +254,37 @@ class ApiStrategy extends EventEmitter {
                 me.transport.initPingParameters(`${me.urlsMap.get(API.MAIN_BASE)}/info`, HTTP.GET_METHOD);
                 break;
         }
+    }
+
+    /**
+     *
+     * @param subscriptionId
+     * @returns {*}
+     * @private
+     */
+    _externalSubscriptionIdToInternal(subscriptionId) {
+        const me = this;
+
+        return me.subscriptionIdsMap.get(subscriptionId) || subscriptionId;
+    }
+
+    /**
+     *
+     * @param subscriptionId
+     * @returns {*}
+     * @private
+     */
+    _internalSubscriptionIdToExternal(subscriptionId){
+        const me = this;
+        let result = subscriptionId;
+
+        me.subscriptionIdsMap.forEach((internalSubId, externalSubId) => {
+           if (internalSubId === subscriptionId) {
+               result = externalSubId;
+           }
+        });
+
+        return result;
     }
 }
 

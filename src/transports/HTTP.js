@@ -2,7 +2,7 @@ require('isomorphic-fetch');
 const Transport = require(`./base/Transport`);
 const Utils = require('../utils/Utils');
 const ReconnectionAttemptFailedError = require('../error/ReconnectionAttemptFailedError');
-
+const { URL } = require(`url`);
 
 /**
  * HTTP Transport class
@@ -73,7 +73,7 @@ class HTTP extends Transport {
 
         if (subscription === true) {
             const subscriptionId = Utils.randomString();
-            const longPollingHandler = me._initLongPolling(endpoint, method, body);
+            const longPollingHandler = me._initLongPolling(subscriptionId, endpoint, method, body);
 
             longPollingHandler.poll();
 
@@ -139,27 +139,40 @@ class HTTP extends Transport {
 
     /**
      * Initialize polling functionality
+     * @param subscriptionId
      * @param endpoint
      * @param method
      * @param body
      * @returns {{poll: poll, stop: stop}}
      */
-    _initLongPolling(endpoint, method, body) {
+    _initLongPolling(subscriptionId, endpoint, method, body) {
         const me = this;
         let stopped = false;
+        const parsedEndpoint = new URL(endpoint);
 
         /**
          * Poll notifications
          */
         function poll () {
-            me.send({ endpoint, method, body, polling: true })
+            me.send({ endpoint: parsedEndpoint.href, method, body, polling: true })
                 .then((messageList) => {
                     if (!stopped) {
                         if (messageList && messageList.length) {
-                            messageList.forEach((message) => me.emit(Transport.MESSAGE_EVENT, message));
+                            let latestTimestamp;
+
+                            messageList.forEach((message) => {
+                                message.subscriptionId = subscriptionId;
+                                me.emit(Transport.MESSAGE_EVENT, message);
+
+                                latestTimestamp = Utils.getLatestTimestamp(message.timestamp, latestTimestamp);
+                            });
+
+                            if (latestTimestamp) {
+                                parsedEndpoint.searchParams.set(`timestamp`, latestTimestamp);
+                            }
                         }
 
-                        poll(endpoint, method, body);
+                        poll();
                     }
                 })
                 .catch((error) => me.emit(Transport.ERROR_EVENT, error));

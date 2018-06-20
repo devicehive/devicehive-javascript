@@ -61,6 +61,19 @@ class Utils {
      * Empty function
      */
     static emptyFn() {}
+
+    /**
+     * Returns latest timestamp
+     * @param ts1
+     * @param ts2
+     * @returns {*}
+     */
+    static getLatestTimestamp(ts1, ts2) {
+        if (!ts1) { return ts2; }
+        else if (!ts2) { return ts1; }
+
+        return new Date(ts1).getTime() > new Date(ts2).getTime() ? ts1 : ts2;
+    }
 }
 
 
