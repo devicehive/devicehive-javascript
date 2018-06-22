@@ -14,7 +14,6 @@ class HttpApiResolver {
      * @returns {string}
      */
     static buildUrl(base, parameters = {}) {
-        // console.log(base, parameters);
         const pathRegex = /[^{}]+(?=\})/g;
         const pathParameterKeys = pathRegex.test(base) ? base.match(pathRegex) : [];
         const pathParameters = {};

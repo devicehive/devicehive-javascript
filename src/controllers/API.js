@@ -6,9 +6,6 @@ const ApiMap = require(`./transportResolvers/ApiMap`);
  */
 class API {
 
-    static get HTTP_API() { return ApiMap.HTTP_API; }
-    static get WS_API() { return ApiMap.WS_API; }
-
     static get MAIN_BASE() { return ApiMap.MAIN_BASE; }
     static get AUTH_BASE() { return ApiMap.AUTH_BASE; }
     static get PLUGIN_BASE() { return ApiMap.PLUGIN_BASE; }

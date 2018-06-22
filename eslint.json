@@ -1,6 +1,6 @@
 {
   "parserOptions" : {
-    "ecmaVersion" : 6,
+    "ecmaVersion" : 7,
     "sourceType" : "module",
     "ecmaFeatures" : {
       "impliedStrict" : true,
@@ -39,7 +39,7 @@
     "dot-notation" : "warn",
     "eqeqeq" : "error",
     "no-case-declarations" : "error",
-    "no-empty-function" : "error",
+    "no-empty-function" : "warn",
     "no-empty-pattern" : "error",
     "no-eval" : "error",
     "no-extend-native" : "error",
@@ -96,7 +96,6 @@
     "sort-imports" : "error",
     "arrow-spacing" : "error",
     "no-class-assign" : "error",
-    "no-confusing-arrow" : "error",
     "no-dupe-class-members" : "error",
     "no-duplicate-imports" : "error",
     "no-this-before-super" : "error",

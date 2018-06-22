@@ -95,6 +95,21 @@ class ApiMap {
     static get AUTH_BASE() { return `auth`; }
     static get PLUGIN_BASE() { return `plugin`; }
 
+    /**
+     *
+     * @param key
+     */
+    static isSubscription(key) {
+        return key === ApiMap.subscribeNotification || key === ApiMap.subscribeCommand;
+    }
+
+    /**
+     *
+     * @param key
+     */
+    static isUnsubscription(key) {
+        return key === ApiMap.unsubscribeNotification || key === ApiMap.unsubscribeCommand;
+    }
 
     /**
      *
@@ -190,7 +205,7 @@ apiMap.set(ApiMap.updateCommand, { http: { method: 'PUT', uri: '/device/{deviceI
 apiMap.set(ApiMap.pollCommand, { http: { method: 'GET', uri: '/device/{deviceId}/command/poll', base: ApiMap.MAIN_BASE } });
 apiMap.set(ApiMap.pollManyCommand, { http: { method: 'GET', uri: '/device/command/poll', base: ApiMap.MAIN_BASE } });
 apiMap.set(ApiMap.waitCommand, { http: { method: 'GET', uri: '/device/{deviceId}/command/{commandId}/poll', base: ApiMap.MAIN_BASE } });
-apiMap.set(ApiMap.subscribeCommand, { http: { method: 'GET', uri: '/device/command/poll', base: ApiMap.MAIN_BASE, subscription: true }, ws: { action: 'command/subscribe', response: null } });
+apiMap.set(ApiMap.subscribeCommand, { http: { method: 'GET', uri: '/device/command/poll', base: ApiMap.MAIN_BASE, subscription: true }, ws: { action: 'command/subscribe', response: [`subscriptionId`] } });
 apiMap.set(ApiMap.unsubscribeCommand, { http: { unsubscription: true }, ws: { action: 'command/unsubscribe', response: null } });
 
 apiMap.set(ApiMap.listNotification, { http: { method: 'GET', uri: '/device/{deviceId}/notification', base: ApiMap.MAIN_BASE }, ws: { action: 'notification/list', response: { bodyKey: 'notifications' } } });
@@ -198,7 +213,7 @@ apiMap.set(ApiMap.getNotification, { http: { method: 'GET', uri: '/device/{devic
 apiMap.set(ApiMap.insertNotification, { http: { method: 'POST', uri: '/device/{deviceId}/notification', base: ApiMap.MAIN_BASE }, ws: { action: 'notification/insert', bodyKey: 'notification', response: { bodyKey: 'notification' } } });
 apiMap.set(ApiMap.pollNotification, { http: { method: 'GET', uri: '/device/{deviceId}/notification/poll', base: ApiMap.MAIN_BASE } });
 apiMap.set(ApiMap.pollManyNotification, { http: { method: 'GET', uri: '/device/notification/poll', base: ApiMap.MAIN_BASE } });
-apiMap.set(ApiMap.subscribeNotification, { http: { method: 'GET', uri: '/device/notification/poll', base: ApiMap.MAIN_BASE, subscription: true }, ws: { action: 'notification/subscribe', response: null } });
+apiMap.set(ApiMap.subscribeNotification, { http: { method: 'GET', uri: '/device/notification/poll', base: ApiMap.MAIN_BASE, subscription: true }, ws: { action: 'notification/subscribe', response: [`subscriptionId`] } });
 apiMap.set(ApiMap.unsubscribeNotification, { http: { unsubscription: true }, ws: { action: 'notification/unsubscribe', response: null } });
 
 apiMap.set(ApiMap.listNetwork, { http: { method: 'GET', uri: '/network', base: ApiMap.MAIN_BASE }, ws: { action: 'network/list', response: { bodyKey: 'networks' } } });

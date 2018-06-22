@@ -16,8 +16,8 @@ describe('NotificationAPI WS', () => {
 
         mainService = new ws.Server({ port: 4390 });
 
-        mainService.on('connection', ws => {
-            ws.on('message', data => {
+        mainService.on('connection', socket => {
+            socket.on('message', data => {
                 const message = JSON.parse(data);
                 if (message.action === 'token') {
                     const cred = {
@@ -26,13 +26,12 @@ describe('NotificationAPI WS', () => {
                         accessToken: 'eyJhbGciOiJIUzI1NiJ9',
                         refreshToken: 'eyJhbGciOiJIUzI1NiJ8'
                     };
-                    ws.send(JSON.stringify(cred));
+                    socket.send(JSON.stringify(cred));
                 } else {
                     events.emit('request', message);
                 }
 
-                ws.send('{}');
-
+                socket.send(JSON.stringify({ requestId: message.requestId }));
             });
         });
 
@@ -147,20 +146,14 @@ describe('NotificationAPI WS', () => {
     });
 
     it('NotificationAPI.unsubscribe()', done => {
-
         const expected = {
             subscriptionId: '10'
         };
 
-        // Configurating Notification List query
-        const notificationPollQuery = new DeviceHive.models.query.NotificationPollQuery(expected);
-
         deviceHive.notification.unsubscribe(expected.subscriptionId);
 
-        // sent data
         events.once('request', data => {
             assert.equal(data.action, 'notification/unsubscribe', 'Not correct action');
-            assert.include(data, expected, 'Not correct data');
 
             done();
         });

@@ -14,24 +14,40 @@ let authService, mainService, deviceHive;
 describe('TokenAPI HTTP', () => {
 
     before(done => {
-        // authService
+        // mainService
+        mainService = http.createServer((request, res) => {
+            res.writeHead(200, {'Content-Type': 'application/json'});
+            res.write(JSON.stringify({ message: 'Mock server response'}));
+            res.end();
+        }).listen(3390);
+
         authService = http.createServer((request, res) => {
+            let body = [];
+
             if (request.url === '/token' && request.method === 'POST') {
                 const cred = {
                     accessToken: 'eyJhbGciOiJIUzI1NiJ9',
                     refreshToken: 'eyJhbGciOiJIUzI1NiJ8'
                 };
+
+                res.writeHead(200, {'Content-Type': 'application/json'});
                 res.write(JSON.stringify(cred));
+                res.end();
+            } else {
+                res.writeHead(200, {'Content-Type': 'application/json'});
+                res.write(JSON.stringify({ message: 'Mock server response'}));
+                res.end();
             }
 
-            let body = [];
             request.on('error', (err) => {
                 console.error(err);
             }).on('data', (chunk) => {
                 body.push(chunk);
             }).on('end', () => {
+                let parsedURL = url.parse(request.url);
+
                 body = Buffer.concat(body).toString();
-                parsedURL = url.parse(request.url);
+
                 events.emit('request', {
                     method: request.method,
                     url: {
@@ -41,9 +57,6 @@ describe('TokenAPI HTTP', () => {
                     body: body ? JSON.parse(body) : null
                 });
             });
-
-            res.end();
-
         }).listen(3391);
 
         // Configaratuion DeviceHive
@@ -57,9 +70,10 @@ describe('TokenAPI HTTP', () => {
 
         deviceHive.connect()
             .then(() => done());
-    })
+    });
 
     after(() => {
+        mainService.close();
         authService.close();
     });
 

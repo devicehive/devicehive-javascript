@@ -96,6 +96,16 @@ const myDeviceListQuery = new DeviceListQuery({
     networkId: 1
 });
 
+// Push message handler
+myDeviceHive.on(DeviceHive.MESSAGE_EVENT, (message) => {
+    console.log(message);
+});
+
+// Error handler
+myDeviceHive.on(DeviceHive.ERROR_EVENT, (error) => {
+    console.error(error);
+});
+
 // Connecting and usin API
 myDeviceHive.connect()
     .then(() => myDeviceHive.device.list(myDeviceListQuery))
@@ -145,8 +155,18 @@ DeviceHive module
 
 <a name="DeviceHive+connect"></a>
 
-### deviceHive.connect()
+### deviceHive.connect({ accessToken, refreshToken, login, password, reconnectionAttempts, reconnectionInterval })
 Connect and authorize
+
+Params:
+| Param | Type | Description |
+| --- | --- | --- |
+| options.accessToken | <code>string</code> | Access token (default DeviceHive constructor configuration) (optional) |
+| options.refreshToken | <code>string</code> | Refresh token (default DeviceHive constructor configuration) (optional) |
+| options.login | <code>string</code> | Login (default DeviceHive constructor configuration) (optional) |
+| options.password | <code>string</code> | Password (default DeviceHive constructor configuration) (optional) |
+| options.reconnectionAttempts | <code>number</code> | Reconnection attempts (default infinity (-1)) (optional) |
+| options.reconnectionInterval | <code>number</code> | Reconnection interval in ms (default 5000) (optional) |
 
 <a name="DeviceHive.models"></a>
 
