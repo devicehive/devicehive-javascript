@@ -16,8 +16,8 @@ describe('DeviceCommandAPI WS', () => {
 
         mainService = new ws.Server({ port: 4390 });
 
-        mainService.on('connection', ws => {
-            ws.on('message', data => {
+        mainService.on('connection', socket => {
+            socket.on('message', data => {
                 const message = JSON.parse(data);
                 if (message.action === 'token') {
                     const cred = {
@@ -26,13 +26,12 @@ describe('DeviceCommandAPI WS', () => {
                         accessToken: 'eyJhbGciOiJIUzI1NiJ9',
                         refreshToken: 'eyJhbGciOiJIUzI1NiJ8'
                     };
-                    ws.send(JSON.stringify(cred));
+                    socket.send(JSON.stringify(cred));
                 } else {
                     events.emit('request', message);
                 }
 
-                ws.send('{}');                
-
+                socket.send(JSON.stringify({ requestId: message.requestId }));
             });
         });
 
@@ -57,7 +56,8 @@ describe('DeviceCommandAPI WS', () => {
         const expected = {
             deviceId: 1,
             commandId: 1
-        }
+        };
+
         deviceHive.command.get(expected.deviceId, expected.commandId);
 
         // sent data
@@ -179,7 +179,7 @@ describe('DeviceCommandAPI WS', () => {
             timestamp: '2018-02-09T10:09:03.033Z',
             returnUpdatedCommands: 'returnUpdatedCommands',
             waitTimeout: '10',
-            limit: '1',
+            limit: '1'
         };
 
         // Configurating Command List query
@@ -197,20 +197,14 @@ describe('DeviceCommandAPI WS', () => {
     });
 
     it('DeviceCommandAPI.unsubscribe()', done => {
-
         const expected = {
             subscriptionId: '10'
         };
 
-        // Configurating Command List query
-        const commandPollQuery = new DeviceHive.models.query.CommandPollQuery(expected);
-
         deviceHive.command.unsubscribe(expected.subscriptionId);
 
-        // sent data
         events.once('request', data => {
             assert.equal(data.action, 'command/unsubscribe', 'Not correct action');
-            assert.include(data, expected, 'Not correct data');
 
             done();
         });

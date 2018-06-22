@@ -1,15 +1,20 @@
 require('isomorphic-fetch');
 const Transport = require(`./base/Transport`);
 const Utils = require('../utils/Utils');
-
+const ReconnectionAttemptFailedError = require('../error/ReconnectionAttemptFailedError');
+const { URL } = require(`url`);
 
 /**
- * Rest API
+ * HTTP Transport class
+ * @event open
+ * @event message
+ * @event error
+ * @event reconnected
  */
 class HTTP extends Transport {
 
     static get TYPE() { return `http`; }
-
+    static get GET_METHOD() { return `GET`; }
 
     /**
      * Creates HTTP
@@ -22,6 +27,22 @@ class HTTP extends Transport {
         me.type = HTTP.TYPE;
         me.token= ``;
         me.subscriptionMap = new Map();
+        me.reconnectionIntervalHandler = null;
+        me.pingUrl = ``;
+        me.pingMethod = ``;
+    }
+
+    /**
+     * Connect HTTP transport
+     */
+    connect() {
+        const me = this;
+
+        return new Promise((resolve) => {
+            me._ping()
+                .then(resolve)
+                .catch(() => me._startReconnection());
+        });
     }
 
     /**
@@ -30,19 +51,29 @@ class HTTP extends Transport {
      */
     authenticate(token) {
         const me = this;
+
         me.token = token;
+
         return Promise.resolve();
     }
 
     /**
-     * Rest API send method
+     * HTTP transport send method
+     * @param endpoint
+     * @param method
+     * @param body
+     * @param subscription
+     * @param unsubscription
+     * @param noAuth
+     * @param polling
+     * @returns {*}
      */
-    send({ endpoint, method, body, subscription, unsubscription, noAuth }) {
+    send({ endpoint, method, body, subscription, unsubscription, noAuth, polling=false }) {
         const me = this;
 
         if (subscription === true) {
             const subscriptionId = Utils.randomString();
-            const longPollingHandler = me.initLongPolling(endpoint, method, body);
+            const longPollingHandler = me._initLongPolling(subscriptionId, endpoint, method, body);
 
             longPollingHandler.poll();
 
@@ -57,42 +88,94 @@ class HTTP extends Transport {
                 longPollingHandler.stop();
                 me.subscriptionMap.delete(subscriptionId);
 
-                return Promise.resolve({ status: `success` })
+                return Promise.resolve({ status: `success` });
             } else {
-                return Promise.resolve({ status: `No such subscription` })
+                return Promise.resolve({ status: `No such subscription` });
             }
         } else {
             return fetch(endpoint, { headers: me._getHeaders(noAuth), method: method, body: JSON.stringify(body) })
                 .then(response => response.text())
-                .then(responseText => {
-                    return responseText ? JSON.parse(responseText) : responseText
-                });
+                .then(responseText => responseText ? JSON.parse(responseText) : responseText)
+                .catch(error => {
+                    if (!polling) { throw error; }
+                    else { return me._ping().catch(() => me._startReconnection()); }
+                })
         }
     }
 
     /**
-     *
+     * Disconnects HTTP transport
+     */
+    disconnect() {
+        const me = this;
+
+        me._stopAllPolling();
+
+        me.token= ``;
+    }
+
+    /**
+     * Initialize http sever ping parameters
+     * @param pingUrl
+     * @param pingMethod
+     */
+    initPingParameters(pingUrl, pingMethod) {
+        const me = this;
+
+        me.pingUrl = pingUrl;
+        me.pingMethod = pingMethod;
+    }
+
+    /**
+     * Ping server
+     * @returns {Promise<Response>}
+     * @private
+     */
+    _ping() {
+        const me = this;
+
+        return fetch(me.pingUrl, { headers: me._getHeaders(true), method: me.pingMethod });
+    }
+
+    /**
+     * Initialize polling functionality
+     * @param subscriptionId
      * @param endpoint
      * @param method
      * @param body
      * @returns {{poll: poll, stop: stop}}
      */
-    initLongPolling(endpoint, method, body) {
+    _initLongPolling(subscriptionId, endpoint, method, body) {
         const me = this;
         let stopped = false;
+        const parsedEndpoint = new URL(endpoint);
 
         /**
          * Poll notifications
          */
         function poll () {
-            me.send({ endpoint, method, body })
+            me.send({ endpoint: parsedEndpoint.href, method, body, polling: true })
                 .then((messageList) => {
                     if (!stopped) {
-                        messageList.forEach((message) => me.emit(`message`, message));
-                        poll(endpoint, method, body)
+                        if (messageList && messageList.length) {
+                            let latestTimestamp;
+
+                            messageList.forEach((message) => {
+                                message.subscriptionId = subscriptionId;
+                                me.emit(Transport.MESSAGE_EVENT, message);
+
+                                latestTimestamp = Utils.getLatestTimestamp(message.timestamp, latestTimestamp);
+                            });
+
+                            if (latestTimestamp) {
+                                parsedEndpoint.searchParams.set(`timestamp`, latestTimestamp);
+                            }
+                        }
+
+                        poll();
                     }
                 })
-                .catch((error) => console.warn(error));
+                .catch((error) => me.emit(Transport.ERROR_EVENT, error));
         }
 
         /**
@@ -106,7 +189,54 @@ class HTTP extends Transport {
     }
 
     /**
-     *
+     * Reconnection routine
+     * @private
+     */
+    _startReconnection() {
+        const me = this;
+        let successfulPinged = false;
+        let reconnectionCounter = 0;
+
+        me._stopAllPolling();
+
+        me.reconnectionIntervalHandler = setInterval(() => {
+            me._ping()
+                .then(() => {
+                    if (!successfulPinged) {
+                        successfulPinged = true;
+                        clearInterval(me.reconnectionIntervalHandler);
+
+                        me.emit(Transport.RECONNECTED_EVENT);
+                    }
+                })
+                .catch(() => {
+                    if (!successfulPinged) {
+                        reconnectionCounter++;
+
+                        if (reconnectionCounter === me.reconnectionAttempts) {
+                            clearInterval(me.reconnectionIntervalHandler);
+                        }
+
+                        me.emit(Transport.ERROR_EVENT, new ReconnectionAttemptFailedError(reconnectionCounter));
+                    }
+                });
+        }, me.reconnectionInterval);
+    }
+
+    /**
+     * Stop all polling handlers
+     * @private
+     */
+    _stopAllPolling() {
+        const me = this;
+
+        me.subscriptionMap.forEach((pollingHandler) => pollingHandler.stop());
+        me.subscriptionMap.clear();
+    }
+
+    /**
+     * Returns request headers
+     * @param noAuth
      * @returns {Object}
      * @private
      */
@@ -122,15 +252,6 @@ class HTTP extends Transport {
         }
 
         return headers;
-    }
-
-    /**
-     * Disconnects HTTP transport
-     */
-    disconnect() {
-        const me = this;
-
-        me.token= ``;
     }
 }
 

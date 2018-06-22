@@ -52,6 +52,9 @@ const InvalidCredentialsError = require('./error/InvalidCredentialsError');
  */
 class DeviceHive extends EventEmitter {
 
+    static get MESSAGE_EVENT() { return APIStrategy.MESSAGE_EVENT; }
+    static get ERROR_EVENT() { return APIStrategy.ERROR_EVENT; }
+
     /**
      * @type {Object} - Returns DeviceHive models
      */
@@ -100,10 +103,10 @@ class DeviceHive extends EventEmitter {
      * @param {string} [options.accessToken] - Access token
      * @param {string} [options.refreshToken] - Refresh token
      * @param {string} [options.login] - Login
-     * @param {string} [options.password] - Paaword
+     * @param {string} [options.password] - Password
      * @param {string} options.mainServiceURL - Main Service URL
      * @param {string} [options.authServiceURL] - Auth Service URL (required only for http)
-     * @param {string} [options.pluginServiceURL] - Alug inServi ceURL (required only for http)
+     * @param {string} [options.pluginServiceURL] - Plugin Service URL (required only for http)
      */
     constructor({ mainServiceURL, authServiceURL, pluginServiceURL, accessToken, refreshToken, login, password, autoUpdateSession = true }) {
         super();
@@ -130,16 +133,21 @@ class DeviceHive extends EventEmitter {
         me.plugin = new PluginAPI({ strategy: me.strategy });
 
 
-        me.strategy.on(`message`, message => me.emit(`message`, message));
-        me.strategy.on(`error`, error => me.emit(`error`, error));
+        me.strategy.on(APIStrategy.MESSAGE_EVENT, message => me.emit(DeviceHive.MESSAGE_EVENT, message));
+        me.strategy.on(APIStrategy.ERROR_EVENT, error => me.emit(DeviceHive.ERROR_EVENT, error && error.message ? error.message : error));
+
+        me.on(DeviceHive.ERROR_EVENT, Utils.emptyFn);
     }
 
     /**
      * Connect to the DeviceHive service
      * @returns {Promise<DeviceHive>}
      */
-    async connect({ accessToken, refreshToken, login, password } = {}) {
+    async connect({ accessToken, refreshToken, login, password, reconnectionAttempts, reconnectionInterval } = {}) {
         const me = this;
+
+        me.strategy.reconnectionAttempts = reconnectionAttempts;
+        me.strategy.reconnectionInterval = reconnectionInterval;
 
         if (!accessToken && !refreshToken && !(login && password)) {
             accessToken = accessToken || me.accessToken;
@@ -150,6 +158,8 @@ class DeviceHive extends EventEmitter {
 
         if (accessToken || refreshToken || (login && password)) {
             try {
+                await me.strategy.connect();
+
                 if (login && password) {
                     const { accessToken, refreshToken } = await me.token.login(login, password);
 

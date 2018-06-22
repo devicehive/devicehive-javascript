@@ -3,15 +3,13 @@ const assert = chai.assert;
 const http = require('http');
 const url = require('url');
 const querystring = require('querystring');
-
-const EventEmitter = require('events');
-const events = new EventEmitter();
-
 const DeviceHive = require('../../../index');
+const EventEmitter = require('events');
 
-let authService, mainService;
 
 describe('ConfigurationAPI HTTP', () => {
+    const events = new EventEmitter();
+    let authService, mainService, deviceHive;
 
     before(done => {
         // authService
@@ -25,24 +23,29 @@ describe('ConfigurationAPI HTTP', () => {
 
         // mainService
         mainService = http.createServer((request, res) => {
-
             let body = [];
-            request.on('error', (err) => {
-                console.error(err);
-            }).on('data', (chunk) => {
-                body.push(chunk);
-            }).on('end', () => {
-                body = Buffer.concat(body).toString();
-                parsedURL = url.parse(request.url);
-                events.emit('request', {
-                    method: request.method,
-                    url: {
-                        ...parsedURL,
-                        parameters: querystring.parse(parsedURL.query)
-                    },
-                    body: body ? JSON.parse(body) : null
+
+            request
+                .on('error', done)
+                .on('data', (chunk) => body.push(chunk))
+                .on('end', () => {
+                    let parsedURL = url.parse(request.url);
+
+                    body = Buffer.concat(body).toString();
+
+                    events.emit('request', {
+                        method: request.method,
+                        url: {
+                            ...parsedURL,
+                            parameters: querystring.parse(parsedURL.query)
+                        },
+                        body: body ? JSON.parse(body) : null
+                    });
                 });
-            });
+
+            res.writeHead(200, {'Content-Type': 'application/json'});
+            res.write(JSON.stringify({ message: 'Mock server response'}));
+            res.end();
         }).listen(3390);
 
         // Configaratuion DeviceHive
@@ -55,8 +58,9 @@ describe('ConfigurationAPI HTTP', () => {
         });
 
         deviceHive.connect()
-            .then(() => done());
-    })
+            .then(() => done())
+            .catch(done);
+    });
 
     after(() => {
         authService.close();

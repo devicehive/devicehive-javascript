@@ -38,7 +38,6 @@ void async function start () {
             console.log(await  httpDeviceHive.device.list(deviceListQuery));
             console.log(await  httpDeviceHive.deviceType.list(deviceTypeListQuery));
             console.log(await  httpDeviceHive.network.list(networkListQuery));
-            console.log(await  httpDeviceHive.network.list(networkListQuery));
             console.log(await  httpDeviceHive.token.refresh(refreshToken));
         }
 

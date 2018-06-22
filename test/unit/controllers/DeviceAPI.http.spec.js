@@ -43,6 +43,10 @@ describe('DeviceAPI', () => {
                     body: body ? JSON.parse(body) : null
                 });
             });
+
+            res.writeHead(200, {'Content-Type': 'application/json'});
+            res.write(JSON.stringify({ message: 'Mock server response'}));
+            res.end();
         }).listen(3390);
 
         // Configaratuion DeviceHive
